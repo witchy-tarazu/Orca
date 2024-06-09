@@ -1,8 +1,8 @@
 # =============== #
 # Third Party     #
 # =============== #
-Assets/Plugins/Rogue/
-Assets/Plugins/Rogue.meta
+Assets/*/Rogue/
+Assets/*/Rogue.meta
 
 # =============== #
 # Unity generated #
