@@ -4,15 +4,14 @@ namespace Orca
 {
     public class ParabolaProjectile : Projectile
     {
-        public ParabolaProjectile(ProjectileData data) : base(data) { }
-
         public override void Update()
         {
             base.Update();
 
             if (CurrentPos == TargetPos)
             {
-                ProjectileData.Check(CurrentPos);
+                CheckData checkData = new(CurrentPos, ProjectileData.Side, CheckType.Position);
+                ProjectileData.Check(checkData, this);
             }
         }
     }

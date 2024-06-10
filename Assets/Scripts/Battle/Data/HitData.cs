@@ -6,16 +6,16 @@ namespace Orca
 {
     public class HitData : MonoBehaviour
     {
-        private List<Actor> hitActors;
+        private List<ActorHealth> HitList { get; set; }
 
-        public HitData(List<Actor> hitActors)
+        public HitData(List<ActorHealth> hitList)
         {
-            this.hitActors = hitActors;
+            HitList = hitList;
         }
 
-        public void ApplyToActors(Action<Actor> action)
+        public void ApplyToActors(Action<ActorHealth> action)
         {
-            foreach (var actor in hitActors)
+            foreach (var actor in HitList)
             {
                 action(actor);
             }

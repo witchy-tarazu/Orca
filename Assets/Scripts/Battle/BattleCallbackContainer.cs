@@ -7,25 +7,29 @@ namespace Orca
 {
     public class BattleCallbackContainer
     {
-        private Action<int> CheckCallback { get; set; }
+        private Action<CheckData, IHitChecker> CheckCallback { get; set; }
         private Action<HitData> HitCallback { get; set; }
         private Action ReleaseCallback { get; set; }
 
-        public BattleCallbackContainer(Action<int> checkCallback, Action<HitData> hitCallback, Action releaseCallback)
+        public BattleCallbackContainer(
+            Action<CheckData, IHitChecker> checkCallback,
+            Action<HitData> hitCallback,
+            Action releaseCallback
+            )
         {
             CheckCallback = checkCallback;
             HitCallback = hitCallback;
             ReleaseCallback = releaseCallback;
         }
 
-        public void Check(int value)
+        public void Check(CheckData data, IHitChecker checker)
         {
-            CheckCallback.Invoke(value);
+            CheckCallback.Invoke(data, checker);
         }
 
-        public void Hit(HitData hit)
+        public void Hit(HitData data)
         {
-            HitCallback.Invoke(hit);
+            HitCallback.Invoke(data);
         }
 
         public void Release()

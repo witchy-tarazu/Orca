@@ -1,12 +1,22 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Orca
 {
-    public class Influencer
+
+    public class Influencer : IHitChecker, IUpdatable
     {
+        public enum ParentType
+        {
+            System,
+            Actor,
+        }
+
+        public HashSet<ChildInfluencer> Children { get; set; } = new();
+
+        public ParentType InfluencerParentType { get; private set; }
+
+        private ActorSide Side { get; set; }
+
         private int CurrentFrame { get; set; }
 
         private int EndFrame { get; set; }
@@ -17,17 +27,28 @@ namespace Orca
 
         private BattleCallbackContainer CallbackContainer { get; set; }
 
-        public Influencer(
+
+        public void Initialize(
+            ParentType parentType,
+            ActorSide side,
             int endFrame,
             int parentIndex,
             List<int> relativeInfluenceIndexes,
             BattleCallbackContainer callbackContainer)
         {
+            InfluencerParentType = parentType;
+            Side = side;
             CurrentFrame = 0;
             EndFrame = endFrame;
             ParentIndex = parentIndex;
             RelativeInfluenceIndexes = relativeInfluenceIndexes;
             CallbackContainer = callbackContainer;
+            Children.Clear();
+        }
+
+        public void AppendChild(ChildInfluencer child)
+        {
+            Children.Add(child);
         }
 
         public void Update()
@@ -36,7 +57,8 @@ namespace Orca
 
             foreach (var panelIndex in RelativeInfluenceIndexes)
             {
-                CallbackContainer.Check(ParentIndex + panelIndex);
+                CheckData checkData = new(ParentIndex + panelIndex, Side, CheckType.PanelIndex);
+                CallbackContainer.Check(checkData, this);
             }
         }
 

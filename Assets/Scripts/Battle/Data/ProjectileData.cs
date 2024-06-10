@@ -4,6 +4,7 @@ namespace Orca
 {
     public class ProjectileData
     {
+        public ActorSide Side { get; private set; }
         public int Speed { get; private set; }
         public int StartPos { get; private set; }
         public int Distance { get; private set; }
@@ -11,25 +12,27 @@ namespace Orca
         private BattleCallbackContainer CallbackContainer { get; set; }
 
         public ProjectileData(
+            ActorSide side,
             int speed,
             int startPos,
             int distance,
-             BattleCallbackContainer callbackContainer)
+            BattleCallbackContainer callbackContainer)
         {
+            Side = side;
             Speed = speed;
             StartPos = startPos;
             Distance = distance;
             CallbackContainer = callbackContainer;
         }
 
-        public void Check(int detail)
+        public void Check(CheckData data, IHitChecker checker)
         {
-            CallbackContainer.Check(detail);
+            CallbackContainer.Check(data, checker);
         }
 
-        public void Hit(HitData hitData)
+        public void Hit(HitData data)
         {
-            CallbackContainer.Hit(hitData);
+            CallbackContainer.Hit(data);
         }
 
         public void Release()

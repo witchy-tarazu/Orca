@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Orca
 {
-    public class ActorHp
+    public class ActorHitPoint
     {
         public int Hp { get; private set; }
 
-        public ActorHp(int hp)
+        public ActorHitPoint(int hp)
         {
             Hp = hp;
         }

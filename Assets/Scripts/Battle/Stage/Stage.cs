@@ -6,9 +6,9 @@ namespace Orca
 {
     public class Stage
     {
-        private int widthPerPanel { get; set; }
+        private int WidthPerPanel { get; set; }
 
-        private List<Panel> panels = new();
+        private Panel[] Panels { get; set; }
 
         /// <summary>
         /// ステージ内か

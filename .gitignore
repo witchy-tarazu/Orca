@@ -3,6 +3,12 @@
 # =============== #
 Assets/*/Rogue/
 Assets/*/Rogue.meta
+Assets/Scripts/MasterMemory
+Assets/Scripts/MasterMemory.meta
+Assets/Scripts/MessagePack
+Assets/Scripts/MessagePack.meta
+Assets/Plugins
+Assets/Plugins.meta
 
 # =============== #
 # Unity generated #

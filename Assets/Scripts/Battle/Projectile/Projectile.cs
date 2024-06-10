@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace Orca
 {
-    public abstract class Projectile
+    public abstract class Projectile : IHitChecker, IUpdatable
     {
         public int Speed { get; private set; }
 
@@ -9,12 +11,20 @@ namespace Orca
 
         protected ProjectileData ProjectileData { get; private set; }
 
-        public Projectile(ProjectileData projectileData)
+        public HashSet<ChildInfluencer> Children { get; set; } = new();
+
+        public void Initialize(ProjectileData projectileData)
         {
             Speed = projectileData.Speed;
             CurrentPos = projectileData.StartPos;
             TargetPos = CurrentPos + projectileData.Distance;
             ProjectileData = projectileData;
+            Children.Clear();
+        }
+
+        public void AppendChild(ChildInfluencer child)
+        {
+            Children.Add(child);
         }
 
         public virtual void Update()
