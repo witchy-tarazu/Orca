@@ -6,7 +6,7 @@ namespace Orca
         {
             base.Update();
 
-            CheckData checkData = new(CurrentPos, ProjectileData.Side, CheckType.Position);
+            CheckData checkData = new(CurrentPos, CheckSide.Opponent, CheckRange.Position, CheckType.Single);
             ProjectileData.Check(checkData, this);
         }
     }

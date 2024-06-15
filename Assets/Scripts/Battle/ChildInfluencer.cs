@@ -4,15 +4,6 @@ using UnityEngine;
 
 namespace Orca
 {
-    public enum ChildTriggerCondition
-    {
-        None = 0,
-        Hit,
-        NoHit,
-        Damage,
-        NoDamage,
-    }
-
     public class ChildInfluencer
     {
         public bool IsSatisfied { get; set; }

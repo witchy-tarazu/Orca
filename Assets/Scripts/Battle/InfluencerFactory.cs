@@ -19,17 +19,15 @@ namespace Orca
         }
 
         public HashSet<(int, Influencer)> CreateInfluencers(
-            ActorSide ownerSide,
             ActorHealth ownerHealthContainer,
             int parentIndex,
-            BattleCard card,
+            MasterCard card,
             Action<Influencer> releaseCallback)
         {
-            return new() { CreateInfluencer(ownerSide, ownerHealthContainer, parentIndex, null, releaseCallback) };
+            return new() { CreateInfluencer(ownerHealthContainer, parentIndex, null, releaseCallback) };
         }
 
         public (int, Influencer) CreateInfluencer(
-            ActorSide ownerSide,
             ActorHealth ownerHealthContainer,
             int parentIndex,
             BattleEffect effect,
@@ -49,7 +47,7 @@ namespace Orca
                         Release(influencer);
                     }
                 );
-            influencer.Initialize(Influencer.ParentType.Actor, ownerSide, 0, 0, null, callbackContainer);
+            influencer.Initialize(Influencer.ParentType.Actor, null, 0, 0, null, callbackContainer);
 
             return (executeFrame, influencer);
         }

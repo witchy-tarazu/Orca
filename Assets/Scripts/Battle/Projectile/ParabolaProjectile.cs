@@ -1,5 +1,3 @@
-using Unity.VisualScripting;
-
 namespace Orca
 {
     public class ParabolaProjectile : Projectile
@@ -10,7 +8,7 @@ namespace Orca
 
             if (CurrentPos == TargetPos)
             {
-                CheckData checkData = new(CurrentPos, ProjectileData.Side, CheckType.Position);
+                CheckData checkData = new(CurrentPos, CheckSide.Whole, CheckRange.Position, CheckType.Panel);
                 ProjectileData.Check(checkData, this);
             }
         }

@@ -4,17 +4,17 @@ namespace Orca
 {
     public class ActorCard
     {
-        private BattleCard currentCard { get; set; }
+        private MasterCard currentCard { get; set; }
 
-        private Queue<BattleCard> cardQueue { get; set; }
+        private Queue<MasterCard> cardQueue { get; set; }
 
-        public BattleCard GetCurrentInfo() => currentCard;
+        public MasterCard GetCurrentInfo() => currentCard;
 
-        public BattleCard Use() => cardQueue.Dequeue();
+        public MasterCard Use() => cardQueue.Dequeue();
 
-        public ActorCard() { cardQueue = new Queue<BattleCard>(); }
+        public ActorCard() { cardQueue = new Queue<MasterCard>(); }
 
-        public void Set(List<BattleCard> cards)
+        public void Set(List<MasterCard> cards)
         {
             if (cards.Count == 0)
             {
@@ -23,7 +23,7 @@ namespace Orca
             }
 
             currentCard = cards[0];
-            foreach (BattleCard card in cards) { cardQueue.Enqueue(card); }
+            foreach (MasterCard card in cards) { cardQueue.Enqueue(card); }
         }
     }
 }

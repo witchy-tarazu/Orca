@@ -1,0 +1,40 @@
+using MasterMemory;
+using MessagePack;
+
+namespace Orca
+{
+    public enum ChildTriggerCondition
+    {
+        None = 0,
+        Hit,
+        NoHit,
+        Damage,
+        NoDamage,
+    }
+
+    [MemoryTable("influence_relation"), MessagePackObject(true)]
+    public class MasterInfluenceRelation
+    {
+        public MasterInfluenceRelation(
+            int parentId,
+            ChildTriggerCondition triggerCondition,
+            int childId)
+        {
+            ParentId = parentId;
+            TriggerCondition = triggerCondition;
+            ChildId = childId;
+        }
+
+        /// <summary>êeå¯â ID</summary>
+        [PrimaryKey(0), NonUnique]
+        public int ParentId { get; }
+
+        /// <summary>éqå¯â ÇÃî≠ìÆèåè</summary>
+        public ChildTriggerCondition TriggerCondition { get; }
+
+        [PrimaryKey(1)]
+        /// <summary>éqå¯â ÇÃID</summary>
+        public int ChildId { get; }
+
+    }
+}

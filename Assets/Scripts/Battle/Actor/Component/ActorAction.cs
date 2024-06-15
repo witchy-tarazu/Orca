@@ -36,16 +36,14 @@ namespace Orca
             Side = side;
         }
 
-        public void Execute(int parentIndex, BattleCard card, ActorHealth container)
+        public void Execute(int parentIndex, MasterCard card, ActorHealth container)
         {
             CurrentFrame = 0;
             CurrentState = State.Active;
             FinishFrame = 0;    // TODO: card‚©‚çİ’è‚·‚é
 
             // TODO: card‚Ìİ’è‚ÅProjectile‚©Influencer‚Ç‚¿‚ç‚ğ¶¬‚·‚é‚©•ªŠò‚·‚é
-            var influencers = Factory.CreateInfluencers(
-                Side, container, parentIndex, card,
-                OnReleaseInfluencer);
+            var influencers = Factory.CreateInfluencers(container, parentIndex, card, OnReleaseInfluencer);
             ReservedInfluencers.AddRange(influencers);
         }
 

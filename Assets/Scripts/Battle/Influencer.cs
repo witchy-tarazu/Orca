@@ -15,7 +15,7 @@ namespace Orca
 
         public ParentType InfluencerParentType { get; private set; }
 
-        private ActorSide Side { get; set; }
+        private ActorHealth OwnerHealth { get; set; }
 
         private int CurrentFrame { get; set; }
 
@@ -30,14 +30,14 @@ namespace Orca
 
         public void Initialize(
             ParentType parentType,
-            ActorSide side,
+            ActorHealth ownerHealth,
             int endFrame,
             int parentIndex,
             List<int> relativeInfluenceIndexes,
             BattleCallbackContainer callbackContainer)
         {
             InfluencerParentType = parentType;
-            Side = side;
+            OwnerHealth = ownerHealth;
             CurrentFrame = 0;
             EndFrame = endFrame;
             ParentIndex = parentIndex;
@@ -57,7 +57,7 @@ namespace Orca
 
             foreach (var panelIndex in RelativeInfluenceIndexes)
             {
-                CheckData checkData = new(ParentIndex + panelIndex, Side, CheckType.PanelIndex);
+                CheckData checkData = new(ParentIndex + panelIndex, CheckSide.Opponent, CheckRange.RelativePanelIndex, CheckType.Panel);
                 CallbackContainer.Check(checkData, this);
             }
         }

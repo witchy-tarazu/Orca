@@ -21,7 +21,7 @@ namespace Orca
             ActorSide ownerSide,
             ActorHealth ownerHealthContainer,
             int parentIndex,
-            BattleCard card,
+            MasterCard card,
             Action<Projectile> releaseCallback)
         {
             return new() { CreateProjectile(ownerSide, ownerHealthContainer, parentIndex, null, releaseCallback) };
