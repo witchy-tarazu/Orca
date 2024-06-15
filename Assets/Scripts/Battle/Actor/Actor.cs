@@ -17,7 +17,7 @@ namespace Orca
         private ActorCard Card { get; set; }
         private ActorHealth Health { get; set; }
 
-        private Stage Stage { get; set; }
+        private BattleStage Stage { get; set; }
 
         private Action<CheckData> CheckCallback { get; set; }
 

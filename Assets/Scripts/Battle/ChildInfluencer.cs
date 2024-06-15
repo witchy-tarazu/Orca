@@ -1,27 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Orca
 {
     public class ChildInfluencer
     {
-        public bool IsSatisfied { get; set; }
-        public int ExecuteFrameOffset { get; private set; }
-        public int AdditionalFinishFrame { get; private set; }
-        public Influencer Influencer { get; private set; }
-        public ChildTriggerCondition Condition { get; private set; }
+        public bool IsSatisfied { get; private set; }
 
-        public ChildInfluencer(
-            int excuteFrameOffset,
-            int additionalFinishFrame,
-            Influencer influencer,
-            ChildTriggerCondition condition)
+        public PanelPosition Position { get; private set; }
+
+        public MasterInfluenceRelation MasterInfluenceRelation { get; set; }
+
+        public MasterInfluence MasterInfluence { get; private set; }
+
+        public ChildInfluencer(ActorHealth ownerHealth, MasterInfluenceRelation masterInfluenceRelation, MasterInfluence masterInfluence)
         {
-            ExecuteFrameOffset = excuteFrameOffset;
-            AdditionalFinishFrame = additionalFinishFrame;
-            Influencer = influencer;
-            Condition = condition;
+            IsSatisfied = false;
+            MasterInfluenceRelation = masterInfluenceRelation;
+            MasterInfluence = masterInfluence;
+        }
+
+        public void CheckSatisfaction(ChildTriggerCondition triggerCondition, PanelPosition position)
+        {
+            if (MasterInfluenceRelation.TriggerCondition == triggerCondition)
+            {
+                IsSatisfied = true;
+                Position = position;
+            }
         }
     }
 }

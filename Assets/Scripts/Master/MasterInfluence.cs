@@ -3,23 +3,29 @@ using MessagePack;
 
 namespace Orca
 {
-    public enum CheckSide
+    public enum InfluenceCheckSide
     {
         Whole,
         Owner,
         Opponent,
     }
 
-    public enum CheckRange
+    public enum InfluenceTargetType
     {
         Self,
-        Position,
-        RelativePanelIndex,
-        AbsolutePanelIndex,
+        RelativePosition,
+        AbsolutePosition,
         Whole,
     }
 
-    public enum CheckType
+    public enum InfluenceCheckTargetType
+    {
+        Self,
+        Position,
+        Whole,
+    }
+
+    public enum InfluenceCheckRangeType
     {
         Single,
         Panel,
@@ -31,6 +37,12 @@ namespace Orca
 
     }
 
+    public enum InfluenceParentType
+    {
+        System,
+        Actor,
+    }
+
     [MemoryTable("influence"), MessagePackObject(true)]
     public class MasterInfluence
     {
@@ -39,10 +51,13 @@ namespace Orca
             InfluenceType influenceType,
             int baseValue,
             int propotionalValue,
+            int startFrame,
             int duration,
-            CheckSide checkSide,
-            CheckRange checkRange,
-            CheckType checkType,
+            int finishFrame,
+            InfluenceParentType parentType,
+            InfluenceTargetType targetType,
+            InfluenceCheckSide checkSide,
+            InfluenceCheckRangeType checkTargetType,
             int checkValueMin,
             int checkValueMax)
         {
@@ -50,10 +65,13 @@ namespace Orca
             InfluenceType = influenceType;
             BaseValue = baseValue;
             PropotionalValue = propotionalValue;
+            StartFrame = startFrame;
             Duration = duration;
+            FinishFrame = finishFrame;
+            ParentType = parentType;
+            TargetType = targetType;
             CheckSide = checkSide;
-            CheckRange = checkRange;
-            CheckType = checkType;
+            CheckTargetType = checkTargetType;
             CheckValueMin = checkValueMin;
             CheckValueMax = checkValueMax;
         }
@@ -70,16 +88,23 @@ namespace Orca
         /// <summary>グレードによって変わる値</summary>
         public int PropotionalValue { get; }
 
+        /// <summary>判定が発生するまでの時間</summary>
+        public int StartFrame { get; }
+
         /// <summary>判定の残る時間</summary>
         public int Duration { get; }
 
+        /// <summary>全体有効時間</summary>
+        public int FinishFrame { get; }
+
         // 当たり判定関連
-        /// <summary>判定対象サイド</summary>
-        public CheckSide CheckSide { get; }
+        public InfluenceParentType ParentType { get; }
         /// <summary>判定対象の取得形式</summary>
-        public CheckRange CheckRange { get; }
+        public InfluenceTargetType TargetType { get; }
+        /// <summary>判定対象サイド</summary>
+        public InfluenceCheckSide CheckSide { get; }
         /// <summary>判定対象の取得単位</summary>
-        public CheckType CheckType { get; }
+        public InfluenceCheckRangeType CheckTargetType { get; }
 
         /// <summary>判定対象参考最小値</summary>
         public int CheckValueMin { get; }

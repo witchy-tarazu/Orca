@@ -16,7 +16,8 @@ namespace Orca
             ExecuteFrame = executeFrame;
         }
 
-        [PrimaryKey(0), NonUnique]
+        [PrimaryKey(0)]
+        [SecondaryKey(0), NonUnique]
         public int CardId { get; }
 
         [PrimaryKey(1)]

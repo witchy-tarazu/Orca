@@ -14,7 +14,7 @@
 namespace MessagePack.Formatters.Orca
 {
 
-    public sealed class CheckRangeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.InfluenceCheckTargetType>
+    public sealed class InfluenceCheckTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.InfluenceCheckTargetType>
     {
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.InfluenceCheckTargetType value, global::MessagePack.MessagePackSerializerOptions options)
         {

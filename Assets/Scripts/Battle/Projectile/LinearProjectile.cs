@@ -6,7 +6,12 @@ namespace Orca
         {
             base.Update();
 
-            CheckData checkData = new(CurrentPos, CheckSide.Opponent, CheckRange.Position, CheckType.Single);
+            CheckData checkData = new(
+                new() { BattleStage.GetPanelPosition(CurrentPos) },
+                OwnerHealth,
+                InfluenceCheckSide.Opponent,
+                InfluenceCheckTargetType.Position,
+                InfluenceCheckRangeType.Single);
             ProjectileData.Check(checkData, this);
         }
     }

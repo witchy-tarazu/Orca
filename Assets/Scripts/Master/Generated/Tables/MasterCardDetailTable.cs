@@ -16,30 +16,55 @@ namespace Orca.Tables
         public Func<MasterCardDetail, (int CardId, int InfluenceId)> PrimaryKeySelector => primaryIndexSelector;
         readonly Func<MasterCardDetail, (int CardId, int InfluenceId)> primaryIndexSelector;
 
+        readonly MasterCardDetail[] secondaryIndex0;
+        readonly Func<MasterCardDetail, int> secondaryIndex0Selector;
 
         public MasterCardDetailTable(MasterCardDetail[] sortedData)
             : base(sortedData)
         {
             this.primaryIndexSelector = x => (x.CardId, x.InfluenceId);
+            this.secondaryIndex0Selector = x => x.CardId;
+            this.secondaryIndex0 = CloneAndSortBy(this.secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default);
             OnAfterConstruct();
         }
 
         partial void OnAfterConstruct();
 
+        public RangeView<MasterCardDetail> SortByCardId => new RangeView<MasterCardDetail>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public RangeView<MasterCardDetail> FindByCardIdAndInfluenceId((int CardId, int InfluenceId) key)
+        public MasterCardDetail FindByCardIdAndInfluenceId((int CardId, int InfluenceId) key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, true);
+        }
+        
+        public bool TryFindByCardIdAndInfluenceId((int CardId, int InfluenceId) key, out MasterCardDetail result)
+        {
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, out result);
         }
 
-        public RangeView<MasterCardDetail> FindClosestByCardIdAndInfluenceId((int CardId, int InfluenceId) key, bool selectLower = true)
+        public MasterCardDetail FindClosestByCardIdAndInfluenceId((int CardId, int InfluenceId) key, bool selectLower = true)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, selectLower);
         }
 
         public RangeView<MasterCardDetail> FindRangeByCardIdAndInfluenceId((int CardId, int InfluenceId) min, (int CardId, int InfluenceId) max, bool ascendant = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, min, max, ascendant);
+        }
+
+        public RangeView<MasterCardDetail> FindByCardId(int key)
+        {
+            return FindManyCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, key);
+        }
+
+        public RangeView<MasterCardDetail> FindClosestByCardId(int key, bool selectLower = true)
+        {
+            return FindManyClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, key, selectLower);
+        }
+
+        public RangeView<MasterCardDetail> FindRangeByCardId(int min, int max, bool ascendant = true)
+        {
+            return FindManyRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
 
@@ -47,6 +72,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "(CardId, InfluenceId)", resultSet);       
 
 #endif
         }
@@ -66,7 +92,10 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterCardDetail).GetProperty("CardId"),
                         typeof(MasterCardDetail).GetProperty("InfluenceId"),
-                    }, true, false, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default),
+                    new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
+                        typeof(MasterCardDetail).GetProperty("CardId"),
+                    }, false, false, System.Collections.Generic.Comparer<int>.Default),
                 });
         }
 

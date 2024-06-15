@@ -19,32 +19,32 @@ namespace Orca
         private int CurrentFrame { get; set; }
         private int FinishFrame { get; set; }
 
-        private HashSet<(int, Influencer)> ReservedInfluencers { get; set; } = new();
-        private HashSet<(int, Influencer)> RemovedReservation { get; set; } = new();
+        private HashSet<Influencer> ReservedInfluencers { get; set; } = new();
 
         private HashSet<Influencer> ActiveInfluencers { get; set; } = new();
         private HashSet<Influencer> FinishedInfluencers { get; set; } = new();
 
-        private ActorSide Side { get; set; }
+        private ActorHealth Health { get; set; }
         private InfluencerFactory Factory { get; set; }
+        private BattleStage Stage { get; set; }
 
         public void Initialize(
             InfluencerFactory factory,
-            ActorSide side)
+            ActorHealth health)
         {
             Factory = factory;
-            Side = side;
+            Health = health;
         }
 
-        public void Execute(int parentIndex, MasterCard card, ActorHealth container)
+        public void Execute(MasterCard card, ActorHealth container, PanelPosition position)
         {
             CurrentFrame = 0;
             CurrentState = State.Active;
             FinishFrame = 0;    // TODO: cardÇ©ÇÁê›íËÇ∑ÇÈ
 
             // TODO: cardÇÃê›íËÇ≈ProjectileÇ©InfluencerÇ«ÇøÇÁÇê∂ê¨Ç∑ÇÈÇ©ï™äÚÇ∑ÇÈ
-            var influencers = Factory.CreateInfluencers(container, parentIndex, card, OnReleaseInfluencer);
-            ReservedInfluencers.AddRange(influencers);
+            var influencers = Factory.CreateInfluencers(container, position, card, OnReleaseInfluencer);
+            ActiveInfluencers.AddRange(influencers);
         }
 
         public void Update()
@@ -53,14 +53,11 @@ namespace Orca
 
             CurrentFrame++;
 
-            foreach (var (frame, influencer) in ReservedInfluencers)
+            foreach (var influencer in ReservedInfluencers)
             {
-                if (frame == CurrentFrame)
-                {
-                    ActiveInfluencers.Add(influencer);
-                    RemovedReservation.Add((frame, influencer));
-                }
+                ActiveInfluencers.Add(influencer);
             }
+            ReservedInfluencers.Clear();
 
             foreach (var influencer in ActiveInfluencers)
             {
@@ -77,12 +74,6 @@ namespace Orca
                 influencer.LateUpdate();
             }
 
-            foreach (var reservation in RemovedReservation)
-            {
-                ReservedInfluencers.Remove(reservation);
-            }
-            ReservedInfluencers.Clear();
-
             foreach (var influencer in FinishedInfluencers)
             {
                 ActiveInfluencers.Remove(influencer);
@@ -96,7 +87,6 @@ namespace Orca
         {
             CurrentState = State.Inactive;
             ReservedInfluencers.Clear();
-            RemovedReservation.Clear();
             ActiveInfluencers.Clear();
             FinishedInfluencers.Clear();
         }
@@ -110,15 +100,21 @@ namespace Orca
 
             foreach (var child in children)
             {
+                var childInfluence = child.MasterInfluence;
                 if (!child.IsSatisfied
-                    || child.Influencer.InfluencerParentType != Influencer.ParentType.Actor)
+                    || childInfluence.ParentType != InfluenceParentType.Actor)
                 {
                     continue;
                 }
 
-                int executeFrame = CurrentFrame + child.ExecuteFrameOffset;
-                ReservedInfluencers.Add((executeFrame, child.Influencer));
-                FinishFrame += child.AdditionalFinishFrame;
+                int executeFrame = CurrentFrame + 1;
+                var newInfluencer = Factory.CreateInfluencer(
+                    childInfluence,
+                    Health,
+                    child.Position,
+                    OnReleaseInfluencer);
+                ReservedInfluencers.Add(newInfluencer);
+                FinishFrame += childInfluence.FinishFrame + 1;
             }
         }
     }

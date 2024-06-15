@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Orca
@@ -7,18 +9,22 @@ namespace Orca
     public enum PanelType
     {
         Normal,
+        Hall,
     }
 
     public class Panel
     {
         public PanelType Type { get; set; }
 
-        private List<ActorHealth> HealthList { get; set; } = new();
+        public PanelPosition Position { get; private set; }
 
-        public Panel(PanelType type)
+        private List<ActorHealth> HealthList { get; set; }
+
+        public Panel(PanelType type, PanelPosition position)
         {
             Type = type;
-            HealthList.Clear();
+            Position = position;
+            HealthList = new();
         }
 
         public bool Exists(ActorHealth health)
@@ -36,11 +42,41 @@ namespace Orca
             HealthList.Remove(health);
         }
 
-        public List<ActorHealth> Listup(CheckData checkData)
+        public HashSet<ActorHealth> ListupHealth(CheckData checkData)
         {
-            var healthList = new List<ActorHealth>();
+            return checkData.CheckTargetType switch
+            {
+                InfluenceCheckRangeType.Single => new() {
+                        HealthList
+                        .Where(filterFunction)
+                        .First()
+                    },
+                InfluenceCheckRangeType.Panel => HealthList
+                        .Where(health => health.Side != checkData.OwnerHealth.Side)
+                        .ToHashSet(),
+                _ => null,
+            };
 
-            return healthList;
+            bool filterFunction(ActorHealth health)
+            {
+                return checkData.CheckSide switch
+                {
+                    InfluenceCheckSide.Whole => true,
+                    InfluenceCheckSide.Owner => checkData.OwnerHealth.Side == health.Side,
+                    InfluenceCheckSide.Opponent => checkData.OwnerHealth.Side != health.Side,
+                    _ => false,
+                };
+            }
+        }
+
+        public bool HasActor(ActorHealth health)
+        {
+            return HealthList.Contains(health);
+        }
+
+        public bool HasAnyActor()
+        {
+            return HealthList.Count > 0;
         }
     }
 }

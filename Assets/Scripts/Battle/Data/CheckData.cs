@@ -1,25 +1,41 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Orca
 {
     public struct CheckData
     {
-        public int CheckValue { get; private set; }
+        private HashSet<PanelPosition> CheckPositions { get; set; }
 
-        public CheckSide CheckSide { get; private set; }
+        public ActorHealth OwnerHealth { get; private set; }
 
-        public CheckRange CheckRange { get; private set; }
+        public InfluenceCheckSide CheckSide { get; private set; }
 
-        public CheckType CheckType { get; private set; }
+        public InfluenceCheckTargetType CheckType { get; private set; }
+
+        public InfluenceCheckRangeType CheckTargetType { get; private set; }
 
 
-        public CheckData(int checkValue, CheckSide side, CheckRange range, CheckType type)
+        public CheckData(
+            HashSet<PanelPosition> positions,
+            ActorHealth ownerHealth,
+            InfluenceCheckSide side, InfluenceCheckTargetType type, InfluenceCheckRangeType targetType)
         {
-            CheckValue = checkValue;
+            CheckPositions = positions;
+            OwnerHealth = ownerHealth;
             CheckSide = side;
             CheckType = type;
-            CheckRange = range;
+            CheckTargetType = targetType;
+        }
+
+        public void ApplyToPositions(Action<PanelPosition> action)
+        {
+            foreach (var position in CheckPositions)
+            {
+                action(position);
+            }
         }
     }
 }

@@ -6,10 +6,13 @@ namespace Orca
 {
     public class HitData : MonoBehaviour
     {
-        private List<ActorHealth> HitList { get; set; }
+        public Panel Panel { get; private set; }
 
-        public HitData(List<ActorHealth> hitList)
+        private HashSet<ActorHealth> HitList { get; set; }
+
+        public HitData(Panel panel, HashSet<ActorHealth> hitList)
         {
+            Panel = panel;
             HitList = hitList;
         }
 

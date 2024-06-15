@@ -80,6 +80,33 @@ namespace Orca
             );
         }
 
+        public void RemoveMasterCardDetail((int CardId, int InfluenceId)[] keys)
+        {
+            var data = RemoveCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), keys, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var table = new MasterCardDetailTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterInfluenceRelationTable
+            
+            );
+        }
+
+        public void Diff(MasterCardDetail[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), addOrReplaceData, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var table = new MasterCardDetailTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterInfluenceRelationTable
+            
+            );
+        }
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterInfluence> data)
         {

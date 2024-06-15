@@ -1,3 +1,4 @@
+using MessagePack.Formatters.Orca;
 using System.Collections.Generic;
 
 namespace Orca
@@ -5,45 +6,48 @@ namespace Orca
 
     public class Influencer : IHitChecker, IUpdatable
     {
-        public enum ParentType
-        {
-            System,
-            Actor,
-        }
-
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
-        public ParentType InfluencerParentType { get; private set; }
+        public InfluenceParentType InfluencerParentType { get; private set; }
 
         private ActorHealth OwnerHealth { get; set; }
 
         private int CurrentFrame { get; set; }
 
-        private int EndFrame { get; set; }
+        private int StartFrame { get; set; }
 
-        private int ParentIndex { get; set; }
 
-        private List<int> RelativeInfluenceIndexes { get; set; }
+        private int ActiveFrame { get; set; }
+
+        private int FinishFrame { get; set; }
+
+        private PanelPosition OwnerPosition { get; set; }
+
+        private HashSet<PanelPosition> InfluencePositions { get; set; }
 
         private BattleCallbackContainer CallbackContainer { get; set; }
 
+        private MasterInfluence Master { get; set; }
 
-        public void Initialize(
-            ParentType parentType,
+
+        public void Setup(
+            MasterInfluence master,
             ActorHealth ownerHealth,
-            int endFrame,
-            int parentIndex,
-            List<int> relativeInfluenceIndexes,
-            BattleCallbackContainer callbackContainer)
+            PanelPosition ownerPosition,
+            BattleCallbackContainer callbackContainer,
+            BattleStage stage)
         {
-            InfluencerParentType = parentType;
+            InfluencerParentType = master.ParentType;
             OwnerHealth = ownerHealth;
             CurrentFrame = 0;
-            EndFrame = endFrame;
-            ParentIndex = parentIndex;
-            RelativeInfluenceIndexes = relativeInfluenceIndexes;
+            StartFrame = master.StartFrame;
+            ActiveFrame = StartFrame + master.Duration - 1;
+            FinishFrame = master.FinishFrame;
+            OwnerPosition = ownerPosition;
             CallbackContainer = callbackContainer;
             Children.Clear();
+
+            InfluencePositions = stage.GetPanelPositions(ownerHealth, ownerPosition, master);
         }
 
         public void AppendChild(ChildInfluencer child)
@@ -55,11 +59,19 @@ namespace Orca
         {
             CurrentFrame++;
 
-            foreach (var panelIndex in RelativeInfluenceIndexes)
+            if (CurrentFrame < StartFrame
+                || CurrentFrame > ActiveFrame)
             {
-                CheckData checkData = new(ParentIndex + panelIndex, CheckSide.Opponent, CheckRange.RelativePanelIndex, CheckType.Panel);
-                CallbackContainer.Check(checkData, this);
+                return;
             }
+
+            CheckData checkData = new(
+                InfluencePositions,
+                OwnerHealth,
+                InfluenceCheckSide.Opponent,
+                ConvertCheckType(Master.TargetType),
+                InfluenceCheckRangeType.Panel);
+            CallbackContainer.Check(checkData, this);
         }
 
         public void Hit(HitData hitData)
@@ -69,10 +81,22 @@ namespace Orca
 
         public void LateUpdate()
         {
-            if (CurrentFrame == EndFrame)
+            if (CurrentFrame == FinishFrame)
             {
                 CallbackContainer.Release();
             }
+        }
+
+        private InfluenceCheckTargetType ConvertCheckType(InfluenceTargetType type)
+        {
+            return type switch
+            {
+                InfluenceTargetType.Self => InfluenceCheckTargetType.Self,
+                InfluenceTargetType.Whole => InfluenceCheckTargetType.Whole,
+                InfluenceTargetType.AbsolutePosition => InfluenceCheckTargetType.Position,
+                InfluenceTargetType.RelativePosition => InfluenceCheckTargetType.Position,
+                _ => InfluenceCheckTargetType.Self,
+            };
         }
     }
 }

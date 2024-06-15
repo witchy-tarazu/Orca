@@ -47,17 +47,18 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(9)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(10)
             {
-                { typeof(global::Orca.CheckRange), 0 },
-                { typeof(global::Orca.CheckSide), 1 },
-                { typeof(global::Orca.CheckType), 2 },
-                { typeof(global::Orca.ChildTriggerCondition), 3 },
-                { typeof(global::Orca.InfluenceType), 4 },
-                { typeof(global::Orca.MasterCard), 5 },
-                { typeof(global::Orca.MasterCardDetail), 6 },
-                { typeof(global::Orca.MasterInfluence), 7 },
-                { typeof(global::Orca.MasterInfluenceRelation), 8 },
+                { typeof(global::Orca.ChildTriggerCondition), 0 },
+                { typeof(global::Orca.InfluenceCheckRangeType), 1 },
+                { typeof(global::Orca.InfluenceCheckSide), 2 },
+                { typeof(global::Orca.InfluenceParentType), 3 },
+                { typeof(global::Orca.InfluenceTargetType), 4 },
+                { typeof(global::Orca.InfluenceType), 5 },
+                { typeof(global::Orca.MasterCard), 6 },
+                { typeof(global::Orca.MasterCardDetail), 7 },
+                { typeof(global::Orca.MasterInfluence), 8 },
+                { typeof(global::Orca.MasterInfluenceRelation), 9 },
             };
         }
 
@@ -71,15 +72,16 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new MessagePack.Formatters.Orca.CheckRangeFormatter();
-                case 1: return new MessagePack.Formatters.Orca.CheckSideFormatter();
-                case 2: return new MessagePack.Formatters.Orca.CheckTypeFormatter();
-                case 3: return new MessagePack.Formatters.Orca.ChildTriggerConditionFormatter();
-                case 4: return new MessagePack.Formatters.Orca.InfluenceTypeFormatter();
-                case 5: return new MessagePack.Formatters.Orca.MasterCardFormatter();
-                case 6: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
-                case 7: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
-                case 8: return new MessagePack.Formatters.Orca.MasterInfluenceRelationFormatter();
+                case 0: return new MessagePack.Formatters.Orca.ChildTriggerConditionFormatter();
+                case 1: return new MessagePack.Formatters.Orca.InfluenceCheckRangeTypeFormatter();
+                case 2: return new MessagePack.Formatters.Orca.InfluenceCheckSideFormatter();
+                case 3: return new MessagePack.Formatters.Orca.InfluenceParentTypeFormatter();
+                case 4: return new MessagePack.Formatters.Orca.InfluenceTargetTypeFormatter();
+                case 5: return new MessagePack.Formatters.Orca.InfluenceTypeFormatter();
+                case 6: return new MessagePack.Formatters.Orca.MasterCardFormatter();
+                case 7: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
+                case 8: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
+                case 9: return new MessagePack.Formatters.Orca.MasterInfluenceRelationFormatter();
                 default: return null;
             }
         }

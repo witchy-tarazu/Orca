@@ -8,7 +8,12 @@ namespace Orca
 
             if (CurrentPos == TargetPos)
             {
-                CheckData checkData = new(CurrentPos, CheckSide.Whole, CheckRange.Position, CheckType.Panel);
+                CheckData checkData = new(
+                    new() { BattleStage.GetPanelPosition(CurrentPos) },
+                    OwnerHealth,
+                    InfluenceCheckSide.Whole,
+                    InfluenceCheckTargetType.Position,
+                    InfluenceCheckRangeType.Panel);
                 ProjectileData.Check(checkData, this);
             }
         }

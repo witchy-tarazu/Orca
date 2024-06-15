@@ -14,16 +14,16 @@
 namespace MessagePack.Formatters.Orca
 {
 
-    public sealed class CheckTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.CheckType>
+    public sealed class CheckTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.InfluenceCheckRangeType>
     {
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.CheckType value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.InfluenceCheckRangeType value, global::MessagePack.MessagePackSerializerOptions options)
         {
             writer.Write((global::System.Int32)value);
         }
 
-        public global::Orca.CheckType Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::Orca.InfluenceCheckRangeType Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return (global::Orca.CheckType)reader.ReadInt32();
+            return (global::Orca.InfluenceCheckRangeType)reader.ReadInt32();
         }
     }
 }

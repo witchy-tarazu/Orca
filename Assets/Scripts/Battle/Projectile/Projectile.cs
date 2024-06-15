@@ -11,14 +11,20 @@ namespace Orca
 
         protected ProjectileData ProjectileData { get; private set; }
 
+        protected ActorHealth OwnerHealth { get; private set; }
+
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
-        public void Initialize(ProjectileData projectileData)
+        protected BattleStage BattleStage { get; set; }
+
+        public void Initialize(ProjectileData projectileData, ActorHealth ownerHealth, BattleStage battleStage)
         {
             Speed = projectileData.Speed;
             CurrentPos = projectileData.StartPos;
             TargetPos = CurrentPos + projectileData.Distance;
             ProjectileData = projectileData;
+            OwnerHealth = ownerHealth;
+            BattleStage = battleStage;
             Children.Clear();
         }
 

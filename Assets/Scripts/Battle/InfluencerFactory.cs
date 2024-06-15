@@ -10,46 +10,63 @@ namespace Orca
         private Action<(int, IUpdatable)> RegisterActionForStage { get; set; }
         private Action<(int, IUpdatable)> RemoveActionForStage { get; set; }
 
+        private BattleStage Stage { get; set; }
+        private MemoryDatabase MasterDatabase { get; set; }
+
+        private Action<CheckData, IHitChecker> CheckAction { get; set; }
+
         public InfluencerFactory(
             Action<(int, IUpdatable)> registerAction,
-            Action<(int, IUpdatable)> removeAction)
+            Action<(int, IUpdatable)> removeAction,
+            BattleStage stage,
+            MemoryDatabase masterDatabase,
+            Action<CheckData, IHitChecker> checkAction)
         {
             RegisterActionForStage = registerAction;
             RemoveActionForStage = removeAction;
+            Stage = stage;
+            MasterDatabase = masterDatabase;
+            CheckAction = checkAction;
         }
 
-        public HashSet<(int, Influencer)> CreateInfluencers(
+        public HashSet<Influencer> CreateInfluencers(
             ActorHealth ownerHealthContainer,
-            int parentIndex,
+            PanelPosition ownerPosition,
             MasterCard card,
             Action<Influencer> releaseCallback)
         {
-            return new() { CreateInfluencer(ownerHealthContainer, parentIndex, null, releaseCallback) };
+            var details = MasterDatabase.MasterCardDetailTable.FindByCardId(card.CardId);
+            HashSet<Influencer> result = new();
+
+            foreach (var detail in details)
+            {
+                var masterInfluence = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(detail.InfluenceId);
+                var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, ownerPosition, releaseCallback);
+                result.Add(influencer);
+            }
+
+            return result;
         }
 
-        public (int, Influencer) CreateInfluencer(
-            ActorHealth ownerHealthContainer,
-            int parentIndex,
-            BattleEffect effect,
+        public Influencer CreateInfluencer(
+            MasterInfluence master,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition,
             Action<Influencer> releaseCallback)
         {
             Influencer influencer = (InfluencerQueue.Count > 0) ? InfluencerQueue.Dequeue() : new();
-            int executeFrame = 0;
             BattleCallbackContainer callbackContainer =
-                new(null,
-                    hitData =>
-                    {
-
-                    },
+                new(CheckAction,
+                    hitData => ProcessHit(hitData, influencer, ownerHealth, ownerPosition),
                     () =>
                     {
                         releaseCallback.Invoke(influencer);
                         Release(influencer);
                     }
                 );
-            influencer.Initialize(Influencer.ParentType.Actor, null, 0, 0, null, callbackContainer);
+            influencer.Setup(master, ownerHealth, ownerPosition, callbackContainer, Stage);
 
-            return (executeFrame, influencer);
+            return influencer;
         }
 
         private void Release(Influencer influencer)
@@ -58,6 +75,15 @@ namespace Orca
         }
 
         private void CreateChild()
+        {
+
+        }
+
+        private void ProcessHit(
+            HitData hitData,
+            Influencer influencer,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition)
         {
 
         }
