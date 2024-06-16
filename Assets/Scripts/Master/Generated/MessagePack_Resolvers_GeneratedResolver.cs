@@ -47,18 +47,22 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(10)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(14)
             {
-                { typeof(global::Orca.ChildTriggerCondition), 0 },
-                { typeof(global::Orca.InfluenceCheckRangeType), 1 },
-                { typeof(global::Orca.InfluenceCheckSide), 2 },
-                { typeof(global::Orca.InfluenceParentType), 3 },
-                { typeof(global::Orca.InfluenceTargetType), 4 },
-                { typeof(global::Orca.InfluenceType), 5 },
-                { typeof(global::Orca.MasterCard), 6 },
-                { typeof(global::Orca.MasterCardDetail), 7 },
-                { typeof(global::Orca.MasterInfluence), 8 },
-                { typeof(global::Orca.MasterInfluenceRelation), 9 },
+                { typeof(global::Orca.ChildInfluenceParentType), 0 },
+                { typeof(global::Orca.ChildTriggerCondition), 1 },
+                { typeof(global::Orca.InfluenceCheckRangeType), 2 },
+                { typeof(global::Orca.InfluenceCheckSide), 3 },
+                { typeof(global::Orca.InfluenceParentType), 4 },
+                { typeof(global::Orca.InfluenceTargetType), 5 },
+                { typeof(global::Orca.InfluenceType), 6 },
+                { typeof(global::Orca.ProjectileType), 7 },
+                { typeof(global::Orca.ProjetileStartType), 8 },
+                { typeof(global::Orca.MasterCard), 9 },
+                { typeof(global::Orca.MasterCardDetail), 10 },
+                { typeof(global::Orca.MasterChildInfluence), 11 },
+                { typeof(global::Orca.MasterInfluence), 12 },
+                { typeof(global::Orca.MasterProjectile), 13 },
             };
         }
 
@@ -72,16 +76,20 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new MessagePack.Formatters.Orca.ChildTriggerConditionFormatter();
-                case 1: return new MessagePack.Formatters.Orca.InfluenceCheckRangeTypeFormatter();
-                case 2: return new MessagePack.Formatters.Orca.InfluenceCheckSideFormatter();
-                case 3: return new MessagePack.Formatters.Orca.InfluenceParentTypeFormatter();
-                case 4: return new MessagePack.Formatters.Orca.InfluenceTargetTypeFormatter();
-                case 5: return new MessagePack.Formatters.Orca.InfluenceTypeFormatter();
-                case 6: return new MessagePack.Formatters.Orca.MasterCardFormatter();
-                case 7: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
-                case 8: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
-                case 9: return new MessagePack.Formatters.Orca.MasterInfluenceRelationFormatter();
+                case 0: return new MessagePack.Formatters.Orca.ChildInfluenceParentTypeFormatter();
+                case 1: return new MessagePack.Formatters.Orca.ChildTriggerConditionFormatter();
+                case 2: return new MessagePack.Formatters.Orca.InfluenceCheckRangeTypeFormatter();
+                case 3: return new MessagePack.Formatters.Orca.InfluenceCheckSideFormatter();
+                case 4: return new MessagePack.Formatters.Orca.InfluenceParentTypeFormatter();
+                case 5: return new MessagePack.Formatters.Orca.InfluenceTargetTypeFormatter();
+                case 6: return new MessagePack.Formatters.Orca.InfluenceTypeFormatter();
+                case 7: return new MessagePack.Formatters.Orca.ProjectileTypeFormatter();
+                case 8: return new MessagePack.Formatters.Orca.ProjetileStartTypeFormatter();
+                case 9: return new MessagePack.Formatters.Orca.MasterCardFormatter();
+                case 10: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
+                case 11: return new MessagePack.Formatters.Orca.MasterChildInfluenceFormatter();
+                case 12: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
+                case 13: return new MessagePack.Formatters.Orca.MasterProjectileFormatter();
                 default: return null;
             }
         }

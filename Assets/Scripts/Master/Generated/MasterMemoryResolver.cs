@@ -47,12 +47,13 @@ namespace Orca
 
         static MasterMemoryResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(4)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(5)
             {
                 {typeof(MasterCard[]), 0 },
                 {typeof(MasterCardDetail[]), 1 },
-                {typeof(MasterInfluence[]), 2 },
-                {typeof(MasterInfluenceRelation[]), 3 },
+                {typeof(MasterChildInfluence[]), 2 },
+                {typeof(MasterInfluence[]), 3 },
+                {typeof(MasterProjectile[]), 4 },
             };
         }
 
@@ -65,8 +66,9 @@ namespace Orca
             {
                 case 0: return new MessagePack.Formatters.ArrayFormatter<MasterCard>();
                 case 1: return new MessagePack.Formatters.ArrayFormatter<MasterCardDetail>();
-                case 2: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
-                case 3: return new MessagePack.Formatters.ArrayFormatter<MasterInfluenceRelation>();
+                case 2: return new MessagePack.Formatters.ArrayFormatter<MasterChildInfluence>();
+                case 3: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
+                case 4: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
                 default: return null;
             }
         }

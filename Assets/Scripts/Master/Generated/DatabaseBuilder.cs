@@ -25,7 +25,13 @@ namespace Orca
 
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterCardDetail> dataSource)
         {
-            AppendCore(dataSource, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            AppendCore(dataSource, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
+            return this;
+        }
+
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterChildInfluence> dataSource)
+        {
+            AppendCore(dataSource, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
             return this;
         }
 
@@ -35,9 +41,9 @@ namespace Orca
             return this;
         }
 
-        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterInfluenceRelation> dataSource)
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterProjectile> dataSource)
         {
-            AppendCore(dataSource, x => (x.ParentId, x.ChildId), System.Collections.Generic.Comparer<(int ParentId, int ChildId)>.Default);
+            AppendCore(dataSource, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
             return this;
         }
 

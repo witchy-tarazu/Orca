@@ -34,7 +34,8 @@ namespace Orca
     public enum InfluenceType
     {
         Damage,
-
+        CreateInfluence,
+        CreateProjectile,
     }
 
     public enum InfluenceParentType

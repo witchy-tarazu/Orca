@@ -45,19 +45,6 @@ namespace Orca
                     CheckByPosition(check, hit);
                     break;
             }
-
-            switch (check.CheckTargetType)
-            {
-                case InfluenceCheckRangeType.Panel:
-                    if (true)
-                    {
-                        HitData hitData = new(null, null);
-                        hit.Hit(hitData);
-                    }
-                    break;
-                case InfluenceCheckRangeType.Single:
-                    break;
-            }
         }
 
         private void CheckByPosition(CheckData check, IHitChecker hit)

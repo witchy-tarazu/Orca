@@ -13,8 +13,8 @@ namespace Orca.Tables
 {
    public sealed partial class MasterCardDetailTable : TableBase<MasterCardDetail>, ITableUniqueValidate
    {
-        public Func<MasterCardDetail, (int CardId, int InfluenceId)> PrimaryKeySelector => primaryIndexSelector;
-        readonly Func<MasterCardDetail, (int CardId, int InfluenceId)> primaryIndexSelector;
+        public Func<MasterCardDetail, (int CardId, int DetailId)> PrimaryKeySelector => primaryIndexSelector;
+        readonly Func<MasterCardDetail, (int CardId, int DetailId)> primaryIndexSelector;
 
         readonly MasterCardDetail[] secondaryIndex0;
         readonly Func<MasterCardDetail, int> secondaryIndex0Selector;
@@ -22,7 +22,7 @@ namespace Orca.Tables
         public MasterCardDetailTable(MasterCardDetail[] sortedData)
             : base(sortedData)
         {
-            this.primaryIndexSelector = x => (x.CardId, x.InfluenceId);
+            this.primaryIndexSelector = x => (x.CardId, x.DetailId);
             this.secondaryIndex0Selector = x => x.CardId;
             this.secondaryIndex0 = CloneAndSortBy(this.secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default);
             OnAfterConstruct();
@@ -32,24 +32,24 @@ namespace Orca.Tables
 
         public RangeView<MasterCardDetail> SortByCardId => new RangeView<MasterCardDetail>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public MasterCardDetail FindByCardIdAndInfluenceId((int CardId, int InfluenceId) key)
+        public MasterCardDetail FindByCardIdAndDetailId((int CardId, int DetailId) key)
         {
-            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, true);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default, key, true);
         }
         
-        public bool TryFindByCardIdAndInfluenceId((int CardId, int InfluenceId) key, out MasterCardDetail result)
+        public bool TryFindByCardIdAndDetailId((int CardId, int DetailId) key, out MasterCardDetail result)
         {
-            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, out result);
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default, key, out result);
         }
 
-        public MasterCardDetail FindClosestByCardIdAndInfluenceId((int CardId, int InfluenceId) key, bool selectLower = true)
+        public MasterCardDetail FindClosestByCardIdAndDetailId((int CardId, int DetailId) key, bool selectLower = true)
         {
-            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default, key, selectLower);
         }
 
-        public RangeView<MasterCardDetail> FindRangeByCardIdAndInfluenceId((int CardId, int InfluenceId) min, (int CardId, int InfluenceId) max, bool ascendant = true)
+        public RangeView<MasterCardDetail> FindRangeByCardIdAndDetailId((int CardId, int DetailId) min, (int CardId, int DetailId) max, bool ascendant = true)
         {
-            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default, min, max, ascendant);
         }
 
         public RangeView<MasterCardDetail> FindByCardId(int key)
@@ -72,7 +72,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
-            ValidateUniqueCore(data, primaryIndexSelector, "(CardId, InfluenceId)", resultSet);       
+            ValidateUniqueCore(data, primaryIndexSelector, "(CardId, DetailId)", resultSet);       
 
 #endif
         }
@@ -85,14 +85,14 @@ namespace Orca.Tables
                 new MasterMemory.Meta.MetaProperty[]
                 {
                     new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("CardId")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("InfluenceId")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("DetailId")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("ExecuteFrame")),
                 },
                 new MasterMemory.Meta.MetaIndex[]{
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterCardDetail).GetProperty("CardId"),
-                        typeof(MasterCardDetail).GetProperty("InfluenceId"),
-                    }, true, true, System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default),
+                        typeof(MasterCardDetail).GetProperty("DetailId"),
+                    }, true, true, System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterCardDetail).GetProperty("CardId"),
                     }, false, false, System.Collections.Generic.Comparer<int>.Default),

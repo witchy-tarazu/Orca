@@ -16,20 +16,23 @@ namespace Orca
    {
         public MasterCardTable MasterCardTable { get; private set; }
         public MasterCardDetailTable MasterCardDetailTable { get; private set; }
+        public MasterChildInfluenceTable MasterChildInfluenceTable { get; private set; }
         public MasterInfluenceTable MasterInfluenceTable { get; private set; }
-        public MasterInfluenceRelationTable MasterInfluenceRelationTable { get; private set; }
+        public MasterProjectileTable MasterProjectileTable { get; private set; }
 
         public MemoryDatabase(
             MasterCardTable MasterCardTable,
             MasterCardDetailTable MasterCardDetailTable,
+            MasterChildInfluenceTable MasterChildInfluenceTable,
             MasterInfluenceTable MasterInfluenceTable,
-            MasterInfluenceRelationTable MasterInfluenceRelationTable
+            MasterProjectileTable MasterProjectileTable
         )
         {
             this.MasterCardTable = MasterCardTable;
             this.MasterCardDetailTable = MasterCardDetailTable;
+            this.MasterChildInfluenceTable = MasterChildInfluenceTable;
             this.MasterInfluenceTable = MasterInfluenceTable;
-            this.MasterInfluenceRelationTable = MasterInfluenceRelationTable;
+            this.MasterProjectileTable = MasterProjectileTable;
         }
 
         public MemoryDatabase(byte[] databaseBinary, bool internString = true, MessagePack.IFormatterResolver formatterResolver = null, int maxDegreeOfParallelism = 1)
@@ -53,8 +56,9 @@ namespace Orca
         {
             this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs));
             this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs));
+            this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs));
             this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs));
-            this.MasterInfluenceRelationTable = ExtractTableData<MasterInfluenceRelation, MasterInfluenceRelationTable>(header, databaseBinary, options, xs => new MasterInfluenceRelationTable(xs));
+            this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs));
         }
 
         void InitParallel(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)
@@ -63,8 +67,9 @@ namespace Orca
             {
                 () => this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs)),
                 () => this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs)),
+                () => this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs)),
                 () => this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs)),
-                () => this.MasterInfluenceRelationTable = ExtractTableData<MasterInfluenceRelation, MasterInfluenceRelationTable>(header, databaseBinary, options, xs => new MasterInfluenceRelationTable(xs)),
+                () => this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs)),
             };
             
             System.Threading.Tasks.Parallel.Invoke(new System.Threading.Tasks.ParallelOptions
@@ -83,8 +88,9 @@ namespace Orca
             var builder = new DatabaseBuilder();
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
+            builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
-            builder.Append(this.MasterInfluenceRelationTable.GetRawDataUnsafe());
+            builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             return builder;
         }
 
@@ -93,8 +99,9 @@ namespace Orca
             var builder = new DatabaseBuilder(resolver);
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
+            builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
-            builder.Append(this.MasterInfluenceRelationTable.GetRawDataUnsafe());
+            builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             return builder;
         }
 
@@ -107,18 +114,21 @@ namespace Orca
             {
                 MasterCardTable,
                 MasterCardDetailTable,
+                MasterChildInfluenceTable,
                 MasterInfluenceTable,
-                MasterInfluenceRelationTable,
+                MasterProjectileTable,
             });
 
             ((ITableUniqueValidate)MasterCardTable).ValidateUnique(result);
             ValidateTable(MasterCardTable.All, database, "CardId", MasterCardTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterCardDetailTable).ValidateUnique(result);
-            ValidateTable(MasterCardDetailTable.All, database, "(CardId, InfluenceId)", MasterCardDetailTable.PrimaryKeySelector, result);
+            ValidateTable(MasterCardDetailTable.All, database, "(CardId, DetailId)", MasterCardDetailTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterChildInfluenceTable).ValidateUnique(result);
+            ValidateTable(MasterChildInfluenceTable.All, database, "ChildId", MasterChildInfluenceTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterInfluenceTable).ValidateUnique(result);
             ValidateTable(MasterInfluenceTable.All, database, "InfluenceId", MasterInfluenceTable.PrimaryKeySelector, result);
-            ((ITableUniqueValidate)MasterInfluenceRelationTable).ValidateUnique(result);
-            ValidateTable(MasterInfluenceRelationTable.All, database, "(ParentId, ChildId)", MasterInfluenceRelationTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterProjectileTable).ValidateUnique(result);
+            ValidateTable(MasterProjectileTable.All, database, "ProjectileId", MasterProjectileTable.PrimaryKeySelector, result);
 
             return result;
         }
@@ -135,10 +145,12 @@ namespace Orca
                     return db.MasterCardTable;
                 case "card_detail":
                     return db.MasterCardDetailTable;
+                case "child_influence":
+                    return db.MasterChildInfluenceTable;
                 case "influence":
                     return db.MasterInfluenceTable;
-                case "influence_relation":
-                    return db.MasterInfluenceRelationTable;
+                case "projectile":
+                    return db.MasterProjectileTable;
                 
                 default:
                     return null;
@@ -154,8 +166,9 @@ namespace Orca
             var dict = new Dictionary<string, MasterMemory.Meta.MetaTable>();
             dict.Add("card", Orca.Tables.MasterCardTable.CreateMetaTable());
             dict.Add("card_detail", Orca.Tables.MasterCardDetailTable.CreateMetaTable());
+            dict.Add("child_influence", Orca.Tables.MasterChildInfluenceTable.CreateMetaTable());
             dict.Add("influence", Orca.Tables.MasterInfluenceTable.CreateMetaTable());
-            dict.Add("influence_relation", Orca.Tables.MasterInfluenceRelationTable.CreateMetaTable());
+            dict.Add("projectile", Orca.Tables.MasterProjectileTable.CreateMetaTable());
 
             metaTable = new MasterMemory.Meta.MetaDatabase(dict);
             return metaTable;

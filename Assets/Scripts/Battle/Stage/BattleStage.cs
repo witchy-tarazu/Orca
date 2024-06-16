@@ -67,17 +67,12 @@ namespace Orca
             PanelPosition ownerPosition,
             MasterInfluence masterInfluence)
         {
-            switch (masterInfluence.TargetType)
+            return masterInfluence.TargetType switch
             {
-                case InfluenceTargetType.RelativePosition:
-                    return GetRelativePanelPositions(ownerHealth, ownerPosition, masterInfluence);
-                case InfluenceTargetType.AbsolutePosition:
-                    return GetAbsolutePanelPositions(ownerHealth, masterInfluence);
-                default:
-                    // SelfとWholeはパネル情報が要らない
-                    // Positionはこの関数を必要としない
-                    return null;
-            }
+                InfluenceTargetType.RelativePosition => GetRelativePanelPositions(ownerHealth, ownerPosition, masterInfluence),
+                InfluenceTargetType.AbsolutePosition => GetAbsolutePanelPositions(ownerHealth, masterInfluence),
+                _ => null,// SelfとWholeはパネル情報が要らず、Positionはこの関数を必要としない
+            };
         }
 
         private HashSet<PanelPosition> GetRelativePanelPositions(

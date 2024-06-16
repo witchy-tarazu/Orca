@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Orca
 {
@@ -7,8 +8,8 @@ namespace Orca
     {
         private Queue<Influencer> InfluencerQueue { get; set; } = new();
 
-        private Action<(int, IUpdatable)> RegisterActionForStage { get; set; }
-        private Action<(int, IUpdatable)> RemoveActionForStage { get; set; }
+        private Action<IUpdatable> RegisterActionForStage { get; set; }
+        private Action<IUpdatable> RemoveActionForStage { get; set; }
 
         private BattleStage Stage { get; set; }
         private MemoryDatabase MasterDatabase { get; set; }
@@ -16,8 +17,8 @@ namespace Orca
         private Action<CheckData, IHitChecker> CheckAction { get; set; }
 
         public InfluencerFactory(
-            Action<(int, IUpdatable)> registerAction,
-            Action<(int, IUpdatable)> removeAction,
+            Action<IUpdatable> registerAction,
+            Action<IUpdatable> removeAction,
             BattleStage stage,
             MemoryDatabase masterDatabase,
             Action<CheckData, IHitChecker> checkAction)
@@ -31,17 +32,17 @@ namespace Orca
 
         public HashSet<Influencer> CreateInfluencers(
             ActorHealth ownerHealthContainer,
-            PanelPosition ownerPosition,
             MasterCard card,
             Action<Influencer> releaseCallback)
         {
             var details = MasterDatabase.MasterCardDetailTable.FindByCardId(card.CardId);
+            var position = Stage.GetPanel(ownerHealthContainer).Position;
             HashSet<Influencer> result = new();
 
             foreach (var detail in details)
             {
-                var masterInfluence = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(detail.InfluenceId);
-                var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, ownerPosition, releaseCallback);
+                var masterInfluence = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(detail.DetailId);
+                var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, position, releaseCallback);
                 result.Add(influencer);
             }
 
@@ -72,11 +73,6 @@ namespace Orca
         private void Release(Influencer influencer)
         {
             InfluencerQueue.Enqueue(influencer);
-        }
-
-        private void CreateChild()
-        {
-
         }
 
         private void ProcessHit(

@@ -4,24 +4,22 @@ namespace Orca
 {
     public class ProjectileData
     {
-        public ActorSide Side { get; private set; }
-        public int Speed { get; private set; }
+        public ActorHealth OwnerHealth { get; private set; }
         public int StartPos { get; private set; }
-        public int Distance { get; private set; }
+
+        public MasterProjectile Master { get; private set; }
 
         private BattleCallbackContainer CallbackContainer { get; set; }
 
         public ProjectileData(
-            ActorSide side,
-            int speed,
+            ActorHealth ownerHealth,
             int startPos,
-            int distance,
+            MasterProjectile master,
             BattleCallbackContainer callbackContainer)
         {
-            Side = side;
-            Speed = speed;
+            OwnerHealth = ownerHealth;
             StartPos = startPos;
-            Distance = distance;
+            Master = master;
             CallbackContainer = callbackContainer;
         }
 

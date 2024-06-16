@@ -17,11 +17,11 @@ namespace Orca
 
         protected BattleStage BattleStage { get; set; }
 
-        public void Initialize(ProjectileData projectileData, ActorHealth ownerHealth, BattleStage battleStage)
+        public void Setup(ProjectileData projectileData, ActorHealth ownerHealth, BattleStage battleStage)
         {
-            Speed = projectileData.Speed;
+            Speed = projectileData.Master.Speed;
             CurrentPos = projectileData.StartPos;
-            TargetPos = CurrentPos + projectileData.Distance;
+            TargetPos = CurrentPos + projectileData.Master.Distance;
             ProjectileData = projectileData;
             OwnerHealth = ownerHealth;
             BattleStage = battleStage;

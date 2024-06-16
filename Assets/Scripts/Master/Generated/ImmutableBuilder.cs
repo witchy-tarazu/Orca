@@ -33,8 +33,9 @@ namespace Orca
             memory = new MemoryDatabase(
                 table,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
@@ -47,8 +48,9 @@ namespace Orca
             memory = new MemoryDatabase(
                 table,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
@@ -61,49 +63,97 @@ namespace Orca
             memory = new MemoryDatabase(
                 table,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterCardDetail> data)
         {
-            var newData = CloneAndSortBy(data, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
             var table = new MasterCardDetailTable(newData);
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 table,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
 
-        public void RemoveMasterCardDetail((int CardId, int InfluenceId)[] keys)
+        public void RemoveMasterCardDetail((int CardId, int DetailId)[] keys)
         {
-            var data = RemoveCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), keys, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
-            var newData = CloneAndSortBy(data, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var data = RemoveCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), keys, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
             var table = new MasterCardDetailTable(newData);
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 table,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
 
         public void Diff(MasterCardDetail[] addOrReplaceData)
         {
-            var data = DiffCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), addOrReplaceData, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
-            var newData = CloneAndSortBy(data, x => (x.CardId, x.InfluenceId), System.Collections.Generic.Comparer<(int CardId, int InfluenceId)>.Default);
+            var data = DiffCore(memory.MasterCardDetailTable.GetRawDataUnsafe(), addOrReplaceData, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.CardId, x.DetailId), System.Collections.Generic.Comparer<(int CardId, int DetailId)>.Default);
             var table = new MasterCardDetailTable(newData);
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 table,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void ReplaceAll(System.Collections.Generic.IList<MasterChildInfluence> data)
+        {
+            var newData = CloneAndSortBy(data, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterChildInfluenceTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void RemoveMasterChildInfluence(int[] keys)
+        {
+            var data = RemoveCore(memory.MasterChildInfluenceTable.GetRawDataUnsafe(), keys, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterChildInfluenceTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void Diff(MasterChildInfluence[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterChildInfluenceTable.GetRawDataUnsafe(), addOrReplaceData, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.ChildId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterChildInfluenceTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
             
             );
         }
@@ -115,8 +165,9 @@ namespace Orca
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 table,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
@@ -129,8 +180,9 @@ namespace Orca
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 table,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
@@ -143,25 +195,56 @@ namespace Orca
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 table,
-                memory.MasterInfluenceRelationTable
+                memory.MasterProjectileTable
             
             );
         }
 
-        public void ReplaceAll(System.Collections.Generic.IList<MasterInfluenceRelation> data)
+        public void ReplaceAll(System.Collections.Generic.IList<MasterProjectile> data)
         {
-            var newData = CloneAndSortBy(data, x => (x.ParentId, x.ChildId), System.Collections.Generic.Comparer<(int ParentId, int ChildId)>.Default);
-            var table = new MasterInfluenceRelationTable(newData);
+            var newData = CloneAndSortBy(data, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterProjectileTable(newData);
             memory = new MemoryDatabase(
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
                 memory.MasterInfluenceTable,
                 table
             
             );
         }
 
+        public void RemoveMasterProjectile(int[] keys)
+        {
+            var data = RemoveCore(memory.MasterProjectileTable.GetRawDataUnsafe(), keys, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterProjectileTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterInfluenceTable,
+                table
+            
+            );
+        }
+
+        public void Diff(MasterProjectile[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterProjectileTable.GetRawDataUnsafe(), addOrReplaceData, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterProjectileTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterInfluenceTable,
+                table
+            
+            );
+        }
 
     }
 }

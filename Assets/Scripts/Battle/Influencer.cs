@@ -10,7 +10,7 @@ namespace Orca
 
         public InfluenceParentType InfluencerParentType { get; private set; }
 
-        private ActorHealth OwnerHealth { get; set; }
+        public ActorHealth OwnerHealth { get; private set; }
 
         private int CurrentFrame { get; set; }
 

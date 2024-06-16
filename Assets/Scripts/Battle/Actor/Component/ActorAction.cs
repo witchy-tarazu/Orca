@@ -1,9 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using Unity.VisualScripting;
-using System;
 
 namespace Orca
 {
@@ -26,7 +22,6 @@ namespace Orca
 
         private ActorHealth Health { get; set; }
         private InfluencerFactory Factory { get; set; }
-        private BattleStage Stage { get; set; }
 
         public void Initialize(
             InfluencerFactory factory,
@@ -36,14 +31,14 @@ namespace Orca
             Health = health;
         }
 
-        public void Execute(MasterCard card, ActorHealth container, PanelPosition position)
+        public void Execute(MasterCard card, ActorHealth health)
         {
             CurrentFrame = 0;
             CurrentState = State.Active;
             FinishFrame = 0;    // TODO: cardÇ©ÇÁê›íËÇ∑ÇÈ
 
             // TODO: cardÇÃê›íËÇ≈ProjectileÇ©InfluencerÇ«ÇøÇÁÇê∂ê¨Ç∑ÇÈÇ©ï™äÚÇ∑ÇÈ
-            var influencers = Factory.CreateInfluencers(container, position, card, OnReleaseInfluencer);
+            var influencers = Factory.CreateInfluencers(health, card, OnReleaseInfluencer);
             ActiveInfluencers.AddRange(influencers);
         }
 
@@ -94,28 +89,6 @@ namespace Orca
         private void OnReleaseInfluencer(Influencer influencer)
         {
             FinishedInfluencers.Add(influencer);
-
-            var children = influencer.Children;
-            if (children.Count == 0) { return; }
-
-            foreach (var child in children)
-            {
-                var childInfluence = child.MasterInfluence;
-                if (!child.IsSatisfied
-                    || childInfluence.ParentType != InfluenceParentType.Actor)
-                {
-                    continue;
-                }
-
-                int executeFrame = CurrentFrame + 1;
-                var newInfluencer = Factory.CreateInfluencer(
-                    childInfluence,
-                    Health,
-                    child.Position,
-                    OnReleaseInfluencer);
-                ReservedInfluencers.Add(newInfluencer);
-                FinishFrame += childInfluence.FinishFrame + 1;
-            }
         }
     }
 }

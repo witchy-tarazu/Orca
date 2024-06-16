@@ -5,43 +5,82 @@ namespace Orca
 {
     public class ProjectileFactory
     {
-        private Queue<Projectile> ProjectileQueue { get; set; } = new();
-        private Action<(int, IUpdatable)> RegisterToSystem { get; set; }
-        private Action<(int, IUpdatable)> RemoveFromSystem { get; set; }
+        private Queue<ParabolaProjectile> ParabolaProjectileQueue { get; set; } = new();
+        private Queue<LinearProjectile> LinearProjectileQueue { get; set; } = new();
+        private Action<IUpdatable> RegisterActionForStage { get; set; }
+        private Action<IUpdatable> RemoveActionForStage { get; set; }
+
+        private BattleStage Stage { get; set; }
+        private MemoryDatabase MasterDatabase { get; set; }
+
+        private Action<CheckData, IHitChecker> CheckAction { get; set; }
 
         public ProjectileFactory(
-            Action<(int, IUpdatable)> registerToSystem,
-            Action<(int, IUpdatable)> removeFromSystem)
+            Action<IUpdatable> registerToSystem,
+            Action<IUpdatable> removeFromSystem)
         {
-            RegisterToSystem = registerToSystem;
-            RemoveFromSystem = removeFromSystem;
+            RegisterActionForStage = registerToSystem;
+            RemoveActionForStage = removeFromSystem;
         }
 
-        public HashSet<(int, Projectile)> CreateProjectiles(
-            ActorSide ownerSide,
-            ActorHealth ownerHealthContainer,
-            int parentIndex,
-            MasterCard card,
+        public Projectile CreateProjectile(
+            MasterProjectile master,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition,
             Action<Projectile> releaseCallback)
         {
-            return new() { CreateProjectile(ownerSide, ownerHealthContainer, parentIndex, null, releaseCallback) };
+            Projectile projectile = GetProjectile(master);
+            BattleCallbackContainer callbackContainer =
+                new(CheckAction,
+                    hitData => ProcessHit(hitData, projectile, ownerHealth, ownerPosition),
+                    () =>
+                    {
+                        releaseCallback.Invoke(projectile);
+                        Release(projectile);
+                    }
+                );
+            int startPosition = master.StartType switch
+            {
+                ProjetileStartType.Center => Stage.GetLinearPositonEdge(ownerPosition, ownerHealth.Side),
+                ProjetileStartType.Edge => Stage.GetLinearPositonEdge(ownerPosition, ownerHealth.Side),
+                _ => 0,
+            };
+
+            ProjectileData projectileData = new(ownerHealth, startPosition, master, callbackContainer);
+            projectile.Setup(projectileData, ownerHealth, Stage);
+
+            return projectile;
         }
 
-        public (int, Projectile) CreateProjectile(
-            ActorSide ownerSide,
-            ActorHealth ownerHealthContainer,
-            int parentIndex,
-            BattleEffect effect,
-            Action<Projectile> releaseCallback)
+        private Projectile GetProjectile(MasterProjectile master)
         {
-            Projectile projectile = null;
-
-            return (0, projectile);
+            return master.ProjectileType switch
+            {
+                ProjectileType.Linear => (LinearProjectileQueue.Count > 0) ? LinearProjectileQueue.Dequeue() : new(),
+                ProjectileType.Parabola => (ParabolaProjectileQueue.Count > 0) ? ParabolaProjectileQueue.Dequeue() : new(),
+                _ => null,
+            };
         }
 
         private void Release(Projectile projectile)
         {
-            ProjectileQueue.Enqueue(projectile);
+            if (projectile is LinearProjectile)
+            {
+                LinearProjectileQueue.Enqueue(projectile as LinearProjectile);
+            }
+            else
+            {
+                ParabolaProjectileQueue.Enqueue(projectile as ParabolaProjectile);
+            }
+        }
+
+        private void ProcessHit(
+            HitData hitData,
+            Projectile projectile,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition)
+        {
+
         }
     }
 }
