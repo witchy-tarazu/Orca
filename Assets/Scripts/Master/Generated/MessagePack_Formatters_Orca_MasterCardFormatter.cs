@@ -24,8 +24,6 @@ namespace MessagePack.Formatters.Orca
         private static global::System.ReadOnlySpan<byte> GetSpan_Grade() => new byte[1 + 5] { 165, 71, 114, 97, 100, 101 };
         // FinishFrame
         private static global::System.ReadOnlySpan<byte> GetSpan_FinishFrame() => new byte[1 + 11] { 171, 70, 105, 110, 105, 115, 104, 70, 114, 97, 109, 101 };
-        // CancellableFrame
-        private static global::System.ReadOnlySpan<byte> GetSpan_CancellableFrame() => new byte[1 + 16] { 176, 67, 97, 110, 99, 101, 108, 108, 97, 98, 108, 101, 70, 114, 97, 109, 101 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterCard value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -35,15 +33,13 @@ namespace MessagePack.Formatters.Orca
                 return;
             }
 
-            writer.WriteMapHeader(4);
+            writer.WriteMapHeader(3);
             writer.WriteRaw(GetSpan_CardId());
             writer.Write(value.CardId);
             writer.WriteRaw(GetSpan_Grade());
             writer.Write(value.Grade);
             writer.WriteRaw(GetSpan_FinishFrame());
             writer.Write(value.FinishFrame);
-            writer.WriteRaw(GetSpan_CancellableFrame());
-            writer.Write(value.CancellableFrame);
         }
 
         public global::Orca.MasterCard Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -58,7 +54,6 @@ namespace MessagePack.Formatters.Orca
             var __CardId__ = default(int);
             var __Grade__ = default(int);
             var __FinishFrame__ = default(int);
-            var __CancellableFrame__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -84,16 +79,11 @@ namespace MessagePack.Formatters.Orca
 
                         __FinishFrame__ = reader.ReadInt32();
                         continue;
-                    case 16:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_CancellableFrame().Slice(1))) { goto FAIL; }
-
-                        __CancellableFrame__ = reader.ReadInt32();
-                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterCard(__CardId__, __Grade__, __FinishFrame__, __CancellableFrame__);
+            var ____result = new global::Orca.MasterCard(__CardId__, __Grade__, __FinishFrame__);
             reader.Depth--;
             return ____result;
         }

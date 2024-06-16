@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Orca
 {
     public class InfluencerFactory
     {
-        private Queue<Influencer> InfluencerQueue { get; set; } = new();
+        private Queue<Influencer> InfluencerQueue { get; set; }
 
-        private Action<IUpdatable> RegisterActionForStage { get; set; }
-        private Action<IUpdatable> RemoveActionForStage { get; set; }
+        private Action<HitData, Influencer, ActorHealth, PanelPosition> ProcessHitAction { get; set; }
 
         private BattleStage Stage { get; set; }
         private MemoryDatabase MasterDatabase { get; set; }
@@ -17,23 +15,23 @@ namespace Orca
         private Action<CheckData, IHitChecker> CheckAction { get; set; }
 
         public InfluencerFactory(
-            Action<IUpdatable> registerAction,
-            Action<IUpdatable> removeAction,
             BattleStage stage,
             MemoryDatabase masterDatabase,
-            Action<CheckData, IHitChecker> checkAction)
+            Action<CheckData, IHitChecker> checkAction,
+            Action<HitData, Influencer, ActorHealth, PanelPosition> processHitAction)
         {
-            RegisterActionForStage = registerAction;
-            RemoveActionForStage = removeAction;
             Stage = stage;
             MasterDatabase = masterDatabase;
             CheckAction = checkAction;
+            ProcessHitAction = processHitAction;
+            InfluencerQueue = new();
         }
 
         public HashSet<Influencer> CreateInfluencers(
             ActorHealth ownerHealthContainer,
             MasterCard card,
-            Action<Influencer> releaseCallback)
+            Action<IUpdatable> releaseCallbackForActor,
+            Action<IUpdatable> releaseCallbackForSystem)
         {
             var details = MasterDatabase.MasterCardDetailTable.FindByCardId(card.CardId);
             var position = Stage.GetPanel(ownerHealthContainer).Position;
@@ -42,6 +40,9 @@ namespace Orca
             foreach (var detail in details)
             {
                 var masterInfluence = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(detail.DetailId);
+                var releaseCallback =
+                    (masterInfluence.ParentType == InfluenceParentType.System) ?
+                    releaseCallbackForSystem : releaseCallbackForActor;
                 var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, position, releaseCallback);
                 result.Add(influencer);
             }
@@ -53,12 +54,12 @@ namespace Orca
             MasterInfluence master,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
-            Action<Influencer> releaseCallback)
+            Action<IUpdatable> releaseCallback)
         {
             Influencer influencer = (InfluencerQueue.Count > 0) ? InfluencerQueue.Dequeue() : new();
             BattleCallbackContainer callbackContainer =
                 new(CheckAction,
-                    hitData => ProcessHit(hitData, influencer, ownerHealth, ownerPosition),
+                    hitData => ProcessHitAction.Invoke(hitData, influencer, ownerHealth, ownerPosition),
                     () =>
                     {
                         releaseCallback.Invoke(influencer);
@@ -67,21 +68,20 @@ namespace Orca
                 );
             influencer.Setup(master, ownerHealth, ownerPosition, callbackContainer, Stage);
 
+            var children = MasterDatabase.MasterChildInfluenceTable
+                .FindByParentTypeAndParentId((ChildInfluenceParentType.Influence, master.InfluenceId));
+            foreach (var childMaster in children)
+            {
+                ChildInfluencer childInfluencer = new(ownerHealth, childMaster);
+                influencer.AppendChild(childInfluencer);
+            }
+
             return influencer;
         }
 
         private void Release(Influencer influencer)
         {
             InfluencerQueue.Enqueue(influencer);
-        }
-
-        private void ProcessHit(
-            HitData hitData,
-            Influencer influencer,
-            ActorHealth ownerHealth,
-            PanelPosition ownerPosition)
-        {
-
         }
     }
 }

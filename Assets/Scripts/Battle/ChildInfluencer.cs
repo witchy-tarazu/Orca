@@ -9,17 +9,17 @@ namespace Orca
     {
         public bool IsSatisfied { get; private set; }
 
-        public MasterChildInfluence MasterInfluenceRelation { get; set; }
+        public MasterChildInfluence Master { get; set; }
 
-        public ChildInfluencer(ActorHealth ownerHealth, MasterChildInfluence masterInfluenceRelation)
+        public ChildInfluencer(ActorHealth ownerHealth, MasterChildInfluence masterChild)
         {
             IsSatisfied = false;
-            MasterInfluenceRelation = masterInfluenceRelation;
+            Master = masterChild;
         }
 
         public void CheckSatisfaction(ChildTriggerCondition triggerCondition)
         {
-            if (MasterInfluenceRelation.TriggerCondition == triggerCondition)
+            if (Master.TriggerCondition == triggerCondition)
             {
                 IsSatisfied = true;
             }

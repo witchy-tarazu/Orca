@@ -45,11 +45,11 @@ namespace Orca
         /// <summary>qŒø‰Ê‚ÌID</summary>
         public int ChildId { get; }
 
-        [SecondaryKey(0, 0)]
+        [SecondaryKey(0, 0), NonUnique]
         public ChildInfluenceParentType ParentType { get; }
 
         /// <summary>eŒø‰ÊID</summary>
-        [SecondaryKey(0, 1)]
+        [SecondaryKey(0, 1), NonUnique]
         public int ParentId { get; }
 
         /// <summary>qŒø‰Ê‚Ì”­“®ğŒ</summary>

@@ -10,12 +10,37 @@ namespace Orca
         private List<IUpdatable> EnemyAutonomyList { get; set; } = new();
         private BattleStage Stage { get; set; }
 
+        private InfluencerFactory InfluencerFactory { get; set; }
+        private ProjectileFactory ProjectileFactory { get; set; }
+
+        private HashSet<IUpdatable> ReservedUpdatables { get; set; } = new();
+        private HashSet<IUpdatable> ActiveUpdatables { get; set; } = new();
+        private HashSet<IUpdatable> FinishedUpdatables { get; set; } = new();
+
+        public void Setup(MemoryDatabase memoryDatabase)
+        {
+            InfluencerFactory = new(Stage, memoryDatabase, Check, ProcessHit);
+            ProjectileFactory = new(Stage, memoryDatabase, Check, ProcessHit);
+        }
+
         public void Update()
         {
-            PlayerList.ForEach(x => x.Update());
-            EnemyList.ForEach(x => x.Update());
-            PlayerAutonomyList.ForEach(x => x.Update());
-            EnemyAutonomyList.ForEach(x => x.Update());
+            foreach (var updatable in ReservedUpdatables)
+            {
+                ActiveUpdatables.Add(updatable);
+            }
+            ReservedUpdatables.Clear();
+
+            foreach (var updatable in ActiveUpdatables)
+            {
+                updatable.Update();
+            }
+
+            foreach (var updatable in FinishedUpdatables)
+            {
+                ActiveUpdatables.Remove(updatable);
+            }
+            FinishedUpdatables.Clear();
         }
 
         private void Check(CheckData check, IHitChecker hit)
@@ -70,6 +95,34 @@ namespace Orca
                     });
                     return;
             }
+        }
+
+        private void ProcessHit(
+            HitData hitData,
+            Influencer influencer,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition)
+        {
+
+        }
+
+        private void ProcessHit(
+            HitData hitData,
+            Projectile projectile,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition)
+        {
+
+        }
+
+        private void Register(IUpdatable updatable)
+        {
+            ReservedUpdatables.Add(updatable);
+        }
+
+        private void Release(IUpdatable updatable)
+        {
+            FinishedUpdatables.Add(updatable);
         }
     }
 }

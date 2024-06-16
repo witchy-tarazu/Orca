@@ -9,13 +9,11 @@ namespace Orca
         public MasterCard(
             int cardId,
             int grade,
-            int finishFrame,
-            int cancellableFrame)
+            int finishFrame)
         {
             CardId = cardId;
             Grade = grade;
             FinishFrame = finishFrame;
-            CancellableFrame = cancellableFrame;
         }
 
         [PrimaryKey]
@@ -24,7 +22,5 @@ namespace Orca
         public int Grade { get; }
 
         public int FinishFrame { get; }
-
-        public int CancellableFrame { get; }
     }
 }

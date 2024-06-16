@@ -75,24 +75,19 @@ namespace Orca.Tables
             return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
-        public MasterChildInfluence FindByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key)
+        public RangeView<MasterChildInfluence> FindByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key)
         {
-            return FindUniqueCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key, true);
-        }
-        
-        public bool TryFindByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key, out MasterChildInfluence result)
-        {
-            return TryFindUniqueCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key, out result);
+            return FindManyCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key);
         }
 
-        public MasterChildInfluence FindClosestByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key, bool selectLower = true)
+        public RangeView<MasterChildInfluence> FindClosestByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key, bool selectLower = true)
         {
-            return FindUniqueClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key, selectLower);
+            return FindManyClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key, selectLower);
         }
 
         public RangeView<MasterChildInfluence> FindRangeByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) min, (ChildInfluenceParentType ParentType, int ParentId) max, bool ascendant = true)
         {
-            return FindUniqueRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, min, max, ascendant);
+            return FindManyRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, min, max, ascendant);
         }
 
 
@@ -101,7 +96,6 @@ namespace Orca.Tables
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
             ValidateUniqueCore(data, primaryIndexSelector, "ChildId", resultSet);       
-            ValidateUniqueCore(secondaryIndex0, secondaryIndex0Selector, "(ParentType, ParentId)", resultSet);       
 
 #endif
         }
@@ -129,7 +123,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterChildInfluence).GetProperty("ParentType"),
                         typeof(MasterChildInfluence).GetProperty("ParentId"),
-                    }, false, true, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default),
+                    }, false, false, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default),
                 });
         }
 

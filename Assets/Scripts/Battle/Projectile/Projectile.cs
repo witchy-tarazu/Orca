@@ -2,20 +2,23 @@ using System.Collections.Generic;
 
 namespace Orca
 {
-    public abstract class Projectile : IHitChecker, IUpdatable
+    public class Projectile : IHitChecker, IUpdatable
     {
         public int Speed { get; private set; }
 
         public int TargetPos { get; private set; }
         public int CurrentPos { get; private set; }
 
-        protected ProjectileData ProjectileData { get; private set; }
-
-        protected ActorHealth OwnerHealth { get; private set; }
+        private ProjectileData ProjectileData { get; set; }
 
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
-        protected BattleStage BattleStage { get; set; }
+        private BattleStage BattleStage { get; set; }
+
+        private IProjectileStrategy Strategy { get; set; }
+
+        private LinearProjectile LinearProjectile { get; set; }
+        private ParabolaProjectile ParabolaProjectile { get; set; }
 
         public void Setup(ProjectileData projectileData, ActorHealth ownerHealth, BattleStage battleStage)
         {
@@ -23,8 +26,18 @@ namespace Orca
             CurrentPos = projectileData.StartPos;
             TargetPos = CurrentPos + projectileData.Master.Distance;
             ProjectileData = projectileData;
-            OwnerHealth = ownerHealth;
             BattleStage = battleStage;
+
+            switch (ProjectileData.Master.ProjectileType)
+            {
+                case ProjectileType.Linear:
+                    Strategy = (LinearProjectile ??= new LinearProjectile());
+                    break;
+                case ProjectileType.Parabola:
+                    Strategy = (ParabolaProjectile ??= new ParabolaProjectile());
+                    break;
+            }
+
             Children.Clear();
         }
 
@@ -40,6 +53,8 @@ namespace Orca
             {
                 CurrentPos = TargetPos;
             }
+
+            Strategy.Update(this, ProjectileData, BattleStage, CurrentPos, TargetPos);
         }
 
         public void Hit(HitData hitData)

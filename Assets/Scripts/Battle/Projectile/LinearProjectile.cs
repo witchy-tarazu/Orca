@@ -1,18 +1,21 @@
 namespace Orca
 {
-    public class LinearProjectile : Projectile
+    public class LinearProjectile : IProjectileStrategy
     {
-        public override void Update()
+        public void Update(
+            Projectile projectile,
+            ProjectileData data,
+            BattleStage stage,
+            int currentPos,
+            int targetPos)
         {
-            base.Update();
-
             CheckData checkData = new(
-                new() { BattleStage.GetPanelPosition(CurrentPos) },
-                OwnerHealth,
+                new() { stage.GetPanelPosition(currentPos) },
+                data.OwnerHealth,
                 InfluenceCheckSide.Opponent,
                 InfluenceCheckTargetType.Position,
                 InfluenceCheckRangeType.Single);
-            ProjectileData.Check(checkData, this);
+            data.Check(checkData, projectile);
         }
     }
 }

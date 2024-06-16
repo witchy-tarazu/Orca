@@ -7,5 +7,7 @@ namespace Orca
     public interface IUpdatable
     {
         void Update();
+
+        void LateUpdate();
     }
 }

@@ -1,20 +1,23 @@
 namespace Orca
 {
-    public class ParabolaProjectile : Projectile
+    public class ParabolaProjectile : IProjectileStrategy
     {
-        public override void Update()
+        public void Update(
+            Projectile projectile,
+            ProjectileData data,
+            BattleStage stage,
+            int currentPos,
+            int targetPos)
         {
-            base.Update();
-
-            if (CurrentPos == TargetPos)
+            if (currentPos == targetPos)
             {
                 CheckData checkData = new(
-                    new() { BattleStage.GetPanelPosition(CurrentPos) },
-                    OwnerHealth,
+                    new() { stage.GetPanelPosition(currentPos) },
+                    data.OwnerHealth,
                     InfluenceCheckSide.Whole,
                     InfluenceCheckTargetType.Position,
                     InfluenceCheckRangeType.Panel);
-                ProjectileData.Check(checkData, this);
+                data.Check(checkData, projectile);
             }
         }
     }

@@ -27,5 +27,10 @@ namespace Orca
         {
 
         }
+
+        public void LateUpdate()
+        {
+
+        }
     }
 }

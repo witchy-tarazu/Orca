@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace Orca
 {
@@ -15,31 +15,59 @@ namespace Orca
         private int CurrentFrame { get; set; }
         private int FinishFrame { get; set; }
 
-        private HashSet<Influencer> ReservedInfluencers { get; set; } = new();
+        private HashSet<IUpdatable> ReservedInfluencers { get; set; } = new();
 
-        private HashSet<Influencer> ActiveInfluencers { get; set; } = new();
-        private HashSet<Influencer> FinishedInfluencers { get; set; } = new();
+        private HashSet<IUpdatable> ActiveInfluencers { get; set; } = new();
+        private HashSet<IUpdatable> FinishedInfluencers { get; set; } = new();
 
         private ActorHealth Health { get; set; }
-        private InfluencerFactory Factory { get; set; }
+        private InfluencerFactory InfluencerFactory { get; set; }
+        private ProjectileFactory ProjectileFactory { get; set; }
+
+        private Action<IUpdatable> RegisterForSystem { get; set; }
+
+        private Action<IUpdatable> ReleaseForSystem { get; set; }
 
         public void Initialize(
             InfluencerFactory factory,
+            ProjectileFactory projectileFactory,
+            Action<IUpdatable> registerForSystem,
+            Action<IUpdatable> releaseForSystem,
             ActorHealth health)
         {
-            Factory = factory;
+            InfluencerFactory = factory;
+            ProjectileFactory = projectileFactory;
+            RegisterForSystem = registerForSystem;
+            ReleaseForSystem = releaseForSystem;
             Health = health;
         }
 
-        public void Execute(MasterCard card, ActorHealth health)
+        public void Execute(MasterCard card)
         {
             CurrentFrame = 0;
             CurrentState = State.Active;
-            FinishFrame = 0;    // TODO: cardÇ©ÇÁê›íËÇ∑ÇÈ
+            FinishFrame = card.FinishFrame;
 
-            // TODO: cardÇÃê›íËÇ≈ProjectileÇ©InfluencerÇ«ÇøÇÁÇê∂ê¨Ç∑ÇÈÇ©ï™äÚÇ∑ÇÈ
-            var influencers = Factory.CreateInfluencers(health, card, OnReleaseInfluencer);
-            ActiveInfluencers.AddRange(influencers);
+            var influencers =
+                InfluencerFactory.CreateInfluencers(Health, card, OnReleaseInfluencer, ReleaseForSystem);
+            foreach (var influencer in influencers)
+            {
+                switch (influencer.InfluencerParentType)
+                {
+                    case InfluenceParentType.Actor:
+                        ActiveInfluencers.Add(influencer);
+                        break;
+                    case InfluenceParentType.System:
+                        RegisterForSystem(influencer);
+                        break;
+                };
+            }
+
+            var projectiles = ProjectileFactory.CreateProjectiles(Health, card, ReleaseForSystem);
+            foreach (var projectile in projectiles)
+            {
+                RegisterForSystem(projectile);
+            }
         }
 
         public void Update()
@@ -86,7 +114,7 @@ namespace Orca
             FinishedInfluencers.Clear();
         }
 
-        private void OnReleaseInfluencer(Influencer influencer)
+        private void OnReleaseInfluencer(IUpdatable influencer)
         {
             FinishedInfluencers.Add(influencer);
         }
