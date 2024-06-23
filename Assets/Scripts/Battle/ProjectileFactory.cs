@@ -7,7 +7,7 @@ namespace Orca
     {
         private Queue<Projectile> ProjectileQueue { get; set; }
 
-        private Action<HitData, Projectile, ActorHealth, PanelPosition> ProcessHitAction { get; set; }
+        private Action<HitData, Projectile> ProcessHitAction { get; set; }
 
         private BattleStage Stage { get; set; }
         private MemoryDatabase MasterDatabase { get; set; }
@@ -18,8 +18,7 @@ namespace Orca
             BattleStage stage,
             MemoryDatabase masterDatabase,
             Action<CheckData, IHitChecker> checkAction,
-
-            Action<HitData, Projectile, ActorHealth, PanelPosition> processHitAction)
+            Action<HitData, Projectile> processHitAction)
         {
             Stage = stage;
             MasterDatabase = masterDatabase;
@@ -40,7 +39,7 @@ namespace Orca
             foreach (var detail in details)
             {
                 var masterInfluence = MasterDatabase.MasterProjectileTable.FindByProjectileId(detail.DetailId);
-                var projectile = CreateProjectile(masterInfluence, ownerHealthContainer, position, releaseCallback);
+                var projectile = CreateProjectile(masterInfluence, card.Grade, ownerHealthContainer, position, releaseCallback);
                 result.Add(projectile);
             }
 
@@ -48,7 +47,20 @@ namespace Orca
         }
 
         public Projectile CreateProjectile(
+            int projectileId,
+            int grade,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition,
+            Action<IUpdatable> releaseCallback)
+        {
+            var master = MasterDatabase.MasterProjectileTable.FindByProjectileId(projectileId);
+            return CreateProjectile(master, grade, ownerHealth, ownerPosition, releaseCallback);
+        }
+
+
+        public Projectile CreateProjectile(
             MasterProjectile master,
+            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
@@ -56,7 +68,7 @@ namespace Orca
             Projectile projectile = GetProjectile(master);
             BattleCallbackContainer callbackContainer =
                 new(CheckAction,
-                    hitData => ProcessHitAction.Invoke(hitData, projectile, ownerHealth, ownerPosition),
+                    hitData => ProcessHitAction.Invoke(hitData, projectile),
                     () =>
                     {
                         releaseCallback.Invoke(projectile);
@@ -71,13 +83,13 @@ namespace Orca
             };
 
             ProjectileData projectileData = new(ownerHealth, startPosition, master, callbackContainer);
-            projectile.Setup(projectileData, ownerHealth, Stage);
+            projectile.Setup(projectileData, grade, Stage);
 
             var children = MasterDatabase.MasterChildInfluenceTable
                 .FindByParentTypeAndParentId((ChildInfluenceParentType.Projectile, master.ProjectileId));
             foreach (var childMaster in children)
             {
-                ChildInfluencer childInfluencer = new(ownerHealth, childMaster);
+                ChildInfluencer childInfluencer = new(childMaster);
                 projectile.AppendChild(childInfluencer);
             }
 

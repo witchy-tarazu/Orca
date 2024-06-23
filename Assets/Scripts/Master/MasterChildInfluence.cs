@@ -5,17 +5,14 @@ namespace Orca
 {
     public enum ChildTriggerCondition
     {
-        None = 0,
         Hit,
-        NoHit,
         Damage,
-        NoDamage,
     }
 
     public enum ChildInfluenceParentType
     {
         Influence,
-        Projectile
+        Projectile,
     }
 
     [MemoryTable("child_influence"), MessagePackObject(true)]
@@ -28,6 +25,8 @@ namespace Orca
             ChildTriggerCondition triggerCondition,
             InfluenceCheckSide checkSide,
             InfluenceType influenceType,
+            ActorState actorState,
+            InfluencePenetrationType penetrationType,
             int baseValue,
             int propotionalValue)
         {
@@ -37,8 +36,10 @@ namespace Orca
             TriggerCondition = triggerCondition;
             CheckSide = checkSide;
             InfluenceType = influenceType;
+            ActorState = actorState;
+            PenetrationType = penetrationType;
             BaseValue = baseValue;
-            PropotionalValue = propotionalValue;
+            PromotionalValue = propotionalValue;
         }
 
         [PrimaryKey]
@@ -61,10 +62,15 @@ namespace Orca
         /// <summary>効果タイプ</summary>
         public InfluenceType InfluenceType { get; }
 
+        public ActorState ActorState { get; }
+
+        /// <summary>貫通タイプ</summary>
+        public InfluencePenetrationType PenetrationType { get; }
+
         /// <summary>ベースの値</summary>
         public int BaseValue { get; }
 
         /// <summary>グレードによって変わる値</summary>
-        public int PropotionalValue { get; }
+        public int PromotionalValue { get; }
     }
 }

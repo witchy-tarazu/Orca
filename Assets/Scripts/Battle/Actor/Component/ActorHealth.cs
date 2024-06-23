@@ -1,16 +1,177 @@
+using System;
+using static UnityEngine.CompositeCollider2D;
+
 namespace Orca
 {
     public class ActorHealth
     {
         public ActorSide Side { get; private set; }
-        public ActorStatus Status { get; private set; }
-        public ActorHitPoint Health { get; private set; }
+        private ActorStatus Status { get; set; }
+        private ActorHitPoint HitPoint { get; set; }
 
-        public ActorHealth(ActorSide side, ActorStatus status, ActorHitPoint health)
+        public ActorHealth(ActorSide side, int maxHp)
         {
             Side = side;
-            Status = status;
-            Health = health;
+
+            Status = new(OnApplyAbnormalState);
+            HitPoint = new(maxHp);
+        }
+
+        public void Damage(
+            int damage,
+            InfluencePenetrationType penetrationType,
+            ActorHealth owner,
+            Action<ActorHealth> onDamage)
+        {
+            // 無敵・回避の処理
+            if (Status.IsState(ActorState.Invincible)
+                && penetrationType != InfluencePenetrationType.Invincible
+                && penetrationType != InfluencePenetrationType.Whole)
+            {
+                // ダメージは受けない
+                return;
+            }
+
+            var ownerStatus = owner.Status;
+
+            // 暗闇の処理
+            if (ownerStatus.IsState(ActorState.Darkness)
+                && !ownerStatus.HasStack(ActorState.Critical))
+            {
+                // クリティカル以外の場合はダメージは受けない
+                return;
+            }
+
+            int defenceStack = Status.GetStackValue(ActorState.DefenceBuff);
+            int attackStack = ownerStatus.GetStackValue(ActorState.AttackBuff);
+            if (ownerStatus.HasStack(ActorState.Critical))
+            {
+                // クリティカルは防御を無視する
+                defenceStack = 0;
+                damage *= 2;
+                ownerStatus.ConsumeStack(ActorState.Critical, 1);
+            }
+            damage *= (100 + attackStack - defenceStack) / 100;
+
+            // バリアの処理
+            if (Status.HasStack(ActorState.Barrier)
+                && penetrationType != InfluencePenetrationType.Barrier
+                && penetrationType != InfluencePenetrationType.Whole)
+            {
+                int stackValue = Status.GetStackValue(ActorState.Barrier);
+                Status.ConsumeStack(ActorState.Barrier, damage);
+
+                damage -= stackValue;
+
+                // バリアでダメージがすべて軽減された場合にはここで終了
+                if (damage <= 0) { return; }
+            }
+
+            HitPoint.Damage(damage);
+
+            if (ownerStatus.HasStack(ActorState.Drain))
+            {
+                owner.HitPoint.Recovery(damage);
+                ownerStatus.ConsumeStack(ActorState.Drain, 1);
+            }
+
+            onDamage?.Invoke(this);
+        }
+
+        public void Recovery(int recovery)
+        {
+            HitPoint.Recovery(recovery);
+        }
+
+        public void AddStack(
+            ActorState stackState,
+            int value,
+            ActorHealth owner,
+            InfluencePenetrationType penetrationType)
+        {
+            if (value > 0)
+            {
+                // 有利効果はすべて適用する
+                Status.AddStack(stackState, value);
+                return;
+            }
+
+            // 不利効果はふるいにかける
+            if (!CanBadStateAdapt(penetrationType, owner))
+            {
+                return;
+            }
+
+            Status.AddStack(stackState, value);
+        }
+
+        public void RemoveStack(ActorState stackState)
+        {
+            Status.RemoveStack(stackState);
+        }
+
+        public void MakeState(
+            ActorState abnormalState,
+            int duration,
+            ActorHealth owner,
+            InfluencePenetrationType penetrationType)
+        {
+            // 不利効果はふるいにかける
+            switch (abnormalState)
+            {
+                case ActorState.Poison:
+                case ActorState.Darkness:
+                case ActorState.Dazzle:
+                case ActorState.Stan:
+                    if (!CanBadStateAdapt(penetrationType, owner))
+                    {
+                        return;
+                    }
+                    break;
+            }
+
+            Status.MakeState(abnormalState, duration);
+        }
+
+        public void Update()
+        {
+            Status.Update();
+        }
+
+        private void OnApplyAbnormalState(ActorState state)
+        {
+            // 状態異常による効果はバリアや無敵を貫通する
+            switch (state)
+            {
+                case ActorState.Regeneration:
+                    HitPoint.Recovery(BattleDefine.RegenerationValue);
+                    break;
+                case ActorState.Poison:
+                    HitPoint.Damage(BattleDefine.PoisonSlipDamage);
+                    break;
+            }
+        }
+
+        private bool CanBadStateAdapt(InfluencePenetrationType penetrationType, ActorHealth owner)
+        {
+            if (owner.Status.IsState(ActorState.Darkness)) { return false; }
+
+            switch (penetrationType)
+            {
+                case InfluencePenetrationType.None:
+                    if (Status.HasStack(ActorState.Barrier)
+                        || Status.IsState(ActorState.Invincible))
+                    { return false; }
+                    break;
+                case InfluencePenetrationType.Barrier:
+                    if (Status.IsState(ActorState.Invincible)) { return false; }
+                    break;
+                case InfluencePenetrationType.Invincible:
+                    if (Status.HasStack(ActorState.Barrier)) { return false; }
+                    break;
+            }
+
+            return true;
         }
     }
 }

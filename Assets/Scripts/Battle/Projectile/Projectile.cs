@@ -11,6 +11,8 @@ namespace Orca
 
         private ProjectileData ProjectileData { get; set; }
 
+        public int Grade { get; private set; }
+
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
         private BattleStage BattleStage { get; set; }
@@ -20,12 +22,15 @@ namespace Orca
         private LinearProjectile LinearProjectile { get; set; }
         private ParabolaProjectile ParabolaProjectile { get; set; }
 
-        public void Setup(ProjectileData projectileData, ActorHealth ownerHealth, BattleStage battleStage)
+        public ActorHealth OwnerHealth => ProjectileData.OwnerHealth;
+
+        public void Setup(ProjectileData projectileData, int grade, BattleStage battleStage)
         {
             Speed = projectileData.Master.Speed;
             CurrentPos = projectileData.StartPos;
             TargetPos = CurrentPos + projectileData.Master.Distance;
             ProjectileData = projectileData;
+            Grade = grade;
             BattleStage = battleStage;
 
             switch (ProjectileData.Master.ProjectileType)
@@ -69,6 +74,11 @@ namespace Orca
             {
                 ProjectileData.Release();
             }
+        }
+
+        public MasterProjectile GetMaster()
+        {
+            return ProjectileData.Master;
         }
     }
 }

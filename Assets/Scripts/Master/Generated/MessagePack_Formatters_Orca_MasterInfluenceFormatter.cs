@@ -22,6 +22,10 @@ namespace MessagePack.Formatters.Orca
         private static global::System.ReadOnlySpan<byte> GetSpan_InfluenceId() => new byte[1 + 11] { 171, 73, 110, 102, 108, 117, 101, 110, 99, 101, 73, 100 };
         // InfluenceType
         private static global::System.ReadOnlySpan<byte> GetSpan_InfluenceType() => new byte[1 + 13] { 173, 73, 110, 102, 108, 117, 101, 110, 99, 101, 84, 121, 112, 101 };
+        // ActorState
+        private static global::System.ReadOnlySpan<byte> GetSpan_ActorState() => new byte[1 + 10] { 170, 65, 99, 116, 111, 114, 83, 116, 97, 116, 101 };
+        // PenetrationType
+        private static global::System.ReadOnlySpan<byte> GetSpan_PenetrationType() => new byte[1 + 15] { 175, 80, 101, 110, 101, 116, 114, 97, 116, 105, 111, 110, 84, 121, 112, 101 };
         // BaseValue
         private static global::System.ReadOnlySpan<byte> GetSpan_BaseValue() => new byte[1 + 9] { 169, 66, 97, 115, 101, 86, 97, 108, 117, 101 };
         // PropotionalValue
@@ -54,15 +58,19 @@ namespace MessagePack.Formatters.Orca
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(13);
+            writer.WriteMapHeader(15);
             writer.WriteRaw(GetSpan_InfluenceId());
             writer.Write(value.InfluenceId);
             writer.WriteRaw(GetSpan_InfluenceType());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceType>(formatterResolver).Serialize(ref writer, value.InfluenceType, options);
+            writer.WriteRaw(GetSpan_ActorState());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ActorState>(formatterResolver).Serialize(ref writer, value.ActorState, options);
+            writer.WriteRaw(GetSpan_PenetrationType());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluencePenetrationType>(formatterResolver).Serialize(ref writer, value.PenetrationType, options);
             writer.WriteRaw(GetSpan_BaseValue());
             writer.Write(value.BaseValue);
             writer.WriteRaw(GetSpan_PropotionalValue());
-            writer.Write(value.PropotionalValue);
+            writer.Write(value.PromotionalValue);
             writer.WriteRaw(GetSpan_StartFrame());
             writer.Write(value.StartFrame);
             writer.WriteRaw(GetSpan_Duration());
@@ -95,6 +103,8 @@ namespace MessagePack.Formatters.Orca
             var length = reader.ReadMapHeader();
             var __InfluenceId__ = default(int);
             var __InfluenceType__ = default(global::Orca.InfluenceType);
+            var __ActorState__ = default(global::Orca.ActorState);
+            var __PenetrationType__ = default(global::Orca.InfluencePenetrationType);
             var __BaseValue__ = default(int);
             var __PropotionalValue__ = default(int);
             var __StartFrame__ = default(int);
@@ -156,6 +166,52 @@ namespace MessagePack.Formatters.Orca
                                 }
 
                         }
+                    case 10:
+                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
+                        {
+                            default: goto FAIL;
+                            case 7022329469938721601UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25972UL) { goto FAIL; }
+
+                                __ActorState__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ActorState>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                            case 7021752234973164627UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25965UL) { goto FAIL; }
+
+                                __StartFrame__ = reader.ReadInt32();
+                                continue;
+
+                            case 8742740794130194768UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25968UL) { goto FAIL; }
+
+                                __ParentType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceParentType>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                            case 8742740755509043540UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25968UL) { goto FAIL; }
+
+                                __TargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceTargetType>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                        }
+                    case 15:
+                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
+                        {
+                            default: goto FAIL;
+                            case 8386109825384080720UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 28552639057653609UL) { goto FAIL; }
+
+                                __PenetrationType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluencePenetrationType>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                            case 8241961613270542403UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 28552639058044263UL) { goto FAIL; }
+
+                                __CheckTargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckRangeType>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                        }
                     case 9:
                         switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
                         {
@@ -178,44 +234,16 @@ namespace MessagePack.Formatters.Orca
 
                         __PropotionalValue__ = reader.ReadInt32();
                         continue;
-                    case 10:
-                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
-                        {
-                            default: goto FAIL;
-                            case 7021752234973164627UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25965UL) { goto FAIL; }
-
-                                __StartFrame__ = reader.ReadInt32();
-                                continue;
-
-                            case 8742740794130194768UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25968UL) { goto FAIL; }
-
-                                __ParentType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceParentType>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                            case 8742740755509043540UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25968UL) { goto FAIL; }
-
-                                __TargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceTargetType>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                        }
                     case 8:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7957695015158969668UL) { goto FAIL; }
 
                         __Duration__ = reader.ReadInt32();
                         continue;
-                    case 15:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_CheckTargetType().Slice(1))) { goto FAIL; }
-
-                        __CheckTargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckRangeType>(formatterResolver).Deserialize(ref reader, options);
-                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterInfluence(__InfluenceId__, __InfluenceType__, __BaseValue__, __PropotionalValue__, __StartFrame__, __Duration__, __FinishFrame__, __ParentType__, __TargetType__, __CheckSide__, __CheckTargetType__, __CheckValueMin__, __CheckValueMax__);
+            var ____result = new global::Orca.MasterInfluence(__InfluenceId__, __InfluenceType__, __ActorState__, __PenetrationType__, __BaseValue__, __PropotionalValue__, __StartFrame__, __Duration__, __FinishFrame__, __ParentType__, __TargetType__, __CheckSide__, __CheckTargetType__, __CheckValueMin__, __CheckValueMax__);
             reader.Depth--;
             return ____result;
         }

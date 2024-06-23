@@ -52,7 +52,7 @@ namespace Orca
                 InfluencerFactory.CreateInfluencers(Health, card, OnReleaseInfluencer, ReleaseForSystem);
             foreach (var influencer in influencers)
             {
-                switch (influencer.InfluencerParentType)
+                switch (influencer.Master.ParentType)
                 {
                     case InfluenceParentType.Actor:
                         ActiveInfluencers.Add(influencer);
@@ -68,6 +68,11 @@ namespace Orca
             {
                 RegisterForSystem(projectile);
             }
+        }
+
+        private void Execute(MasterInfluence influencer, int grade)
+        {
+
         }
 
         public void Update()

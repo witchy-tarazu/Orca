@@ -7,7 +7,7 @@ namespace Orca
     {
         private Queue<Influencer> InfluencerQueue { get; set; }
 
-        private Action<HitData, Influencer, ActorHealth, PanelPosition> ProcessHitAction { get; set; }
+        private Action<HitData, Influencer> ProcessHitAction { get; set; }
 
         private BattleStage Stage { get; set; }
         private MemoryDatabase MasterDatabase { get; set; }
@@ -18,7 +18,7 @@ namespace Orca
             BattleStage stage,
             MemoryDatabase masterDatabase,
             Action<CheckData, IHitChecker> checkAction,
-            Action<HitData, Influencer, ActorHealth, PanelPosition> processHitAction)
+            Action<HitData, Influencer> processHitAction)
         {
             Stage = stage;
             MasterDatabase = masterDatabase;
@@ -43,7 +43,7 @@ namespace Orca
                 var releaseCallback =
                     (masterInfluence.ParentType == InfluenceParentType.System) ?
                     releaseCallbackForSystem : releaseCallbackForActor;
-                var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, position, releaseCallback);
+                var influencer = CreateInfluencer(masterInfluence, card.Grade, ownerHealthContainer, position, releaseCallback);
                 result.Add(influencer);
             }
 
@@ -51,7 +51,19 @@ namespace Orca
         }
 
         public Influencer CreateInfluencer(
+            int influeceId,
+            int grade,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition,
+            Action<IUpdatable> releaseCallback)
+        {
+            var master = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(influeceId);
+            return CreateInfluencer(master, grade, ownerHealth, ownerPosition, releaseCallback);
+        }
+
+        public Influencer CreateInfluencer(
             MasterInfluence master,
+            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
@@ -59,20 +71,20 @@ namespace Orca
             Influencer influencer = (InfluencerQueue.Count > 0) ? InfluencerQueue.Dequeue() : new();
             BattleCallbackContainer callbackContainer =
                 new(CheckAction,
-                    hitData => ProcessHitAction.Invoke(hitData, influencer, ownerHealth, ownerPosition),
+                    hitData => ProcessHitAction.Invoke(hitData, influencer),
                     () =>
                     {
                         releaseCallback.Invoke(influencer);
                         Release(influencer);
                     }
                 );
-            influencer.Setup(master, ownerHealth, ownerPosition, callbackContainer, Stage);
+            influencer.Setup(master, grade, ownerHealth, ownerPosition, callbackContainer, Stage);
 
             var children = MasterDatabase.MasterChildInfluenceTable
                 .FindByParentTypeAndParentId((ChildInfluenceParentType.Influence, master.InfluenceId));
             foreach (var childMaster in children)
             {
-                ChildInfluencer childInfluencer = new(ownerHealth, childMaster);
+                ChildInfluencer childInfluencer = new(childMaster);
                 influencer.AppendChild(childInfluencer);
             }
 

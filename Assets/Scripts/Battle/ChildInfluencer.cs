@@ -1,7 +1,5 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Orca
 {
@@ -11,18 +9,46 @@ namespace Orca
 
         public MasterChildInfluence Master { get; set; }
 
-        public ChildInfluencer(ActorHealth ownerHealth, MasterChildInfluence masterChild)
+        private HashSet<ActorHealth> SatisfiedHealthSet { get; set; }
+
+        public ChildInfluencer(MasterChildInfluence masterChild)
         {
             IsSatisfied = false;
             Master = masterChild;
         }
 
-        public void CheckSatisfaction(ChildTriggerCondition triggerCondition)
+        public void CheckSatisfaction(ChildTriggerCondition triggerCondition, ActorHealth health)
         {
             if (Master.TriggerCondition == triggerCondition)
             {
                 IsSatisfied = true;
+                SatisfiedHealthSet.Add(health);
             }
+        }
+
+        public void CheckSatisfaction(ChildTriggerCondition triggerCondition, HitData hitData)
+        {
+            if (Master.TriggerCondition == triggerCondition)
+            {
+                IsSatisfied = true;
+                hitData.ApplyToActors(health => SatisfiedHealthSet.Add(health));
+            }
+        }
+
+        public HitProcessData CreateHitProcessData(int grade, HitData hitData, ActorHealth ownerHealth)
+        {
+            HitProcessData processData =
+                new(Master.InfluenceType,
+                    Master.ActorState,
+                    Master.PenetrationType,
+                    Master.BaseValue,
+                    Master.PromotionalValue,
+                    grade,
+                    hitData,
+                    ownerHealth,
+                    null);
+
+            return processData;
         }
     }
 }

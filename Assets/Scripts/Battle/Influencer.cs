@@ -1,5 +1,5 @@
-using MessagePack.Formatters.Orca;
 using System.Collections.Generic;
+using UnityEngine.Timeline;
 
 namespace Orca
 {
@@ -8,42 +8,39 @@ namespace Orca
     {
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
-        public InfluenceParentType InfluencerParentType { get; private set; }
-
         public ActorHealth OwnerHealth { get; private set; }
 
         private int CurrentFrame { get; set; }
 
         private int StartFrame { get; set; }
 
-
         private int ActiveFrame { get; set; }
 
         private int FinishFrame { get; set; }
-
-        private PanelPosition OwnerPosition { get; set; }
 
         private HashSet<PanelPosition> InfluencePositions { get; set; }
 
         private BattleCallbackContainer CallbackContainer { get; set; }
 
-        private MasterInfluence Master { get; set; }
+        public MasterInfluence Master { get; private set; }
+        public int Grade { get; private set; }
 
 
         public void Setup(
             MasterInfluence master,
+            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             BattleCallbackContainer callbackContainer,
             BattleStage stage)
         {
-            InfluencerParentType = master.ParentType;
+            Master = master;
+            Grade = grade;
             OwnerHealth = ownerHealth;
             CurrentFrame = 0;
-            StartFrame = master.StartFrame;
-            ActiveFrame = StartFrame + master.Duration - 1;
-            FinishFrame = master.FinishFrame;
-            OwnerPosition = ownerPosition;
+            StartFrame = Master.StartFrame;
+            ActiveFrame = StartFrame + Master.Duration - 1;
+            FinishFrame = Master.FinishFrame;
             CallbackContainer = callbackContainer;
             Children.Clear();
 

@@ -6,9 +6,11 @@ namespace Orca
     {
         public int Hp { get; private set; }
 
+        private int MaxHp { get; set; }
+
         public ActorHitPoint(int hp)
         {
-            Hp = hp;
+            MaxHp = Hp = hp;
         }
 
         public void Damage(int damage)
@@ -16,6 +18,13 @@ namespace Orca
             Hp -= damage;
 
             Hp = Mathf.Max(Hp, 0);
+        }
+
+        public void Recovery(int recovery)
+        {
+            Hp += recovery;
+
+            Hp = Mathf.Min(Hp, MaxHp);
         }
 
         public bool IsAlive() => Hp > 0;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 namespace Orca
 {
@@ -17,10 +18,14 @@ namespace Orca
         private HashSet<IUpdatable> ActiveUpdatables { get; set; } = new();
         private HashSet<IUpdatable> FinishedUpdatables { get; set; } = new();
 
+        private HitProcessor HitProcessor { get; set; }
+
         public void Setup(MemoryDatabase memoryDatabase)
         {
             InfluencerFactory = new(Stage, memoryDatabase, Check, ProcessHit);
             ProjectileFactory = new(Stage, memoryDatabase, Check, ProcessHit);
+
+            HitProcessor = new(CreateInfluencerForChild, CreateProjectileForChild);
         }
 
         public void Update()
@@ -89,7 +94,6 @@ namespace Orca
                     {
                         var panel = Stage.GetPanel(position);
                         var targetList = panel.ListupHealth(check);
-                        if (targetList.Count == 0) { return; }
                         HitData hitData = new(panel, targetList);
                         hit.Hit(hitData);
                     });
@@ -99,20 +103,36 @@ namespace Orca
 
         private void ProcessHit(
             HitData hitData,
-            Influencer influencer,
-            ActorHealth ownerHealth,
-            PanelPosition ownerPosition)
+            Influencer influencer)
         {
-
+            HitProcessor.Process(hitData, influencer);
         }
 
         private void ProcessHit(
             HitData hitData,
-            Projectile projectile,
+            Projectile projectile)
+        {
+            HitProcessor.Process(hitData, projectile);
+        }
+
+        private void CreateInfluencerForChild(
+            int influeceId,
+            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition)
         {
+            var influencer = InfluencerFactory.CreateInfluencer(influeceId, grade, ownerHealth, ownerPosition, Release);
+            Register(influencer);
+        }
 
+        private void CreateProjectileForChild(
+            int projectileId,
+            int grade,
+            ActorHealth ownerHealth,
+            PanelPosition ownerPosition)
+        {
+            var projectile = ProjectileFactory.CreateProjectile(projectileId, grade, ownerHealth, ownerPosition, Release);
+            Register(projectile);
         }
 
         private void Register(IUpdatable updatable)

@@ -34,6 +34,9 @@ namespace Orca
     public enum InfluenceType
     {
         Damage,
+        Recovery,
+        Stack,
+        State,
         CreateInfluence,
         CreateProjectile,
     }
@@ -44,12 +47,44 @@ namespace Orca
         Actor,
     }
 
+    public enum InfluencePenetrationType
+    {
+        None,
+        Barrier,
+        Invincible,
+        Whole,
+    }
+
+    public enum ActorState
+    {
+        None,
+
+        // 状態異常
+        Poison,
+        Darkness,
+        Invincible,
+        Dazzle,
+        Stan,
+        Regeneration,
+
+        // 蓄積可能な状態
+        AttackBuff,
+        DefenceBuff,
+        Barrier,
+        Charge,
+        Critical,
+        Drain,
+
+    }
+
     [MemoryTable("influence"), MessagePackObject(true)]
     public class MasterInfluence
     {
         public MasterInfluence(
             int influenceId,
             InfluenceType influenceType,
+            ActorState actorState,
+            InfluencePenetrationType penetrationType,
             int baseValue,
             int propotionalValue,
             int startFrame,
@@ -64,8 +99,10 @@ namespace Orca
         {
             InfluenceId = influenceId;
             InfluenceType = influenceType;
+            ActorState = actorState;
+            PenetrationType = penetrationType;
             BaseValue = baseValue;
-            PropotionalValue = propotionalValue;
+            PromotionalValue = propotionalValue;
             StartFrame = startFrame;
             Duration = duration;
             FinishFrame = finishFrame;
@@ -83,11 +120,16 @@ namespace Orca
         /// <summary>効果タイプ</summary>
         public InfluenceType InfluenceType { get; }
 
+        public ActorState ActorState { get; }
+
+        /// <summary>貫通タイプ</summary>
+        public InfluencePenetrationType PenetrationType { get; }
+
         /// <summary>ベースの値</summary>
         public int BaseValue { get; }
 
         /// <summary>グレードによって変わる値</summary>
-        public int PropotionalValue { get; }
+        public int PromotionalValue { get; }
 
         /// <summary>判定が発生するまでの時間</summary>
         public int StartFrame { get; }
