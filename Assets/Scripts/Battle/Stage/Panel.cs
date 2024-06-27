@@ -78,5 +78,10 @@ namespace Orca
         {
             return HealthList.Count > 0;
         }
+
+        public bool HasAnyActor(ActorSide side)
+        {
+            return HealthList.Where(health => health.Side == side).Count() > 0;
+        }
     }
 }

@@ -8,6 +8,11 @@ namespace Orca
 
         private int MaxHp { get; set; }
 
+        public ActorHitPoint(int currentHp, int maxHp)
+        {
+            Hp = currentHp;
+            MaxHp = maxHp;
+        }
         public ActorHitPoint(int hp)
         {
             MaxHp = Hp = hp;

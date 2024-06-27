@@ -3,15 +3,9 @@ using System.Collections.Generic;
 
 namespace Orca
 {
-    public class ActorAction
+    public class ActorAttacker
     {
-        private enum State
-        {
-            Inactive,
-            Active,
-        }
-
-        private State CurrentState { get; set; }
+        private ActorComponentState CurrentState { get; set; }
         private int CurrentFrame { get; set; }
         private int FinishFrame { get; set; }
 
@@ -45,7 +39,7 @@ namespace Orca
         public void Execute(MasterCard card)
         {
             CurrentFrame = 0;
-            CurrentState = State.Active;
+            CurrentState = ActorComponentState.Active;
             FinishFrame = card.FinishFrame;
 
             var influencers =
@@ -77,7 +71,7 @@ namespace Orca
 
         public void Update()
         {
-            if (CurrentState == State.Inactive) { return; }
+            if (CurrentState == ActorComponentState.Inactive) { return; }
 
             CurrentFrame++;
 
@@ -95,7 +89,7 @@ namespace Orca
 
         public void LateUpdate()
         {
-            if (CurrentState == State.Inactive) { return; }
+            if (CurrentState == ActorComponentState.Inactive) { return; }
 
             foreach (var influencer in ActiveInfluencers)
             {
@@ -113,7 +107,7 @@ namespace Orca
 
         public void Cancel()
         {
-            CurrentState = State.Inactive;
+            CurrentState = ActorComponentState.Inactive;
             ReservedInfluencers.Clear();
             ActiveInfluencers.Clear();
             FinishedInfluencers.Clear();

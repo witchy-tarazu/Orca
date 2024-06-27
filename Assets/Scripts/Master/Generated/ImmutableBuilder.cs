@@ -34,6 +34,8 @@ namespace Orca
                 table,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -49,6 +51,8 @@ namespace Orca
                 table,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -64,6 +68,8 @@ namespace Orca
                 table,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -78,6 +84,8 @@ namespace Orca
                 memory.MasterCardTable,
                 table,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -93,6 +101,8 @@ namespace Orca
                 memory.MasterCardTable,
                 table,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -108,6 +118,8 @@ namespace Orca
                 memory.MasterCardTable,
                 table,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -122,6 +134,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 table,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -137,6 +151,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 table,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
@@ -152,11 +168,80 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 table,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 memory.MasterProjectileTable
             
             );
         }
+
+        public void ReplaceAll(System.Collections.Generic.IList<MasterEnemy> data)
+        {
+            var newData = CloneAndSortBy(data, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterEnemyTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                table,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void RemoveMasterEnemy(int[] keys)
+        {
+            var data = RemoveCore(memory.MasterEnemyTable.GetRawDataUnsafe(), keys, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterEnemyTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                table,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void Diff(MasterEnemy[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterEnemyTable.GetRawDataUnsafe(), addOrReplaceData, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterEnemyTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                table,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
+        public void ReplaceAll(System.Collections.Generic.IList<MasterEnemyCommand> data)
+        {
+            var newData = CloneAndSortBy(data, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            var table = new MasterEnemyCommandTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterProjectileTable
+            
+            );
+        }
+
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterInfluence> data)
         {
@@ -166,6 +251,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 table,
                 memory.MasterProjectileTable
             
@@ -181,6 +268,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 table,
                 memory.MasterProjectileTable
             
@@ -196,6 +285,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 table,
                 memory.MasterProjectileTable
             
@@ -210,6 +301,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 table
             
@@ -225,6 +318,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 table
             
@@ -240,6 +335,8 @@ namespace Orca
                 memory.MasterCardTable,
                 memory.MasterCardDetailTable,
                 memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyCommandTable,
                 memory.MasterInfluenceTable,
                 table
             

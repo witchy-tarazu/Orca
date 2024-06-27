@@ -17,6 +17,8 @@ namespace Orca
         public MasterCardTable MasterCardTable { get; private set; }
         public MasterCardDetailTable MasterCardDetailTable { get; private set; }
         public MasterChildInfluenceTable MasterChildInfluenceTable { get; private set; }
+        public MasterEnemyTable MasterEnemyTable { get; private set; }
+        public MasterEnemyCommandTable MasterEnemyCommandTable { get; private set; }
         public MasterInfluenceTable MasterInfluenceTable { get; private set; }
         public MasterProjectileTable MasterProjectileTable { get; private set; }
 
@@ -24,6 +26,8 @@ namespace Orca
             MasterCardTable MasterCardTable,
             MasterCardDetailTable MasterCardDetailTable,
             MasterChildInfluenceTable MasterChildInfluenceTable,
+            MasterEnemyTable MasterEnemyTable,
+            MasterEnemyCommandTable MasterEnemyCommandTable,
             MasterInfluenceTable MasterInfluenceTable,
             MasterProjectileTable MasterProjectileTable
         )
@@ -31,6 +35,8 @@ namespace Orca
             this.MasterCardTable = MasterCardTable;
             this.MasterCardDetailTable = MasterCardDetailTable;
             this.MasterChildInfluenceTable = MasterChildInfluenceTable;
+            this.MasterEnemyTable = MasterEnemyTable;
+            this.MasterEnemyCommandTable = MasterEnemyCommandTable;
             this.MasterInfluenceTable = MasterInfluenceTable;
             this.MasterProjectileTable = MasterProjectileTable;
         }
@@ -57,6 +63,8 @@ namespace Orca
             this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs));
             this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs));
             this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs));
+            this.MasterEnemyTable = ExtractTableData<MasterEnemy, MasterEnemyTable>(header, databaseBinary, options, xs => new MasterEnemyTable(xs));
+            this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs));
             this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs));
             this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs));
         }
@@ -68,6 +76,8 @@ namespace Orca
                 () => this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs)),
                 () => this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs)),
                 () => this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs)),
+                () => this.MasterEnemyTable = ExtractTableData<MasterEnemy, MasterEnemyTable>(header, databaseBinary, options, xs => new MasterEnemyTable(xs)),
+                () => this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs)),
                 () => this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs)),
                 () => this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs)),
             };
@@ -89,6 +99,8 @@ namespace Orca
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
             builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             return builder;
@@ -100,6 +112,8 @@ namespace Orca
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
             builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             return builder;
@@ -115,6 +129,8 @@ namespace Orca
                 MasterCardTable,
                 MasterCardDetailTable,
                 MasterChildInfluenceTable,
+                MasterEnemyTable,
+                MasterEnemyCommandTable,
                 MasterInfluenceTable,
                 MasterProjectileTable,
             });
@@ -125,6 +141,10 @@ namespace Orca
             ValidateTable(MasterCardDetailTable.All, database, "(CardId, DetailId)", MasterCardDetailTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterChildInfluenceTable).ValidateUnique(result);
             ValidateTable(MasterChildInfluenceTable.All, database, "ChildId", MasterChildInfluenceTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterEnemyTable).ValidateUnique(result);
+            ValidateTable(MasterEnemyTable.All, database, "Id", MasterEnemyTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterEnemyCommandTable).ValidateUnique(result);
+            ValidateTable(MasterEnemyCommandTable.All, database, "(PatternId, Index)", MasterEnemyCommandTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterInfluenceTable).ValidateUnique(result);
             ValidateTable(MasterInfluenceTable.All, database, "InfluenceId", MasterInfluenceTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterProjectileTable).ValidateUnique(result);
@@ -147,6 +167,10 @@ namespace Orca
                     return db.MasterCardDetailTable;
                 case "child_influence":
                     return db.MasterChildInfluenceTable;
+                case "enemy":
+                    return db.MasterEnemyTable;
+                case "enemy_command":
+                    return db.MasterEnemyCommandTable;
                 case "influence":
                     return db.MasterInfluenceTable;
                 case "projectile":
@@ -167,6 +191,8 @@ namespace Orca
             dict.Add("card", Orca.Tables.MasterCardTable.CreateMetaTable());
             dict.Add("card_detail", Orca.Tables.MasterCardDetailTable.CreateMetaTable());
             dict.Add("child_influence", Orca.Tables.MasterChildInfluenceTable.CreateMetaTable());
+            dict.Add("enemy", Orca.Tables.MasterEnemyTable.CreateMetaTable());
+            dict.Add("enemy_command", Orca.Tables.MasterEnemyCommandTable.CreateMetaTable());
             dict.Add("influence", Orca.Tables.MasterInfluenceTable.CreateMetaTable());
             dict.Add("projectile", Orca.Tables.MasterProjectileTable.CreateMetaTable());
 

@@ -28,8 +28,8 @@ namespace MessagePack.Formatters.Orca
         private static global::System.ReadOnlySpan<byte> GetSpan_PenetrationType() => new byte[1 + 15] { 175, 80, 101, 110, 101, 116, 114, 97, 116, 105, 111, 110, 84, 121, 112, 101 };
         // BaseValue
         private static global::System.ReadOnlySpan<byte> GetSpan_BaseValue() => new byte[1 + 9] { 169, 66, 97, 115, 101, 86, 97, 108, 117, 101 };
-        // PropotionalValue
-        private static global::System.ReadOnlySpan<byte> GetSpan_PropotionalValue() => new byte[1 + 16] { 176, 80, 114, 111, 112, 111, 116, 105, 111, 110, 97, 108, 86, 97, 108, 117, 101 };
+        // PromotionalValue
+        private static global::System.ReadOnlySpan<byte> GetSpan_PromotionalValue() => new byte[1 + 16] { 176, 80, 114, 111, 109, 111, 116, 105, 111, 110, 97, 108, 86, 97, 108, 117, 101 };
         // StartFrame
         private static global::System.ReadOnlySpan<byte> GetSpan_StartFrame() => new byte[1 + 10] { 170, 83, 116, 97, 114, 116, 70, 114, 97, 109, 101 };
         // Duration
@@ -69,7 +69,7 @@ namespace MessagePack.Formatters.Orca
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluencePenetrationType>(formatterResolver).Serialize(ref writer, value.PenetrationType, options);
             writer.WriteRaw(GetSpan_BaseValue());
             writer.Write(value.BaseValue);
-            writer.WriteRaw(GetSpan_PropotionalValue());
+            writer.WriteRaw(GetSpan_PromotionalValue());
             writer.Write(value.PromotionalValue);
             writer.WriteRaw(GetSpan_StartFrame());
             writer.Write(value.StartFrame);
@@ -106,7 +106,7 @@ namespace MessagePack.Formatters.Orca
             var __ActorState__ = default(global::Orca.ActorState);
             var __PenetrationType__ = default(global::Orca.InfluencePenetrationType);
             var __BaseValue__ = default(int);
-            var __PropotionalValue__ = default(int);
+            var __PromotionalValue__ = default(int);
             var __StartFrame__ = default(int);
             var __Duration__ = default(int);
             var __FinishFrame__ = default(int);
@@ -230,9 +230,9 @@ namespace MessagePack.Formatters.Orca
 
                         }
                     case 16:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PropotionalValue().Slice(1))) { goto FAIL; }
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PromotionalValue().Slice(1))) { goto FAIL; }
 
-                        __PropotionalValue__ = reader.ReadInt32();
+                        __PromotionalValue__ = reader.ReadInt32();
                         continue;
                     case 8:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7957695015158969668UL) { goto FAIL; }
@@ -243,7 +243,7 @@ namespace MessagePack.Formatters.Orca
                 }
             }
 
-            var ____result = new global::Orca.MasterInfluence(__InfluenceId__, __InfluenceType__, __ActorState__, __PenetrationType__, __BaseValue__, __PropotionalValue__, __StartFrame__, __Duration__, __FinishFrame__, __ParentType__, __TargetType__, __CheckSide__, __CheckTargetType__, __CheckValueMin__, __CheckValueMax__);
+            var ____result = new global::Orca.MasterInfluence(__InfluenceId__, __InfluenceType__, __ActorState__, __PenetrationType__, __BaseValue__, __PromotionalValue__, __StartFrame__, __Duration__, __FinishFrame__, __ParentType__, __TargetType__, __CheckSide__, __CheckTargetType__, __CheckValueMin__, __CheckValueMax__);
             reader.Depth--;
             return ____result;
         }

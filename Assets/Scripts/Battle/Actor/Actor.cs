@@ -10,10 +10,15 @@ namespace Orca
         Left,
         Right,
     }
+    public enum ActorComponentState
+    {
+        Inactive,
+        Active,
+    }
 
     public class Actor : IUpdatable
     {
-        private ActorAction Action { get; set; }
+        private ActorAttacker Action { get; set; }
         private ActorCard Card { get; set; }
         private ActorHealth Health { get; set; }
 
@@ -23,6 +28,11 @@ namespace Orca
 
         private Action<Actor> OnDeadCallback { get; set; }
 
+        public void Setup()
+        {
+
+        }
+
         public void Update()
         {
 
@@ -30,7 +40,10 @@ namespace Orca
 
         public void LateUpdate()
         {
-
+            if (!Health.IsAlive)
+            {
+                OnDeadCallback.Invoke(this);
+            }
         }
     }
 }

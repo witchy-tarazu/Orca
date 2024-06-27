@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Orca
 {
     public class BattleStage
     {
-        private int WidthPerPanel { get; set; }
+        public int WidthPerPanel { get; private set; }
 
-        private Dictionary<PanelPosition, Panel> Panels { get; set; }
+        private HashSet<Panel> Panels { get; set; }
 
 
         /// <summary>
@@ -21,6 +22,34 @@ namespace Orca
             return position.PositionX >= 0 && position.PositionX < Panels.Count;
         }
 
+        public bool TryMove(PanelPosition position, ActorHealth ownerHealth, Action onCancel)
+        {
+            if (!IsValidPos(position))
+            {
+                onCancel.Invoke();
+                return false;
+            }
+
+            var targetPanel = GetPanel(position);
+            var ownerPanel = GetPanel(ownerHealth);
+            if (targetPanel.Position == ownerPanel.Position)
+            {
+                return false;
+            }
+
+            var opponentSide = ownerHealth.Side == ActorSide.Left ? ActorSide.Right : ActorSide.Left;
+            if (targetPanel.HasAnyActor(opponentSide))
+            {
+                onCancel.Invoke();
+                return false;
+            }
+
+            ownerPanel.Remove(ownerHealth);
+            targetPanel.Add(ownerHealth);
+
+            return true;
+        }
+
         /// <summary>
         /// ŒŠ‚ªŠJ‚¢‚Ä‚¢‚é‚©
         /// </summary>
@@ -28,7 +57,7 @@ namespace Orca
         /// <returns></returns>
         public bool IsPitfall(PanelPosition position)
         {
-            var panel = Panels[position];
+            var panel = Panels.First(x => x.Position == position);
             return panel.Type == PanelType.Hall;
         }
 
@@ -41,9 +70,9 @@ namespace Orca
         {
             int zeroPosition = -WidthPerPanel * (Panels.Count - 1) / 2;
             int currentIndex = Panels
-                .OrderBy(panel => panel.Key.PositionX)
+                .OrderBy(panel => panel.Position.PositionX)
                 .ToList()
-                .FindIndex(panel => panel.Key == panelPosition);
+                .FindIndex(panel => panel.Position == panelPosition);
 
             return zeroPosition + currentIndex * WidthPerPanel;
         }
@@ -133,17 +162,17 @@ namespace Orca
 
         public Panel GetPanel(PanelPosition position)
         {
-            return Panels.Values.Where(panel => panel.Position == position).FirstOrDefault();
+            return Panels.Where(panel => panel.Position == position).FirstOrDefault();
         }
 
         public Panel GetPanel(ActorHealth health)
         {
-            return Panels.Values.Where(panel => panel.HasActor(health)).FirstOrDefault();
+            return Panels.Where(panel => panel.HasActor(health)).FirstOrDefault();
         }
 
         public HashSet<Panel> GetAllPanelHasActor()
         {
-            return Panels.Values.Where(panel => panel.HasAnyActor()).ToHashSet();
+            return Panels.Where(panel => panel.HasAnyActor()).ToHashSet();
         }
 
         public Panel GetNearestPanel(CheckData check)
@@ -153,10 +182,76 @@ namespace Orca
             check.ApplyToPositions(
                 position =>
                 {
-                    
+                    var tmp = GetPanel(position);
+
+                    var checkSide = check.CheckSide;
+                    if (checkSide == InfluenceCheckSide.Whole)
+                    {
+                        if (tmp.HasAnyActor()
+                            && IsNearest(check.OwnerHealth.Side, tmp, panel))
+                        {
+                            panel = tmp;
+                        }
+                    }
+
+                    var side = checkSide switch
+                    {
+                        InfluenceCheckSide.Owner =>
+                             check.OwnerHealth.Side == ActorSide.Left ? ActorSide.Left : ActorSide.Right,
+                        InfluenceCheckSide.Opponent =>
+                            check.OwnerHealth.Side == ActorSide.Left ? ActorSide.Right : ActorSide.Left,
+                        _ => ActorSide.Left,
+                    };
+
+                    if (tmp.HasAnyActor(side) && IsNearest(side, tmp, panel))
+                    {
+                        panel = tmp;
+                    }
                 });
 
             return panel;
+        }
+
+        private bool IsNearest(ActorSide side, Panel tmp, Panel current)
+        {
+            if (current == null)
+            {
+                return true;
+            }
+
+            if (side == ActorSide.Left
+                && tmp.Position.PositionX < current.Position.PositionX)
+            {
+                return true;
+            }
+
+            if (side == ActorSide.Right
+                && tmp.Position.PositionX > current.Position.PositionX)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Panel GetNearestEnemyPanel(ActorHealth health)
+        {
+            var currentPanel = GetPanel(health);
+            switch (health.Side)
+            {
+                case ActorSide.Left:
+                    return Panels
+                        .Where(x => x.Position.PositionX > currentPanel.Position.PositionX)
+                        .OrderBy(x => x.Position.PositionX)
+                        .First();
+                case ActorSide.Right:
+                    return Panels
+                        .Where(x => x.Position.PositionX < currentPanel.Position.PositionX)
+                        .OrderByDescending(x => x.Position.PositionX)
+                        .First();
+                default:
+                    return null;
+            }
         }
     }
 }

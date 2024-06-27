@@ -92,7 +92,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("ActorState")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("PenetrationType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("BaseValue")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("PropotionalValue")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("PromotionalValue")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("StartFrame")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("Duration")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("FinishFrame")),

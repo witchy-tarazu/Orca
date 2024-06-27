@@ -35,6 +35,18 @@ namespace Orca
             return this;
         }
 
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterEnemy> dataSource)
+        {
+            AppendCore(dataSource, x => x.Id, System.Collections.Generic.Comparer<int>.Default);
+            return this;
+        }
+
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterEnemyCommand> dataSource)
+        {
+            AppendCore(dataSource, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            return this;
+        }
+
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterInfluence> dataSource)
         {
             AppendCore(dataSource, x => x.InfluenceId, System.Collections.Generic.Comparer<int>.Default);

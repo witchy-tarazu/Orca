@@ -9,6 +9,8 @@ namespace Orca
         private ActorStatus Status { get; set; }
         private ActorHitPoint HitPoint { get; set; }
 
+        public bool IsAlive => HitPoint.IsAlive();
+
         public ActorHealth(ActorSide side, int maxHp)
         {
             Side = side;

@@ -86,7 +86,7 @@ namespace Orca
             ActorState actorState,
             InfluencePenetrationType penetrationType,
             int baseValue,
-            int propotionalValue,
+            int promotionalValue,
             int startFrame,
             int duration,
             int finishFrame,
@@ -102,7 +102,7 @@ namespace Orca
             ActorState = actorState;
             PenetrationType = penetrationType;
             BaseValue = baseValue;
-            PromotionalValue = propotionalValue;
+            PromotionalValue = promotionalValue;
             StartFrame = startFrame;
             Duration = duration;
             FinishFrame = finishFrame;

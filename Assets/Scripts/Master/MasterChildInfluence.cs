@@ -28,7 +28,7 @@ namespace Orca
             ActorState actorState,
             InfluencePenetrationType penetrationType,
             int baseValue,
-            int propotionalValue)
+            int promotionalValue)
         {
             ChildId = childId;
             ParentType = parentType;
@@ -39,7 +39,7 @@ namespace Orca
             ActorState = actorState;
             PenetrationType = penetrationType;
             BaseValue = baseValue;
-            PromotionalValue = propotionalValue;
+            PromotionalValue = promotionalValue;
         }
 
         [PrimaryKey]
