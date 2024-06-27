@@ -19,7 +19,7 @@ namespace Orca
         private int Wait { get; set; }
         private bool IsLoop { get; set; }
 
-        public void Setup(
+        public EnemyStrategy(
             BattleStage stage,
             ActorHealth health,
             List<MasterEnemyCommand> commands,

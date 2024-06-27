@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Orca
 {
-    public class ActorAttacker
+    public class ActorAttacker : IActorAction
     {
-        private ActorComponentState CurrentState { get; set; }
+        public ActorComponentState CurrentState { get; private set; }
         private int CurrentFrame { get; set; }
         private int FinishFrame { get; set; }
 
@@ -22,14 +22,14 @@ namespace Orca
 
         private Action<IUpdatable> ReleaseForSystem { get; set; }
 
-        public void Initialize(
-            InfluencerFactory factory,
+        public ActorAttacker(
+            InfluencerFactory influencerFactory,
             ProjectileFactory projectileFactory,
             Action<IUpdatable> registerForSystem,
             Action<IUpdatable> releaseForSystem,
             ActorHealth health)
         {
-            InfluencerFactory = factory;
+            InfluencerFactory = influencerFactory;
             ProjectileFactory = projectileFactory;
             RegisterForSystem = registerForSystem;
             ReleaseForSystem = releaseForSystem;

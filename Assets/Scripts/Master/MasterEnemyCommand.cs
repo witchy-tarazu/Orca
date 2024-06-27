@@ -23,26 +23,26 @@ namespace Orca
     public class MasterEnemyCommand
     {
         [PrimaryKey(0), SecondaryKey(0), NonUnique]
-        public int PatternId { get; private set; }
+        public int PatternId { get; }
 
         [PrimaryKey(1), NonUnique]
-        public int Index { get; private set; }
+        public int Index { get; }
 
-        public CommandType Type { get; private set; }
+        public CommandType Type { get; }
 
-        public CommandTargetType TargetType { get; private set; }
+        public CommandTargetType TargetType { get; }
 
-        public int Value { get; private set; }
+        public int Value { get; }
 
         /// <summary>
         /// 実行までの待機時間
         /// </summary>
-        public int Wait { get; private set; }
+        public int Wait { get; }
 
         /// <summary>
         /// 一度しか発動しない=ループ時に除外されるコマンドかどうか
         /// </summary>
-        public bool IsOnce { get; private set; }
+        public bool IsOnce { get; }
 
         public MasterEnemyCommand(
             int patternId,

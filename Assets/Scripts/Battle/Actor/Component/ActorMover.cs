@@ -6,13 +6,13 @@ namespace Orca
         Jump,
     }
 
-    public class ActorMover
+    public class ActorMover : IActorAction
     {
         private BattleStage Stage { get; set; }
         private ActorHealth Health { get; set; }
         private int AbsoluteSpeed { get; set; }
 
-        private ActorComponentState CurrentState { get; set; }
+        public ActorComponentState CurrentState { get; private set; }
 
         private MoveType MoveType { get; set; }
         private PanelPosition Target { get; set; }
@@ -23,9 +23,17 @@ namespace Orca
         private int LinearPosition { get; set; }
         private int LinearTargetPosition { get; set; }
 
+        public ActorMover(BattleStage stage, ActorHealth health, int speed)
+        {
+            Stage = stage;
+            Health = health;
+            AbsoluteSpeed = speed;
+            CurrentState = ActorComponentState.Inactive;
+        }
 
         public void Execute(MoveType moveType, PanelPosition target)
         {
+            CurrentState = ActorComponentState.Active;
             MoveType = moveType;
             Target = target;
 

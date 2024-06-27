@@ -55,7 +55,10 @@ namespace MessagePack.Formatters.Orca
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadMapHeader();
-            var ____result = new global::Orca.MasterEnemy();
+            var __Id__ = default(int);
+            var __PatternId__ = default(int);
+            var __MaxHp__ = default(int);
+            var __Speed__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -69,28 +72,29 @@ namespace MessagePack.Formatters.Orca
                     case 2:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25673UL) { goto FAIL; }
 
-                        reader.Skip();
+                        __Id__ = reader.ReadInt32();
                         continue;
                     case 9:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PatternId().Slice(1))) { goto FAIL; }
 
-                        reader.Skip();
+                        __PatternId__ = reader.ReadInt32();
                         continue;
                     case 5:
                         switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
                         {
                             default: goto FAIL;
                             case 482252185933UL:
-                                reader.Skip();
+                                __MaxHp__ = reader.ReadInt32();
                                 continue;
                             case 431197876307UL:
-                                reader.Skip();
+                                __Speed__ = reader.ReadInt32();
                                 continue;
                         }
 
                 }
             }
 
+            var ____result = new global::Orca.MasterEnemy(__Id__, __PatternId__, __MaxHp__, __Speed__);
             reader.Depth--;
             return ____result;
         }
