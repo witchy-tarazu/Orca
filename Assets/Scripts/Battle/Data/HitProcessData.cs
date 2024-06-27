@@ -13,6 +13,7 @@ namespace Orca
         public HitData HitData { get; }
         public ActorHealth OwnerHealth { get; }
         public Action<ActorHealth> OnDamageAction { get; }
+        public int Serial { get; }
 
         public HitProcessData(
             InfluenceType type,
@@ -23,7 +24,8 @@ namespace Orca
             int grade,
             HitData hitData,
             ActorHealth ownerHealth,
-            Action<ActorHealth> onDamageAction)
+            Action<ActorHealth> onDamageAction,
+            int serial)
         {
             Type = type;
             ActorState = actorState;
@@ -34,6 +36,7 @@ namespace Orca
             HitData = hitData;
             OwnerHealth = ownerHealth;
             OnDamageAction = onDamageAction;
+            Serial = serial;
         }
     }
 }

@@ -33,7 +33,8 @@ namespace Orca
                     grade,
                     hitData,
                     influencer.OwnerHealth,
-                    (x) => CheckHitForChild(influencer, x));
+                    (x) => CheckHitForChild(influencer, x),
+                    influencer.Serial);
 
             Process(processData);
 
@@ -63,18 +64,18 @@ namespace Orca
             {
                 case InfluenceType.Damage:
                     data.HitData.ApplyToActors(x =>
-                        x.Damage(data.BaseValue + data.PromotionalValue * data.Grade, data.PenetrationType, data.OwnerHealth, data.OnDamageAction));
+                        x.Damage(data.BaseValue + data.PromotionalValue * data.Grade, data.PenetrationType, data.OwnerHealth, data.OnDamageAction, data.Serial));
                     break;
                 case InfluenceType.Recovery:
-                    data.HitData.ApplyToActors(x => x.Recovery(data.BaseValue + data.PromotionalValue * data.Grade));
+                    data.HitData.ApplyToActors(x => x.Recovery(data.BaseValue + data.PromotionalValue * data.Grade, data.Serial));
                     break;
                 case InfluenceType.State:
                     data.HitData.ApplyToActors(x =>
-                        x.MakeState(data.ActorState, data.BaseValue + data.PromotionalValue * data.Grade, data.OwnerHealth, data.PenetrationType));
+                        x.MakeState(data.ActorState, data.BaseValue + data.PromotionalValue * data.Grade, data.OwnerHealth, data.PenetrationType, data.Serial));
                     break;
                 case InfluenceType.Stack:
                     data.HitData.ApplyToActors(x =>
-                        x.AddStack(data.ActorState, data.BaseValue + data.PromotionalValue * data.Grade, data.OwnerHealth, data.PenetrationType));
+                        x.AddStack(data.ActorState, data.BaseValue + data.PromotionalValue * data.Grade, data.OwnerHealth, data.PenetrationType, data.Serial));
                     break;
                 case InfluenceType.CreateInfluence:
                     CreateInfluencerAction.Invoke(data.BaseValue, data.Grade, data.OwnerHealth, data.HitData.Panel.Position);

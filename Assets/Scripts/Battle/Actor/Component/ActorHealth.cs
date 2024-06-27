@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using static UnityEngine.CompositeCollider2D;
 
 namespace Orca
@@ -9,6 +10,8 @@ namespace Orca
         private ActorStatus Status { get; set; }
         private ActorHitPoint HitPoint { get; set; }
 
+        private HashSet<int> ReceivedSerial { get; set; }
+
         public bool IsAlive => HitPoint.IsAlive();
 
         public ActorHealth(ActorSide side, int maxHp)
@@ -17,14 +20,20 @@ namespace Orca
 
             Status = new(OnApplyAbnormalState);
             HitPoint = new(maxHp);
+
+            ReceivedSerial = new();
         }
 
         public void Damage(
             int damage,
             InfluencePenetrationType penetrationType,
             ActorHealth owner,
-            Action<ActorHealth> onDamage)
+            Action<ActorHealth> onDamage,
+            int serial)
         {
+            if(ReceivedSerial.Contains(serial)) { return; }
+            ReceivedSerial.Add(serial);
+
             // 無敵・回避の処理
             if (Status.IsState(ActorState.Invincible)
                 && penetrationType != InfluencePenetrationType.Invincible
@@ -80,8 +89,11 @@ namespace Orca
             onDamage?.Invoke(this);
         }
 
-        public void Recovery(int recovery)
+        public void Recovery(int recovery, int serial)
         {
+            if (ReceivedSerial.Contains(serial)) { return; }
+            ReceivedSerial.Add(serial);
+
             HitPoint.Recovery(recovery);
         }
 
@@ -89,8 +101,12 @@ namespace Orca
             ActorState stackState,
             int value,
             ActorHealth owner,
-            InfluencePenetrationType penetrationType)
+            InfluencePenetrationType penetrationType,
+            int serial)
         {
+            if (ReceivedSerial.Contains(serial)) { return; }
+            ReceivedSerial.Add(serial);
+
             if (value > 0)
             {
                 // 有利効果はすべて適用する
@@ -107,8 +123,11 @@ namespace Orca
             Status.AddStack(stackState, value);
         }
 
-        public void RemoveStack(ActorState stackState)
+        public void RemoveStack(ActorState stackState, int serial)
         {
+            if (ReceivedSerial.Contains(serial)) { return; }
+            ReceivedSerial.Add(serial);
+
             Status.RemoveStack(stackState);
         }
 
@@ -116,8 +135,12 @@ namespace Orca
             ActorState abnormalState,
             int duration,
             ActorHealth owner,
-            InfluencePenetrationType penetrationType)
+            InfluencePenetrationType penetrationType,
+            int serial)
         {
+            if (ReceivedSerial.Contains(serial)) { return; }
+            ReceivedSerial.Add(serial);
+
             // 不利効果はふるいにかける
             switch (abnormalState)
             {

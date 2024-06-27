@@ -14,6 +14,8 @@ namespace Orca
 
         private Action<CheckData, IHitChecker> CheckAction { get; set; }
 
+        private int Serial { get; set; }
+
         public InfluencerFactory(
             BattleStage stage,
             MemoryDatabase masterDatabase,
@@ -25,6 +27,7 @@ namespace Orca
             CheckAction = checkAction;
             ProcessHitAction = processHitAction;
             InfluencerQueue = new();
+            Serial = 0;
         }
 
         public HashSet<Influencer> CreateInfluencers(
@@ -78,7 +81,7 @@ namespace Orca
                         Release(influencer);
                     }
                 );
-            influencer.Setup(master, grade, ownerHealth, ownerPosition, callbackContainer, Stage);
+            influencer.Setup(master, grade, ownerHealth, ownerPosition, callbackContainer, Stage, ++Serial);
 
             var children = MasterDatabase.MasterChildInfluenceTable
                 .FindByParentTypeAndParentId((ChildInfluenceParentType.Influence, master.InfluenceId));

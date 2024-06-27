@@ -24,7 +24,7 @@ namespace Orca
 
         public MasterInfluence Master { get; private set; }
         public int Grade { get; private set; }
-
+        public int Serial { get; private set; }
 
         public void Setup(
             MasterInfluence master,
@@ -32,7 +32,8 @@ namespace Orca
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             BattleCallbackContainer callbackContainer,
-            BattleStage stage)
+            BattleStage stage,
+            int serial)
         {
             Master = master;
             Grade = grade;
@@ -43,6 +44,7 @@ namespace Orca
             FinishFrame = Master.FinishFrame;
             CallbackContainer = callbackContainer;
             Children.Clear();
+            Serial = serial;
 
             InfluencePositions = stage.GetPanelPositions(ownerHealth, ownerPosition, master);
         }

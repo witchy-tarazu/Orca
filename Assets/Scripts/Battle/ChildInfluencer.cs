@@ -46,7 +46,8 @@ namespace Orca
                     grade,
                     hitData,
                     ownerHealth,
-                    null);
+                    null,
+                    0);
 
             return processData;
         }
