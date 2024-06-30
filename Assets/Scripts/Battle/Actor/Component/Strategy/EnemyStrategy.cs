@@ -43,6 +43,7 @@ namespace Orca
         // s“®‰Â”\‚Èó‘Ô‚Å‚Ì‚İUpdate‚ªŒÄ‚Î‚ê‚é
         public void Update()
         {
+            Wait--;
             if (Wait == 0)
             {
                 Execute();

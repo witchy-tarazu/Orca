@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using static UnityEngine.CompositeCollider2D;
 
 namespace Orca
 {
@@ -24,6 +23,18 @@ namespace Orca
             ReceivedSerial = new();
         }
 
+        public ActorHealth(ActorSide side, int currentHp, int maxHp)
+        {
+            Side = side;
+
+            Status = new(OnApplyAbnormalState);
+            HitPoint = new(currentHp, maxHp);
+
+            ReceivedSerial = new();
+        }
+
+        public int GetHp() => HitPoint.Hp;
+
         public void Damage(
             int damage,
             InfluencePenetrationType penetrationType,
@@ -31,9 +42,23 @@ namespace Orca
             Action<ActorHealth> onDamage,
             int serial)
         {
-            if(ReceivedSerial.Contains(serial)) { return; }
+            if (ReceivedSerial.Contains(serial)) { return; }
             ReceivedSerial.Add(serial);
 
+            DamageCore(damage, penetrationType, owner, onDamage);
+        }
+
+        public void DazzleDamage()
+        {
+            DamageCore(BattleDefine.DazzleDamage, InfluencePenetrationType.None, this, null);
+        }
+
+        private void DamageCore(
+            int damage,
+            InfluencePenetrationType penetrationType,
+            ActorHealth owner,
+            Action<ActorHealth> onDamage)
+        {
             // ñ≥ìGÅEâÒîÇÃèàóù
             if (Status.IsState(ActorState.Invincible)
                 && penetrationType != InfluencePenetrationType.Invincible
@@ -156,6 +181,16 @@ namespace Orca
             }
 
             Status.MakeState(abnormalState, duration);
+        }
+
+        public bool IsDisableAction()
+        {
+            return Status.IsState(ActorState.Stan) || !IsAlive;
+        }
+
+        public bool IsDazzle()
+        {
+            return Status.IsState(ActorState.Dazzle);
         }
 
         public void Update()

@@ -5,6 +5,7 @@ namespace Orca
 {
     public enum CommandType
     {
+        Attack,
         Card,
         Move,
         MoveNearestEnemy,

@@ -14,31 +14,43 @@ namespace Orca
 {
    public sealed class MemoryDatabase : MemoryDatabaseBase
    {
+        public MasterBossBattleLayoutTable MasterBossBattleLayoutTable { get; private set; }
         public MasterCardTable MasterCardTable { get; private set; }
         public MasterCardDetailTable MasterCardDetailTable { get; private set; }
         public MasterChildInfluenceTable MasterChildInfluenceTable { get; private set; }
         public MasterEnemyTable MasterEnemyTable { get; private set; }
+        public MasterEnemyBattleLayoutTable MasterEnemyBattleLayoutTable { get; private set; }
         public MasterEnemyCommandTable MasterEnemyCommandTable { get; private set; }
         public MasterInfluenceTable MasterInfluenceTable { get; private set; }
+        public MasterLayoutLotteryTable MasterLayoutLotteryTable { get; private set; }
         public MasterProjectileTable MasterProjectileTable { get; private set; }
+        public MasterStageTable MasterStageTable { get; private set; }
 
         public MemoryDatabase(
+            MasterBossBattleLayoutTable MasterBossBattleLayoutTable,
             MasterCardTable MasterCardTable,
             MasterCardDetailTable MasterCardDetailTable,
             MasterChildInfluenceTable MasterChildInfluenceTable,
             MasterEnemyTable MasterEnemyTable,
+            MasterEnemyBattleLayoutTable MasterEnemyBattleLayoutTable,
             MasterEnemyCommandTable MasterEnemyCommandTable,
             MasterInfluenceTable MasterInfluenceTable,
-            MasterProjectileTable MasterProjectileTable
+            MasterLayoutLotteryTable MasterLayoutLotteryTable,
+            MasterProjectileTable MasterProjectileTable,
+            MasterStageTable MasterStageTable
         )
         {
+            this.MasterBossBattleLayoutTable = MasterBossBattleLayoutTable;
             this.MasterCardTable = MasterCardTable;
             this.MasterCardDetailTable = MasterCardDetailTable;
             this.MasterChildInfluenceTable = MasterChildInfluenceTable;
             this.MasterEnemyTable = MasterEnemyTable;
+            this.MasterEnemyBattleLayoutTable = MasterEnemyBattleLayoutTable;
             this.MasterEnemyCommandTable = MasterEnemyCommandTable;
             this.MasterInfluenceTable = MasterInfluenceTable;
+            this.MasterLayoutLotteryTable = MasterLayoutLotteryTable;
             this.MasterProjectileTable = MasterProjectileTable;
+            this.MasterStageTable = MasterStageTable;
         }
 
         public MemoryDatabase(byte[] databaseBinary, bool internString = true, MessagePack.IFormatterResolver formatterResolver = null, int maxDegreeOfParallelism = 1)
@@ -60,26 +72,34 @@ namespace Orca
 
         void InitSequential(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)
         {
+            this.MasterBossBattleLayoutTable = ExtractTableData<MasterBossBattleLayout, MasterBossBattleLayoutTable>(header, databaseBinary, options, xs => new MasterBossBattleLayoutTable(xs));
             this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs));
             this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs));
             this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs));
             this.MasterEnemyTable = ExtractTableData<MasterEnemy, MasterEnemyTable>(header, databaseBinary, options, xs => new MasterEnemyTable(xs));
+            this.MasterEnemyBattleLayoutTable = ExtractTableData<MasterEnemyBattleLayout, MasterEnemyBattleLayoutTable>(header, databaseBinary, options, xs => new MasterEnemyBattleLayoutTable(xs));
             this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs));
             this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs));
+            this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs));
             this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs));
+            this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs));
         }
 
         void InitParallel(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)
         {
             var extracts = new Action[]
             {
+                () => this.MasterBossBattleLayoutTable = ExtractTableData<MasterBossBattleLayout, MasterBossBattleLayoutTable>(header, databaseBinary, options, xs => new MasterBossBattleLayoutTable(xs)),
                 () => this.MasterCardTable = ExtractTableData<MasterCard, MasterCardTable>(header, databaseBinary, options, xs => new MasterCardTable(xs)),
                 () => this.MasterCardDetailTable = ExtractTableData<MasterCardDetail, MasterCardDetailTable>(header, databaseBinary, options, xs => new MasterCardDetailTable(xs)),
                 () => this.MasterChildInfluenceTable = ExtractTableData<MasterChildInfluence, MasterChildInfluenceTable>(header, databaseBinary, options, xs => new MasterChildInfluenceTable(xs)),
                 () => this.MasterEnemyTable = ExtractTableData<MasterEnemy, MasterEnemyTable>(header, databaseBinary, options, xs => new MasterEnemyTable(xs)),
+                () => this.MasterEnemyBattleLayoutTable = ExtractTableData<MasterEnemyBattleLayout, MasterEnemyBattleLayoutTable>(header, databaseBinary, options, xs => new MasterEnemyBattleLayoutTable(xs)),
                 () => this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs)),
                 () => this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs)),
+                () => this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs)),
                 () => this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs)),
+                () => this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs)),
             };
             
             System.Threading.Tasks.Parallel.Invoke(new System.Threading.Tasks.ParallelOptions
@@ -96,26 +116,34 @@ namespace Orca
         public DatabaseBuilder ToDatabaseBuilder()
         {
             var builder = new DatabaseBuilder();
+            builder.Append(this.MasterBossBattleLayoutTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
             builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterEnemyTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyBattleLayoutTable.GetRawDataUnsafe());
             builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
+            builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
+            builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
         }
 
         public DatabaseBuilder ToDatabaseBuilder(MessagePack.IFormatterResolver resolver)
         {
             var builder = new DatabaseBuilder(resolver);
+            builder.Append(this.MasterBossBattleLayoutTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardTable.GetRawDataUnsafe());
             builder.Append(this.MasterCardDetailTable.GetRawDataUnsafe());
             builder.Append(this.MasterChildInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterEnemyTable.GetRawDataUnsafe());
+            builder.Append(this.MasterEnemyBattleLayoutTable.GetRawDataUnsafe());
             builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
+            builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
+            builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
         }
 
@@ -126,15 +154,21 @@ namespace Orca
             var result = new ValidateResult();
             var database = new ValidationDatabase(new object[]
             {
+                MasterBossBattleLayoutTable,
                 MasterCardTable,
                 MasterCardDetailTable,
                 MasterChildInfluenceTable,
                 MasterEnemyTable,
+                MasterEnemyBattleLayoutTable,
                 MasterEnemyCommandTable,
                 MasterInfluenceTable,
+                MasterLayoutLotteryTable,
                 MasterProjectileTable,
+                MasterStageTable,
             });
 
+            ((ITableUniqueValidate)MasterBossBattleLayoutTable).ValidateUnique(result);
+            ValidateTable(MasterBossBattleLayoutTable.All, database, "(LayoutId, EnemyId)", MasterBossBattleLayoutTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterCardTable).ValidateUnique(result);
             ValidateTable(MasterCardTable.All, database, "CardId", MasterCardTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterCardDetailTable).ValidateUnique(result);
@@ -143,12 +177,18 @@ namespace Orca
             ValidateTable(MasterChildInfluenceTable.All, database, "ChildId", MasterChildInfluenceTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterEnemyTable).ValidateUnique(result);
             ValidateTable(MasterEnemyTable.All, database, "Id", MasterEnemyTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterEnemyBattleLayoutTable).ValidateUnique(result);
+            ValidateTable(MasterEnemyBattleLayoutTable.All, database, "(LayoutId, RoleType, PositionIndex)", MasterEnemyBattleLayoutTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterEnemyCommandTable).ValidateUnique(result);
             ValidateTable(MasterEnemyCommandTable.All, database, "(PatternId, Index)", MasterEnemyCommandTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterInfluenceTable).ValidateUnique(result);
             ValidateTable(MasterInfluenceTable.All, database, "InfluenceId", MasterInfluenceTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterLayoutLotteryTable).ValidateUnique(result);
+            ValidateTable(MasterLayoutLotteryTable.All, database, "(StageId, LayoutId)", MasterLayoutLotteryTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterProjectileTable).ValidateUnique(result);
             ValidateTable(MasterProjectileTable.All, database, "ProjectileId", MasterProjectileTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterStageTable).ValidateUnique(result);
+            ValidateTable(MasterStageTable.All, database, "(Id, PanelIndex)", MasterStageTable.PrimaryKeySelector, result);
 
             return result;
         }
@@ -161,6 +201,8 @@ namespace Orca
         {
             switch (tableName)
             {
+                case "boss_battle_layout":
+                    return db.MasterBossBattleLayoutTable;
                 case "card":
                     return db.MasterCardTable;
                 case "card_detail":
@@ -169,12 +211,18 @@ namespace Orca
                     return db.MasterChildInfluenceTable;
                 case "enemy":
                     return db.MasterEnemyTable;
+                case "enemy_battle_layout":
+                    return db.MasterEnemyBattleLayoutTable;
                 case "enemy_command":
                     return db.MasterEnemyCommandTable;
                 case "influence":
                     return db.MasterInfluenceTable;
+                case "layout_lottery":
+                    return db.MasterLayoutLotteryTable;
                 case "projectile":
                     return db.MasterProjectileTable;
+                case "stage":
+                    return db.MasterStageTable;
                 
                 default:
                     return null;
@@ -188,13 +236,17 @@ namespace Orca
             if (metaTable != null) return metaTable;
 
             var dict = new Dictionary<string, MasterMemory.Meta.MetaTable>();
+            dict.Add("boss_battle_layout", Orca.Tables.MasterBossBattleLayoutTable.CreateMetaTable());
             dict.Add("card", Orca.Tables.MasterCardTable.CreateMetaTable());
             dict.Add("card_detail", Orca.Tables.MasterCardDetailTable.CreateMetaTable());
             dict.Add("child_influence", Orca.Tables.MasterChildInfluenceTable.CreateMetaTable());
             dict.Add("enemy", Orca.Tables.MasterEnemyTable.CreateMetaTable());
+            dict.Add("enemy_battle_layout", Orca.Tables.MasterEnemyBattleLayoutTable.CreateMetaTable());
             dict.Add("enemy_command", Orca.Tables.MasterEnemyCommandTable.CreateMetaTable());
             dict.Add("influence", Orca.Tables.MasterInfluenceTable.CreateMetaTable());
+            dict.Add("layout_lottery", Orca.Tables.MasterLayoutLotteryTable.CreateMetaTable());
             dict.Add("projectile", Orca.Tables.MasterProjectileTable.CreateMetaTable());
+            dict.Add("stage", Orca.Tables.MasterStageTable.CreateMetaTable());
 
             metaTable = new MasterMemory.Meta.MetaDatabase(dict);
             return metaTable;

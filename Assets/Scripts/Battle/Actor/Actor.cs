@@ -23,7 +23,7 @@ namespace Orca
 
         private BattleStage Stage { get; set; }
 
-        private Action<Actor> OnDeadCallback { get; set; }
+        private Action OnDeadCallback { get; set; }
 
         private MemoryDatabase MasterDatabase { get; set; }
 
@@ -33,20 +33,36 @@ namespace Orca
             Stage = stage;
         }
 
-        public void SetupHero()
+        public void SetupHero(
+            ActorSide side,
+            ActorLayoutData layoutData,
+            InfluencerFactory influencerFactory,
+            ProjectileFactory projectileFactory,
+            Action<IUpdatable> registerForSystem,
+            Action<IUpdatable> releaseForSystem,
+            Action onDeadCallback)
         {
-
+            var heroData = layoutData.HeroData;
+            Health = new(side, heroData.Hp, heroData.MaxHp);
+            Attacker = new(influencerFactory, projectileFactory, registerForSystem, releaseForSystem, Health);
+            Mover = new(Stage, Health, heroData.Speed);
+            Strategy = new HeroStrategy(Stage, Health, heroData,
+                Attacker.Execute,
+                position => Mover.Execute(MoveType.Normal, position));
+            OnDeadCallback = onDeadCallback;
+            Stage.AddHealth(heroData.StartPosition, Health);
         }
 
         public void SetupEnemy(
             ActorSide side,
-            int enemyId,
+            ActorPositionData positionData,
             InfluencerFactory influencerFactory,
             ProjectileFactory projectileFactory,
             Action<IUpdatable> registerForSystem,
-            Action<IUpdatable> releaseForSystem)
+            Action<IUpdatable> releaseForSystem,
+            Action onDeadCallback)
         {
-            var enemyMaster = MasterDatabase.MasterEnemyTable.FindById(enemyId);
+            var enemyMaster = positionData.Enemy;
             Health = new(side, enemyMaster.MaxHp);
             Attacker = new(influencerFactory, projectileFactory, registerForSystem, releaseForSystem, Health);
             Mover = new(Stage, Health, enemyMaster.Speed);
@@ -57,10 +73,19 @@ namespace Orca
                 cardId => Attacker.Execute(MasterDatabase.MasterCardTable.FindByCardId(cardId)),
                 position => Mover.Execute(MoveType.Normal, position),
                 position => Mover.Execute(MoveType.Jump, position));
+            OnDeadCallback = onDeadCallback;
+            Stage.AddHealth(positionData.Position, Health);
         }
 
         public void Update()
         {
+            Health.Update();
+
+            if (Health.IsDisableAction())
+            {
+                return;
+            }
+
             if (Attacker.CurrentState == ActorComponentState.Inactive
                 && Mover.CurrentState == ActorComponentState.Inactive)
             {
@@ -74,10 +99,35 @@ namespace Orca
 
         public void LateUpdate()
         {
+            if (Health.IsDisableAction())
+            {
+                Attacker.Cancel();
+                Mover.Cancel();
+            }
+
             if (!Health.IsAlive)
             {
-                OnDeadCallback.Invoke(this);
+                OnDeadCallback.Invoke();
+                return;
             }
         }
+
+        public void StartTurn()
+        {
+            if (Strategy is not HeroStrategy)
+            {
+                return;
+            }
+
+            var heroStrategy = Strategy as HeroStrategy;
+            heroStrategy.StartTurn();
+        }
+
+        public bool IsHero(ActorSide side)
+        {
+            return Health.Side == side && Strategy is HeroStrategy;
+        }
+
+        public int GetHp() => Health.GetHp();
     }
 }

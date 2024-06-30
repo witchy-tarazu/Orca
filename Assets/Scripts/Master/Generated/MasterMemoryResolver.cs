@@ -47,15 +47,19 @@ namespace Orca
 
         static MasterMemoryResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(7)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(11)
             {
-                {typeof(MasterCard[]), 0 },
-                {typeof(MasterCardDetail[]), 1 },
-                {typeof(MasterChildInfluence[]), 2 },
-                {typeof(MasterEnemy[]), 3 },
-                {typeof(MasterEnemyCommand[]), 4 },
-                {typeof(MasterInfluence[]), 5 },
-                {typeof(MasterProjectile[]), 6 },
+                {typeof(MasterBossBattleLayout[]), 0 },
+                {typeof(MasterCard[]), 1 },
+                {typeof(MasterCardDetail[]), 2 },
+                {typeof(MasterChildInfluence[]), 3 },
+                {typeof(MasterEnemy[]), 4 },
+                {typeof(MasterEnemyBattleLayout[]), 5 },
+                {typeof(MasterEnemyCommand[]), 6 },
+                {typeof(MasterInfluence[]), 7 },
+                {typeof(MasterLayoutLottery[]), 8 },
+                {typeof(MasterProjectile[]), 9 },
+                {typeof(MasterStage[]), 10 },
             };
         }
 
@@ -66,13 +70,17 @@ namespace Orca
 
             switch (key)
             {
-                case 0: return new MessagePack.Formatters.ArrayFormatter<MasterCard>();
-                case 1: return new MessagePack.Formatters.ArrayFormatter<MasterCardDetail>();
-                case 2: return new MessagePack.Formatters.ArrayFormatter<MasterChildInfluence>();
-                case 3: return new MessagePack.Formatters.ArrayFormatter<MasterEnemy>();
-                case 4: return new MessagePack.Formatters.ArrayFormatter<MasterEnemyCommand>();
-                case 5: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
-                case 6: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
+                case 0: return new MessagePack.Formatters.ArrayFormatter<MasterBossBattleLayout>();
+                case 1: return new MessagePack.Formatters.ArrayFormatter<MasterCard>();
+                case 2: return new MessagePack.Formatters.ArrayFormatter<MasterCardDetail>();
+                case 3: return new MessagePack.Formatters.ArrayFormatter<MasterChildInfluence>();
+                case 4: return new MessagePack.Formatters.ArrayFormatter<MasterEnemy>();
+                case 5: return new MessagePack.Formatters.ArrayFormatter<MasterEnemyBattleLayout>();
+                case 6: return new MessagePack.Formatters.ArrayFormatter<MasterEnemyCommand>();
+                case 7: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
+                case 8: return new MessagePack.Formatters.ArrayFormatter<MasterLayoutLottery>();
+                case 9: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
+                case 10: return new MessagePack.Formatters.ArrayFormatter<MasterStage>();
                 default: return null;
             }
         }

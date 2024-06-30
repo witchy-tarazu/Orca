@@ -20,6 +20,10 @@ namespace MessagePack.Formatters.Orca
     {
         // Id
         private static global::System.ReadOnlySpan<byte> GetSpan_Id() => new byte[1 + 2] { 162, 73, 100 };
+        // RoleType
+        private static global::System.ReadOnlySpan<byte> GetSpan_RoleType() => new byte[1 + 8] { 168, 82, 111, 108, 101, 84, 121, 112, 101 };
+        // Level
+        private static global::System.ReadOnlySpan<byte> GetSpan_Level() => new byte[1 + 5] { 165, 76, 101, 118, 101, 108 };
         // PatternId
         private static global::System.ReadOnlySpan<byte> GetSpan_PatternId() => new byte[1 + 9] { 169, 80, 97, 116, 116, 101, 114, 110, 73, 100 };
         // MaxHp
@@ -35,9 +39,14 @@ namespace MessagePack.Formatters.Orca
                 return;
             }
 
-            writer.WriteMapHeader(4);
+            var formatterResolver = options.Resolver;
+            writer.WriteMapHeader(6);
             writer.WriteRaw(GetSpan_Id());
             writer.Write(value.Id);
+            writer.WriteRaw(GetSpan_RoleType());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.RoleType>(formatterResolver).Serialize(ref writer, value.RoleType, options);
+            writer.WriteRaw(GetSpan_Level());
+            writer.Write(value.Level);
             writer.WriteRaw(GetSpan_PatternId());
             writer.Write(value.PatternId);
             writer.WriteRaw(GetSpan_MaxHp());
@@ -54,8 +63,11 @@ namespace MessagePack.Formatters.Orca
             }
 
             options.Security.DepthStep(ref reader);
+            var formatterResolver = options.Resolver;
             var length = reader.ReadMapHeader();
             var __Id__ = default(int);
+            var __RoleType__ = default(global::Orca.RoleType);
+            var __Level__ = default(int);
             var __PatternId__ = default(int);
             var __MaxHp__ = default(int);
             var __Speed__ = default(int);
@@ -74,15 +86,18 @@ namespace MessagePack.Formatters.Orca
 
                         __Id__ = reader.ReadInt32();
                         continue;
-                    case 9:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PatternId().Slice(1))) { goto FAIL; }
+                    case 8:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7309475598608133970UL) { goto FAIL; }
 
-                        __PatternId__ = reader.ReadInt32();
+                        __RoleType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.RoleType>(formatterResolver).Deserialize(ref reader, options);
                         continue;
                     case 5:
                         switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
                         {
                             default: goto FAIL;
+                            case 465558725964UL:
+                                __Level__ = reader.ReadInt32();
+                                continue;
                             case 482252185933UL:
                                 __MaxHp__ = reader.ReadInt32();
                                 continue;
@@ -90,11 +105,16 @@ namespace MessagePack.Formatters.Orca
                                 __Speed__ = reader.ReadInt32();
                                 continue;
                         }
+                    case 9:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PatternId().Slice(1))) { goto FAIL; }
+
+                        __PatternId__ = reader.ReadInt32();
+                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterEnemy(__Id__, __PatternId__, __MaxHp__, __Speed__);
+            var ____result = new global::Orca.MasterEnemy(__Id__, __RoleType__, __Level__, __PatternId__, __MaxHp__, __Speed__);
             reader.Depth--;
             return ____result;
         }

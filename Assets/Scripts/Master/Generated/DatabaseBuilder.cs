@@ -17,6 +17,12 @@ namespace Orca
         public DatabaseBuilder() : this(null) { }
         public DatabaseBuilder(MessagePack.IFormatterResolver resolver) : base(resolver) { }
 
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterBossBattleLayout> dataSource)
+        {
+            AppendCore(dataSource, x => (x.LayoutId, x.EnemyId), System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default);
+            return this;
+        }
+
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterCard> dataSource)
         {
             AppendCore(dataSource, x => x.CardId, System.Collections.Generic.Comparer<int>.Default);
@@ -41,6 +47,12 @@ namespace Orca
             return this;
         }
 
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterEnemyBattleLayout> dataSource)
+        {
+            AppendCore(dataSource, x => (x.LayoutId, x.RoleType, x.PositionIndex), System.Collections.Generic.Comparer<(int LayoutId, RoleType RoleType, int PositionIndex)>.Default);
+            return this;
+        }
+
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterEnemyCommand> dataSource)
         {
             AppendCore(dataSource, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
@@ -53,9 +65,21 @@ namespace Orca
             return this;
         }
 
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterLayoutLottery> dataSource)
+        {
+            AppendCore(dataSource, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            return this;
+        }
+
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterProjectile> dataSource)
         {
             AppendCore(dataSource, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);
+            return this;
+        }
+
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterStage> dataSource)
+        {
+            AppendCore(dataSource, x => (x.Id, x.PanelIndex), System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default);
             return this;
         }
 

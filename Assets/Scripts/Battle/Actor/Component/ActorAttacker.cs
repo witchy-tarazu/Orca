@@ -38,6 +38,12 @@ namespace Orca
 
         public void Execute(MasterCard card)
         {
+            if (Health.IsDazzle())
+            {
+                Health.DazzleDamage();
+                return;
+            }
+
             CurrentFrame = 0;
             CurrentState = ActorComponentState.Active;
             FinishFrame = card.FinishFrame;
@@ -62,11 +68,6 @@ namespace Orca
             {
                 RegisterForSystem(projectile);
             }
-        }
-
-        private void Execute(MasterInfluence influencer, int grade)
-        {
-
         }
 
         public void Update()

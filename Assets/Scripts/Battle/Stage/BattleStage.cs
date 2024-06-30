@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UIElements;
 
 namespace Orca
 {
@@ -11,6 +10,22 @@ namespace Orca
 
         private HashSet<Panel> Panels { get; set; }
 
+        public BattleStage(List<MasterStage> master, int widthPerPanel)
+        {
+            for (int i = 0; i < master.Count; i++)
+            {
+                var panelData = master[i];
+                Panels.Add(new(panelData.PanelType, new PanelPosition(panelData.PanelIndex)));
+            }
+
+            WidthPerPanel = widthPerPanel;
+        }
+
+        public void AddHealth(PanelPosition position, ActorHealth health)
+        {
+            var panel = GetPanel(position);
+            panel.Add(health);
+        }
 
         /// <summary>
         /// ステージ内か

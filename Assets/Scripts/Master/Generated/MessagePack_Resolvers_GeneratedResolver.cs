@@ -47,7 +47,7 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(20)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(26)
             {
                 { typeof(global::Orca.ActorState), 0 },
                 { typeof(global::Orca.ChildInfluenceParentType), 1 },
@@ -60,15 +60,21 @@ namespace MessagePack.Resolvers
                 { typeof(global::Orca.InfluencePenetrationType), 8 },
                 { typeof(global::Orca.InfluenceTargetType), 9 },
                 { typeof(global::Orca.InfluenceType), 10 },
-                { typeof(global::Orca.ProjectileType), 11 },
-                { typeof(global::Orca.ProjetileStartType), 12 },
-                { typeof(global::Orca.MasterCard), 13 },
-                { typeof(global::Orca.MasterCardDetail), 14 },
-                { typeof(global::Orca.MasterChildInfluence), 15 },
-                { typeof(global::Orca.MasterEnemy), 16 },
-                { typeof(global::Orca.MasterEnemyCommand), 17 },
-                { typeof(global::Orca.MasterInfluence), 18 },
-                { typeof(global::Orca.MasterProjectile), 19 },
+                { typeof(global::Orca.PanelType), 11 },
+                { typeof(global::Orca.ProjectileType), 12 },
+                { typeof(global::Orca.ProjetileStartType), 13 },
+                { typeof(global::Orca.RoleType), 14 },
+                { typeof(global::Orca.MasterBossBattleLayout), 15 },
+                { typeof(global::Orca.MasterCard), 16 },
+                { typeof(global::Orca.MasterCardDetail), 17 },
+                { typeof(global::Orca.MasterChildInfluence), 18 },
+                { typeof(global::Orca.MasterEnemy), 19 },
+                { typeof(global::Orca.MasterEnemyBattleLayout), 20 },
+                { typeof(global::Orca.MasterEnemyCommand), 21 },
+                { typeof(global::Orca.MasterInfluence), 22 },
+                { typeof(global::Orca.MasterLayoutLottery), 23 },
+                { typeof(global::Orca.MasterProjectile), 24 },
+                { typeof(global::Orca.MasterStage), 25 },
             };
         }
 
@@ -93,15 +99,21 @@ namespace MessagePack.Resolvers
                 case 8: return new MessagePack.Formatters.Orca.InfluencePenetrationTypeFormatter();
                 case 9: return new MessagePack.Formatters.Orca.InfluenceTargetTypeFormatter();
                 case 10: return new MessagePack.Formatters.Orca.InfluenceTypeFormatter();
-                case 11: return new MessagePack.Formatters.Orca.ProjectileTypeFormatter();
-                case 12: return new MessagePack.Formatters.Orca.ProjetileStartTypeFormatter();
-                case 13: return new MessagePack.Formatters.Orca.MasterCardFormatter();
-                case 14: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
-                case 15: return new MessagePack.Formatters.Orca.MasterChildInfluenceFormatter();
-                case 16: return new MessagePack.Formatters.Orca.MasterEnemyFormatter();
-                case 17: return new MessagePack.Formatters.Orca.MasterEnemyCommandFormatter();
-                case 18: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
-                case 19: return new MessagePack.Formatters.Orca.MasterProjectileFormatter();
+                case 11: return new MessagePack.Formatters.Orca.PanelTypeFormatter();
+                case 12: return new MessagePack.Formatters.Orca.ProjectileTypeFormatter();
+                case 13: return new MessagePack.Formatters.Orca.ProjetileStartTypeFormatter();
+                case 14: return new MessagePack.Formatters.Orca.RoleTypeFormatter();
+                case 15: return new MessagePack.Formatters.Orca.MasterBossBattleLayoutFormatter();
+                case 16: return new MessagePack.Formatters.Orca.MasterCardFormatter();
+                case 17: return new MessagePack.Formatters.Orca.MasterCardDetailFormatter();
+                case 18: return new MessagePack.Formatters.Orca.MasterChildInfluenceFormatter();
+                case 19: return new MessagePack.Formatters.Orca.MasterEnemyFormatter();
+                case 20: return new MessagePack.Formatters.Orca.MasterEnemyBattleLayoutFormatter();
+                case 21: return new MessagePack.Formatters.Orca.MasterEnemyCommandFormatter();
+                case 22: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
+                case 23: return new MessagePack.Formatters.Orca.MasterLayoutLotteryFormatter();
+                case 24: return new MessagePack.Formatters.Orca.MasterProjectileFormatter();
+                case 25: return new MessagePack.Formatters.Orca.MasterStageFormatter();
                 default: return null;
             }
         }

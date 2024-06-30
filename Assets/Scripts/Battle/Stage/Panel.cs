@@ -6,12 +6,6 @@ using UnityEngine;
 
 namespace Orca
 {
-    public enum PanelType
-    {
-        Normal,
-        Hall,
-    }
-
     public class Panel
     {
         public PanelType Type { get; set; }

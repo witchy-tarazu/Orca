@@ -9,5 +9,8 @@ namespace Orca
     {
         public const int PoisonSlipDamage = 10;
         public const int RegenerationValue = 10;
+        public const int DazzleDamage = 10;
+
+        public const int WidthPerPanel = 100;
     }
 }

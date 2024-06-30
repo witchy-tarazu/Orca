@@ -14,16 +14,21 @@ namespace Orca.Tables
         public Func<MasterEnemy, int> PrimaryKeySelector => primaryIndexSelector;
         readonly Func<MasterEnemy, int> primaryIndexSelector;
 
+        readonly MasterEnemy[] secondaryIndex0;
+        readonly Func<MasterEnemy, (RoleType RoleType, int Level)> secondaryIndex0Selector;
 
         public MasterEnemyTable(MasterEnemy[] sortedData)
             : base(sortedData)
         {
             this.primaryIndexSelector = x => x.Id;
+            this.secondaryIndex0Selector = x => (x.RoleType, x.Level);
+            this.secondaryIndex0 = CloneAndSortBy(this.secondaryIndex0Selector, System.Collections.Generic.Comparer<(RoleType RoleType, int Level)>.Default);
             OnAfterConstruct();
         }
 
         partial void OnAfterConstruct();
 
+        public RangeView<MasterEnemy> SortByRoleTypeAndLevel => new RangeView<MasterEnemy>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public MasterEnemy FindById(int key)
@@ -70,6 +75,21 @@ namespace Orca.Tables
             return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
+        public RangeView<MasterEnemy> FindByRoleTypeAndLevel((RoleType RoleType, int Level) key)
+        {
+            return FindManyCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(RoleType RoleType, int Level)>.Default, key);
+        }
+
+        public RangeView<MasterEnemy> FindClosestByRoleTypeAndLevel((RoleType RoleType, int Level) key, bool selectLower = true)
+        {
+            return FindManyClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(RoleType RoleType, int Level)>.Default, key, selectLower);
+        }
+
+        public RangeView<MasterEnemy> FindRangeByRoleTypeAndLevel((RoleType RoleType, int Level) min, (RoleType RoleType, int Level) max, bool ascendant = true)
+        {
+            return FindManyRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(RoleType RoleType, int Level)>.Default, min, max, ascendant);
+        }
+
 
         void ITableUniqueValidate.ValidateUnique(ValidateResult resultSet)
         {
@@ -88,6 +108,8 @@ namespace Orca.Tables
                 new MasterMemory.Meta.MetaProperty[]
                 {
                     new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("Id")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("RoleType")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("Level")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("PatternId")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("MaxHp")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterEnemy).GetProperty("Speed")),
@@ -96,6 +118,10 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterEnemy).GetProperty("Id"),
                     }, true, true, System.Collections.Generic.Comparer<int>.Default),
+                    new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
+                        typeof(MasterEnemy).GetProperty("RoleType"),
+                        typeof(MasterEnemy).GetProperty("Level"),
+                    }, false, false, System.Collections.Generic.Comparer<(RoleType RoleType, int Level)>.Default),
                 });
         }
 

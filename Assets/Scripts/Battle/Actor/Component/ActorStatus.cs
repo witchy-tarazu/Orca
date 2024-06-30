@@ -32,6 +32,7 @@ namespace Orca
         {
             foreach (var state in Status)
             {
+                state.Update();
                 state.Consume(1);
             }
         }
