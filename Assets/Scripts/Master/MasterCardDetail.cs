@@ -1,13 +1,10 @@
 using MasterMemory;
 using MessagePack;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Orca
 {
     [MemoryTable("card_detail"), MessagePackObject(true)]
-    public class MasterCardDetail : MonoBehaviour
+    public class MasterCardDetail 
     {
         public MasterCardDetail(
             int cardId,
@@ -23,7 +20,7 @@ namespace Orca
         [SecondaryKey(0), NonUnique]
         public int CardId { get; }
 
-        [PrimaryKey(2)]
+        [PrimaryKey(1)]
         public int DetailId { get; }
 
         public int ExecuteFrame { get; }

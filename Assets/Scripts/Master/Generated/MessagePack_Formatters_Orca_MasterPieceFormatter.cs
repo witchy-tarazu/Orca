@@ -16,14 +16,16 @@
 
 namespace MessagePack.Formatters.Orca
 {
-    public sealed class MasterCardFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.MasterCard>
+    public sealed class MasterPieceFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.MasterPiece>
     {
+        // PieceId
+        private static global::System.ReadOnlySpan<byte> GetSpan_PieceId() => new byte[1 + 7] { 167, 80, 105, 101, 99, 101, 73, 100 };
+        // Grade
+        private static global::System.ReadOnlySpan<byte> GetSpan_Grade() => new byte[1 + 5] { 165, 71, 114, 97, 100, 101 };
         // CardId
         private static global::System.ReadOnlySpan<byte> GetSpan_CardId() => new byte[1 + 6] { 166, 67, 97, 114, 100, 73, 100 };
-        // FinishFrame
-        private static global::System.ReadOnlySpan<byte> GetSpan_FinishFrame() => new byte[1 + 11] { 171, 70, 105, 110, 105, 115, 104, 70, 114, 97, 109, 101 };
 
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterCard value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterPiece value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value is null)
             {
@@ -31,14 +33,16 @@ namespace MessagePack.Formatters.Orca
                 return;
             }
 
-            writer.WriteMapHeader(2);
+            writer.WriteMapHeader(3);
+            writer.WriteRaw(GetSpan_PieceId());
+            writer.Write(value.PieceId);
+            writer.WriteRaw(GetSpan_Grade());
+            writer.Write(value.Grade);
             writer.WriteRaw(GetSpan_CardId());
             writer.Write(value.CardId);
-            writer.WriteRaw(GetSpan_FinishFrame());
-            writer.Write(value.FinishFrame);
         }
 
-        public global::Orca.MasterCard Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::Orca.MasterPiece Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -47,8 +51,9 @@ namespace MessagePack.Formatters.Orca
 
             options.Security.DepthStep(ref reader);
             var length = reader.ReadMapHeader();
+            var __PieceId__ = default(int);
+            var __Grade__ = default(int);
             var __CardId__ = default(int);
-            var __FinishFrame__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -59,21 +64,26 @@ namespace MessagePack.Formatters.Orca
                     FAIL:
                       reader.Skip();
                       continue;
+                    case 7:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 28228197479180624UL) { goto FAIL; }
+
+                        __PieceId__ = reader.ReadInt32();
+                        continue;
+                    case 5:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 435475804743UL) { goto FAIL; }
+
+                        __Grade__ = reader.ReadInt32();
+                        continue;
                     case 6:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 110266380607811UL) { goto FAIL; }
 
                         __CardId__ = reader.ReadInt32();
                         continue;
-                    case 11:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_FinishFrame().Slice(1))) { goto FAIL; }
-
-                        __FinishFrame__ = reader.ReadInt32();
-                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterCard(__CardId__, __FinishFrame__);
+            var ____result = new global::Orca.MasterPiece(__PieceId__, __Grade__, __CardId__);
             reader.Depth--;
             return ____result;
         }

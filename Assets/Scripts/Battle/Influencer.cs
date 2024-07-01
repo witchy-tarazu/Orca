@@ -23,12 +23,10 @@ namespace Orca
         private BattleCallbackContainer CallbackContainer { get; set; }
 
         public MasterInfluence Master { get; private set; }
-        public int Grade { get; private set; }
         public int Serial { get; private set; }
 
         public void Setup(
             MasterInfluence master,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             BattleCallbackContainer callbackContainer,
@@ -36,7 +34,6 @@ namespace Orca
             int serial)
         {
             Master = master;
-            Grade = grade;
             OwnerHealth = ownerHealth;
             CurrentFrame = 0;
             StartFrame = Master.StartFrame;

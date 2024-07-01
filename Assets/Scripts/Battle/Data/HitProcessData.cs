@@ -7,9 +7,7 @@ namespace Orca
         public InfluenceType Type { get; }
         public ActorState ActorState { get; }
         public InfluencePenetrationType PenetrationType { get; }
-        public int BaseValue { get; }
-        public int PromotionalValue { get; }
-        public int Grade { get; }
+        public int Value { get; }
         public HitData HitData { get; }
         public ActorHealth OwnerHealth { get; }
         public Action<ActorHealth> OnDamageAction { get; }
@@ -19,9 +17,7 @@ namespace Orca
             InfluenceType type,
             ActorState actorState,
             InfluencePenetrationType penetrationType,
-            int baseValue,
-            int promotionalValue,
-            int grade,
+            int value,
             HitData hitData,
             ActorHealth ownerHealth,
             Action<ActorHealth> onDamageAction,
@@ -30,9 +26,7 @@ namespace Orca
             Type = type;
             ActorState = actorState;
             PenetrationType = penetrationType;
-            BaseValue = baseValue;
-            PromotionalValue = promotionalValue;
-            Grade = grade;
+            Value = value;
             HitData = hitData;
             OwnerHealth = ownerHealth;
             OnDamageAction = onDamageAction;

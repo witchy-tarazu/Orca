@@ -115,8 +115,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("InfluenceType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("ActorState")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("PenetrationType")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("BaseValue")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("PromotionalValue")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("Value")),
                 },
                 new MasterMemory.Meta.MetaIndex[]{
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {

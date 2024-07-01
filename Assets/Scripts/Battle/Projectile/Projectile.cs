@@ -11,8 +11,6 @@ namespace Orca
 
         private ProjectileData ProjectileData { get; set; }
 
-        public int Grade { get; private set; }
-
         public HashSet<ChildInfluencer> Children { get; set; } = new();
 
         private BattleStage BattleStage { get; set; }
@@ -24,13 +22,12 @@ namespace Orca
 
         public ActorHealth OwnerHealth => ProjectileData.OwnerHealth;
 
-        public void Setup(ProjectileData projectileData, int grade, BattleStage battleStage)
+        public void Setup(ProjectileData projectileData, BattleStage battleStage)
         {
             Speed = projectileData.Master.Speed;
             CurrentPos = projectileData.StartPos;
             TargetPos = CurrentPos + projectileData.Master.Distance;
             ProjectileData = projectileData;
-            Grade = grade;
             BattleStage = battleStage;
 
             switch (ProjectileData.Master.ProjectileType)

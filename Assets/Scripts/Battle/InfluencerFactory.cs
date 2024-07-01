@@ -46,7 +46,7 @@ namespace Orca
                 var releaseCallback =
                     (masterInfluence.ParentType == InfluenceParentType.System) ?
                     releaseCallbackForSystem : releaseCallbackForActor;
-                var influencer = CreateInfluencer(masterInfluence, card.Grade, ownerHealthContainer, position, releaseCallback);
+                var influencer = CreateInfluencer(masterInfluence, ownerHealthContainer, position, releaseCallback);
                 result.Add(influencer);
             }
 
@@ -55,18 +55,16 @@ namespace Orca
 
         public Influencer CreateInfluencer(
             int influeceId,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
         {
             var master = MasterDatabase.MasterInfluenceTable.FindByInfluenceId(influeceId);
-            return CreateInfluencer(master, grade, ownerHealth, ownerPosition, releaseCallback);
+            return CreateInfluencer(master, ownerHealth, ownerPosition, releaseCallback);
         }
 
         public Influencer CreateInfluencer(
             MasterInfluence master,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
@@ -81,7 +79,7 @@ namespace Orca
                         Release(influencer);
                     }
                 );
-            influencer.Setup(master, grade, ownerHealth, ownerPosition, callbackContainer, Stage, ++Serial);
+            influencer.Setup(master, ownerHealth, ownerPosition, callbackContainer, Stage, ++Serial);
 
             var children = MasterDatabase.MasterChildInfluenceTable
                 .FindByParentTypeAndParentId((ChildInfluenceParentType.Influence, master.InfluenceId));

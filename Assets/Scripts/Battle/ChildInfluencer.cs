@@ -35,15 +35,13 @@ namespace Orca
             }
         }
 
-        public HitProcessData CreateHitProcessData(int grade, HitData hitData, ActorHealth ownerHealth)
+        public HitProcessData CreateHitProcessData(HitData hitData, ActorHealth ownerHealth)
         {
             HitProcessData processData =
                 new(Master.InfluenceType,
                     Master.ActorState,
                     Master.PenetrationType,
-                    Master.BaseValue,
-                    Master.PromotionalValue,
-                    grade,
+                    Master.Value,
                     hitData,
                     ownerHealth,
                     null,

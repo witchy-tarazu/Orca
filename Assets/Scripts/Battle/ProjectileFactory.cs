@@ -39,7 +39,7 @@ namespace Orca
             foreach (var detail in details)
             {
                 var masterInfluence = MasterDatabase.MasterProjectileTable.FindByProjectileId(detail.DetailId);
-                var projectile = CreateProjectile(masterInfluence, card.Grade, ownerHealthContainer, position, releaseCallback);
+                var projectile = CreateProjectile(masterInfluence, ownerHealthContainer, position, releaseCallback);
                 result.Add(projectile);
             }
 
@@ -48,19 +48,17 @@ namespace Orca
 
         public Projectile CreateProjectile(
             int projectileId,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
         {
             var master = MasterDatabase.MasterProjectileTable.FindByProjectileId(projectileId);
-            return CreateProjectile(master, grade, ownerHealth, ownerPosition, releaseCallback);
+            return CreateProjectile(master, ownerHealth, ownerPosition, releaseCallback);
         }
 
 
         public Projectile CreateProjectile(
             MasterProjectile master,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition,
             Action<IUpdatable> releaseCallback)
@@ -83,7 +81,7 @@ namespace Orca
             };
 
             ProjectileData projectileData = new(ownerHealth, startPosition, master, callbackContainer);
-            projectile.Setup(projectileData, grade, Stage);
+            projectile.Setup(projectileData, Stage);
 
             var children = MasterDatabase.MasterChildInfluenceTable
                 .FindByParentTypeAndParentId((ChildInfluenceParentType.Projectile, master.ProjectileId));

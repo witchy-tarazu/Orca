@@ -5,9 +5,7 @@ using MasterMemory;
 using MessagePack;
 using Orca;
 using System.Collections.Generic;
-using System.Collections;
 using System;
-using UnityEngine;
 using Orca.Tables;
 
 namespace Orca
@@ -68,6 +66,12 @@ namespace Orca
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterLayoutLottery> dataSource)
         {
             AppendCore(dataSource, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            return this;
+        }
+
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterPiece> dataSource)
+        {
+            AppendCore(dataSource, x => (x.PieceId, x.Grade), System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default);
             return this;
         }
 

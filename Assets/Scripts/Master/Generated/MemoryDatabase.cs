@@ -5,9 +5,7 @@ using MasterMemory;
 using MessagePack;
 using Orca;
 using System.Collections.Generic;
-using System.Collections;
 using System;
-using UnityEngine;
 using Orca.Tables;
 
 namespace Orca
@@ -23,6 +21,7 @@ namespace Orca
         public MasterEnemyCommandTable MasterEnemyCommandTable { get; private set; }
         public MasterInfluenceTable MasterInfluenceTable { get; private set; }
         public MasterLayoutLotteryTable MasterLayoutLotteryTable { get; private set; }
+        public MasterPieceTable MasterPieceTable { get; private set; }
         public MasterProjectileTable MasterProjectileTable { get; private set; }
         public MasterStageTable MasterStageTable { get; private set; }
 
@@ -36,6 +35,7 @@ namespace Orca
             MasterEnemyCommandTable MasterEnemyCommandTable,
             MasterInfluenceTable MasterInfluenceTable,
             MasterLayoutLotteryTable MasterLayoutLotteryTable,
+            MasterPieceTable MasterPieceTable,
             MasterProjectileTable MasterProjectileTable,
             MasterStageTable MasterStageTable
         )
@@ -49,6 +49,7 @@ namespace Orca
             this.MasterEnemyCommandTable = MasterEnemyCommandTable;
             this.MasterInfluenceTable = MasterInfluenceTable;
             this.MasterLayoutLotteryTable = MasterLayoutLotteryTable;
+            this.MasterPieceTable = MasterPieceTable;
             this.MasterProjectileTable = MasterProjectileTable;
             this.MasterStageTable = MasterStageTable;
         }
@@ -81,6 +82,7 @@ namespace Orca
             this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs));
             this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs));
             this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs));
+            this.MasterPieceTable = ExtractTableData<MasterPiece, MasterPieceTable>(header, databaseBinary, options, xs => new MasterPieceTable(xs));
             this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs));
             this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs));
         }
@@ -98,6 +100,7 @@ namespace Orca
                 () => this.MasterEnemyCommandTable = ExtractTableData<MasterEnemyCommand, MasterEnemyCommandTable>(header, databaseBinary, options, xs => new MasterEnemyCommandTable(xs)),
                 () => this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs)),
                 () => this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs)),
+                () => this.MasterPieceTable = ExtractTableData<MasterPiece, MasterPieceTable>(header, databaseBinary, options, xs => new MasterPieceTable(xs)),
                 () => this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs)),
                 () => this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs)),
             };
@@ -125,6 +128,7 @@ namespace Orca
             builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
+            builder.Append(this.MasterPieceTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
@@ -142,6 +146,7 @@ namespace Orca
             builder.Append(this.MasterEnemyCommandTable.GetRawDataUnsafe());
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
+            builder.Append(this.MasterPieceTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
@@ -163,6 +168,7 @@ namespace Orca
                 MasterEnemyCommandTable,
                 MasterInfluenceTable,
                 MasterLayoutLotteryTable,
+                MasterPieceTable,
                 MasterProjectileTable,
                 MasterStageTable,
             });
@@ -185,6 +191,8 @@ namespace Orca
             ValidateTable(MasterInfluenceTable.All, database, "InfluenceId", MasterInfluenceTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterLayoutLotteryTable).ValidateUnique(result);
             ValidateTable(MasterLayoutLotteryTable.All, database, "(StageId, LayoutId)", MasterLayoutLotteryTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterPieceTable).ValidateUnique(result);
+            ValidateTable(MasterPieceTable.All, database, "(PieceId, Grade)", MasterPieceTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterProjectileTable).ValidateUnique(result);
             ValidateTable(MasterProjectileTable.All, database, "ProjectileId", MasterProjectileTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterStageTable).ValidateUnique(result);
@@ -219,6 +227,8 @@ namespace Orca
                     return db.MasterInfluenceTable;
                 case "layout_lottery":
                     return db.MasterLayoutLotteryTable;
+                case "piece":
+                    return db.MasterPieceTable;
                 case "projectile":
                     return db.MasterProjectileTable;
                 case "stage":
@@ -245,6 +255,7 @@ namespace Orca
             dict.Add("enemy_command", Orca.Tables.MasterEnemyCommandTable.CreateMetaTable());
             dict.Add("influence", Orca.Tables.MasterInfluenceTable.CreateMetaTable());
             dict.Add("layout_lottery", Orca.Tables.MasterLayoutLotteryTable.CreateMetaTable());
+            dict.Add("piece", Orca.Tables.MasterPieceTable.CreateMetaTable());
             dict.Add("projectile", Orca.Tables.MasterProjectileTable.CreateMetaTable());
             dict.Add("stage", Orca.Tables.MasterStageTable.CreateMetaTable());
 

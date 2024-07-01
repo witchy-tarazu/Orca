@@ -85,8 +85,7 @@ namespace Orca
             InfluenceType influenceType,
             ActorState actorState,
             InfluencePenetrationType penetrationType,
-            int baseValue,
-            int promotionalValue,
+            int value,
             int startFrame,
             int duration,
             int finishFrame,
@@ -101,8 +100,7 @@ namespace Orca
             InfluenceType = influenceType;
             ActorState = actorState;
             PenetrationType = penetrationType;
-            BaseValue = baseValue;
-            PromotionalValue = promotionalValue;
+            Value = value;
             StartFrame = startFrame;
             Duration = duration;
             FinishFrame = finishFrame;
@@ -126,10 +124,7 @@ namespace Orca
         public InfluencePenetrationType PenetrationType { get; }
 
         /// <summary>ベースの値</summary>
-        public int BaseValue { get; }
-
-        /// <summary>グレードによって変わる値</summary>
-        public int PromotionalValue { get; }
+        public int Value { get; }
 
         /// <summary>判定が発生するまでの時間</summary>
         public int StartFrame { get; }

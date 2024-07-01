@@ -5,9 +5,7 @@ using MasterMemory;
 using MessagePack;
 using Orca;
 using System.Collections.Generic;
-using System.Collections;
 using System;
-using UnityEngine;
 
 namespace Orca.Tables
 {

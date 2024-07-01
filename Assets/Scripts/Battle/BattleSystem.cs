@@ -250,21 +250,19 @@ namespace Orca
 
         private void CreateInfluencerForChild(
             int influeceId,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition)
         {
-            var influencer = InfluencerFactory.CreateInfluencer(influeceId, grade, ownerHealth, ownerPosition, Release);
+            var influencer = InfluencerFactory.CreateInfluencer(influeceId, ownerHealth, ownerPosition, Release);
             Register(influencer);
         }
 
         private void CreateProjectileForChild(
             int projectileId,
-            int grade,
             ActorHealth ownerHealth,
             PanelPosition ownerPosition)
         {
-            var projectile = ProjectileFactory.CreateProjectile(projectileId, grade, ownerHealth, ownerPosition, Release);
+            var projectile = ProjectileFactory.CreateProjectile(projectileId, ownerHealth, ownerPosition, Release);
             Register(projectile);
         }
 

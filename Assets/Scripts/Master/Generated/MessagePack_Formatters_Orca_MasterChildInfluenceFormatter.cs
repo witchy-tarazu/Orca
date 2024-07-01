@@ -34,10 +34,8 @@ namespace MessagePack.Formatters.Orca
         private static global::System.ReadOnlySpan<byte> GetSpan_ActorState() => new byte[1 + 10] { 170, 65, 99, 116, 111, 114, 83, 116, 97, 116, 101 };
         // PenetrationType
         private static global::System.ReadOnlySpan<byte> GetSpan_PenetrationType() => new byte[1 + 15] { 175, 80, 101, 110, 101, 116, 114, 97, 116, 105, 111, 110, 84, 121, 112, 101 };
-        // BaseValue
-        private static global::System.ReadOnlySpan<byte> GetSpan_BaseValue() => new byte[1 + 9] { 169, 66, 97, 115, 101, 86, 97, 108, 117, 101 };
-        // PromotionalValue
-        private static global::System.ReadOnlySpan<byte> GetSpan_PromotionalValue() => new byte[1 + 16] { 176, 80, 114, 111, 109, 111, 116, 105, 111, 110, 97, 108, 86, 97, 108, 117, 101 };
+        // Value
+        private static global::System.ReadOnlySpan<byte> GetSpan_Value() => new byte[1 + 5] { 165, 86, 97, 108, 117, 101 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterChildInfluence value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -48,7 +46,7 @@ namespace MessagePack.Formatters.Orca
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(10);
+            writer.WriteMapHeader(9);
             writer.WriteRaw(GetSpan_ChildId());
             writer.Write(value.ChildId);
             writer.WriteRaw(GetSpan_ParentType());
@@ -65,10 +63,8 @@ namespace MessagePack.Formatters.Orca
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ActorState>(formatterResolver).Serialize(ref writer, value.ActorState, options);
             writer.WriteRaw(GetSpan_PenetrationType());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluencePenetrationType>(formatterResolver).Serialize(ref writer, value.PenetrationType, options);
-            writer.WriteRaw(GetSpan_BaseValue());
-            writer.Write(value.BaseValue);
-            writer.WriteRaw(GetSpan_PromotionalValue());
-            writer.Write(value.PromotionalValue);
+            writer.WriteRaw(GetSpan_Value());
+            writer.Write(value.Value);
         }
 
         public global::Orca.MasterChildInfluence Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -89,8 +85,7 @@ namespace MessagePack.Formatters.Orca
             var __InfluenceType__ = default(global::Orca.InfluenceType);
             var __ActorState__ = default(global::Orca.ActorState);
             var __PenetrationType__ = default(global::Orca.InfluencePenetrationType);
-            var __BaseValue__ = default(int);
-            var __PromotionalValue__ = default(int);
+            var __Value__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -129,39 +124,15 @@ namespace MessagePack.Formatters.Orca
                         __ParentId__ = reader.ReadInt32();
                         continue;
                     case 16:
-                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
-                        {
-                            default: goto FAIL;
-                            case 4860058442677187156UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7957695015292268143UL) { goto FAIL; }
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_TriggerCondition().Slice(1))) { goto FAIL; }
 
-                                __TriggerCondition__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ChildTriggerCondition>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                            case 8028075832690831952UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7310868735423439214UL) { goto FAIL; }
-
-                                __PromotionalValue__ = reader.ReadInt32();
-                                continue;
-
-                        }
+                        __TriggerCondition__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ChildTriggerCondition>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
                     case 9:
-                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
-                        {
-                            default: goto FAIL;
-                            case 7235405997041608771UL:
-                                if (stringKey[0] != 101) { goto FAIL; }
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_CheckSide().Slice(1))) { goto FAIL; }
 
-                                __CheckSide__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckSide>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                            case 8461244823619461442UL:
-                                if (stringKey[0] != 101) { goto FAIL; }
-
-                                __BaseValue__ = reader.ReadInt32();
-                                continue;
-
-                        }
+                        __CheckSide__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckSide>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
                     case 13:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_InfluenceType().Slice(1))) { goto FAIL; }
 
@@ -172,11 +143,16 @@ namespace MessagePack.Formatters.Orca
 
                         __PenetrationType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluencePenetrationType>(formatterResolver).Deserialize(ref reader, options);
                         continue;
+                    case 5:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 435761733974UL) { goto FAIL; }
+
+                        __Value__ = reader.ReadInt32();
+                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterChildInfluence(__ChildId__, __ParentType__, __ParentId__, __TriggerCondition__, __CheckSide__, __InfluenceType__, __ActorState__, __PenetrationType__, __BaseValue__, __PromotionalValue__);
+            var ____result = new global::Orca.MasterChildInfluence(__ChildId__, __ParentType__, __ParentId__, __TriggerCondition__, __CheckSide__, __InfluenceType__, __ActorState__, __PenetrationType__, __Value__);
             reader.Depth--;
             return ____result;
         }
