@@ -45,7 +45,7 @@ namespace Orca
 
         static MasterMemoryResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(12)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(13)
             {
                 {typeof(MasterBossBattleLayout[]), 0 },
                 {typeof(MasterCard[]), 1 },
@@ -57,8 +57,9 @@ namespace Orca
                 {typeof(MasterInfluence[]), 7 },
                 {typeof(MasterLayoutLottery[]), 8 },
                 {typeof(MasterPiece[]), 9 },
-                {typeof(MasterProjectile[]), 10 },
-                {typeof(MasterStage[]), 11 },
+                {typeof(MasterPieceDescription[]), 10 },
+                {typeof(MasterProjectile[]), 11 },
+                {typeof(MasterStage[]), 12 },
             };
         }
 
@@ -79,8 +80,9 @@ namespace Orca
                 case 7: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
                 case 8: return new MessagePack.Formatters.ArrayFormatter<MasterLayoutLottery>();
                 case 9: return new MessagePack.Formatters.ArrayFormatter<MasterPiece>();
-                case 10: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
-                case 11: return new MessagePack.Formatters.ArrayFormatter<MasterStage>();
+                case 10: return new MessagePack.Formatters.ArrayFormatter<MasterPieceDescription>();
+                case 11: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
+                case 12: return new MessagePack.Formatters.ArrayFormatter<MasterStage>();
                 default: return null;
             }
         }

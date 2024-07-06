@@ -198,6 +198,8 @@ namespace Orca
             Status.Update();
         }
 
+        public int GetStackValue(ActorState state) => Status.GetStackValue(state);
+
         private void OnApplyAbnormalState(ActorState state)
         {
             // ó‘ÔˆÙí‚É‚æ‚éŒø‰Ê‚ÍƒoƒŠƒA‚â–³“G‚ğŠÑ’Ê‚·‚é

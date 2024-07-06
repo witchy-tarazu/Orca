@@ -75,6 +75,12 @@ namespace Orca
             return this;
         }
 
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterPieceDescription> dataSource)
+        {
+            AppendCore(dataSource, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            return this;
+        }
+
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterProjectile> dataSource)
         {
             AppendCore(dataSource, x => x.ProjectileId, System.Collections.Generic.Comparer<int>.Default);

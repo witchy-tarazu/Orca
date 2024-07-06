@@ -47,7 +47,7 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(27)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(28)
             {
                 { typeof(global::Orca.ActorState), 0 },
                 { typeof(global::Orca.ChildInfluenceParentType), 1 },
@@ -74,8 +74,9 @@ namespace MessagePack.Resolvers
                 { typeof(global::Orca.MasterInfluence), 22 },
                 { typeof(global::Orca.MasterLayoutLottery), 23 },
                 { typeof(global::Orca.MasterPiece), 24 },
-                { typeof(global::Orca.MasterProjectile), 25 },
-                { typeof(global::Orca.MasterStage), 26 },
+                { typeof(global::Orca.MasterPieceDescription), 25 },
+                { typeof(global::Orca.MasterProjectile), 26 },
+                { typeof(global::Orca.MasterStage), 27 },
             };
         }
 
@@ -114,8 +115,9 @@ namespace MessagePack.Resolvers
                 case 22: return new MessagePack.Formatters.Orca.MasterInfluenceFormatter();
                 case 23: return new MessagePack.Formatters.Orca.MasterLayoutLotteryFormatter();
                 case 24: return new MessagePack.Formatters.Orca.MasterPieceFormatter();
-                case 25: return new MessagePack.Formatters.Orca.MasterProjectileFormatter();
-                case 26: return new MessagePack.Formatters.Orca.MasterStageFormatter();
+                case 25: return new MessagePack.Formatters.Orca.MasterPieceDescriptionFormatter();
+                case 26: return new MessagePack.Formatters.Orca.MasterProjectileFormatter();
+                case 27: return new MessagePack.Formatters.Orca.MasterStageFormatter();
                 default: return null;
             }
         }

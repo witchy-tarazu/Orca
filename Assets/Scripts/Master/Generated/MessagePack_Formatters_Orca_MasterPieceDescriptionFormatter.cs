@@ -16,18 +16,16 @@
 
 namespace MessagePack.Formatters.Orca
 {
-    public sealed class MasterCardFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.MasterCard>
+    public sealed class MasterPieceDescriptionFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Orca.MasterPieceDescription>
     {
-        // CardId
-        private static global::System.ReadOnlySpan<byte> GetSpan_CardId() => new byte[1 + 6] { 166, 67, 97, 114, 100, 73, 100 };
-        // FinishFrame
-        private static global::System.ReadOnlySpan<byte> GetSpan_FinishFrame() => new byte[1 + 11] { 171, 70, 105, 110, 105, 115, 104, 70, 114, 97, 109, 101 };
+        // PieceId
+        private static global::System.ReadOnlySpan<byte> GetSpan_PieceId() => new byte[1 + 7] { 167, 80, 105, 101, 99, 101, 73, 100 };
         // Name
         private static global::System.ReadOnlySpan<byte> GetSpan_Name() => new byte[1 + 4] { 164, 78, 97, 109, 101 };
         // Description
         private static global::System.ReadOnlySpan<byte> GetSpan_Description() => new byte[1 + 11] { 171, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110 };
 
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterCard value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterPieceDescription value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value is null)
             {
@@ -36,18 +34,16 @@ namespace MessagePack.Formatters.Orca
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(4);
-            writer.WriteRaw(GetSpan_CardId());
-            writer.Write(value.CardId);
-            writer.WriteRaw(GetSpan_FinishFrame());
-            writer.Write(value.FinishFrame);
+            writer.WriteMapHeader(3);
+            writer.WriteRaw(GetSpan_PieceId());
+            writer.Write(value.PieceId);
             writer.WriteRaw(GetSpan_Name());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             writer.WriteRaw(GetSpan_Description());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Description, options);
         }
 
-        public global::Orca.MasterCard Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::Orca.MasterPieceDescription Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -57,8 +53,7 @@ namespace MessagePack.Formatters.Orca
             options.Security.DepthStep(ref reader);
             var formatterResolver = options.Resolver;
             var length = reader.ReadMapHeader();
-            var __CardId__ = default(int);
-            var __FinishFrame__ = default(int);
+            var __PieceId__ = default(int);
             var __Name__ = default(string);
             var __Description__ = default(string);
 
@@ -71,38 +66,26 @@ namespace MessagePack.Formatters.Orca
                     FAIL:
                       reader.Skip();
                       continue;
-                    case 6:
-                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 110266380607811UL) { goto FAIL; }
+                    case 7:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 28228197479180624UL) { goto FAIL; }
 
-                        __CardId__ = reader.ReadInt32();
+                        __PieceId__ = reader.ReadInt32();
                         continue;
-                    case 11:
-                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
-                        {
-                            default: goto FAIL;
-                            case 8234383813592901958UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 6647137UL) { goto FAIL; }
-
-                                __FinishFrame__ = reader.ReadInt32();
-                                continue;
-
-                            case 8390322045806929220UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7237481UL) { goto FAIL; }
-
-                                __Description__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                        }
                     case 4:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 1701667150UL) { goto FAIL; }
 
                         __Name__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         continue;
+                    case 11:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_Description().Slice(1))) { goto FAIL; }
+
+                        __Description__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterCard(__CardId__, __FinishFrame__, __Name__, __Description__);
+            var ____result = new global::Orca.MasterPieceDescription(__PieceId__, __Name__, __Description__);
             reader.Depth--;
             return ____result;
         }

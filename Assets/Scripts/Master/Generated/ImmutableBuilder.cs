@@ -39,6 +39,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -61,6 +62,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -83,6 +85,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -105,6 +108,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -126,6 +130,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -148,6 +153,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -170,6 +176,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -191,6 +198,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -213,6 +221,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -235,6 +244,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -256,6 +266,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -278,6 +289,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -300,6 +312,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -321,6 +334,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -343,6 +357,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -365,6 +380,7 @@ namespace Orca
                 table,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -387,6 +403,7 @@ namespace Orca
                 table,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -409,6 +426,7 @@ namespace Orca
                 table,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -430,6 +448,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 table,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
@@ -452,12 +471,81 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 table,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 memory.MasterStageTable
             
             );
         }
 
+
+        public void ReplaceAll(System.Collections.Generic.IList<MasterPieceDescription> data)
+        {
+            var newData = CloneAndSortBy(data, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterPieceDescriptionTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterLayoutLotteryTable,
+                memory.MasterPieceTable,
+                table,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
+
+        public void RemoveMasterPieceDescription(int[] keys)
+        {
+            var data = RemoveCore(memory.MasterPieceDescriptionTable.GetRawDataUnsafe(), keys, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterPieceDescriptionTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterLayoutLotteryTable,
+                memory.MasterPieceTable,
+                table,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
+
+        public void Diff(MasterPieceDescription[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterPieceDescriptionTable.GetRawDataUnsafe(), addOrReplaceData, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            var newData = CloneAndSortBy(data, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            var table = new MasterPieceDescriptionTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                memory.MasterLayoutLotteryTable,
+                memory.MasterPieceTable,
+                table,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterProjectile> data)
         {
@@ -474,6 +562,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 table,
                 memory.MasterStageTable
             
@@ -496,6 +585,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 table,
                 memory.MasterStageTable
             
@@ -518,6 +608,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 table,
                 memory.MasterStageTable
             
@@ -539,6 +630,7 @@ namespace Orca
                 memory.MasterInfluenceTable,
                 memory.MasterLayoutLotteryTable,
                 memory.MasterPieceTable,
+                memory.MasterPieceDescriptionTable,
                 memory.MasterProjectileTable,
                 table
             

@@ -9,16 +9,16 @@ using System;
 
 namespace Orca.Tables
 {
-   public sealed partial class MasterCardTable : TableBase<MasterCard>, ITableUniqueValidate
+   public sealed partial class MasterPieceDescriptionTable : TableBase<MasterPieceDescription>, ITableUniqueValidate
    {
-        public Func<MasterCard, int> PrimaryKeySelector => primaryIndexSelector;
-        readonly Func<MasterCard, int> primaryIndexSelector;
+        public Func<MasterPieceDescription, int> PrimaryKeySelector => primaryIndexSelector;
+        readonly Func<MasterPieceDescription, int> primaryIndexSelector;
 
 
-        public MasterCardTable(MasterCard[] sortedData)
+        public MasterPieceDescriptionTable(MasterPieceDescription[] sortedData)
             : base(sortedData)
         {
-            this.primaryIndexSelector = x => x.CardId;
+            this.primaryIndexSelector = x => x.PieceId;
             OnAfterConstruct();
         }
 
@@ -26,14 +26,14 @@ namespace Orca.Tables
 
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public MasterCard FindByCardId(int key)
+        public MasterPieceDescription FindByPieceId(int key)
         {
             var lo = 0;
             var hi = data.Length - 1;
             while (lo <= hi)
             {
                 var mid = (int)(((uint)hi + (uint)lo) >> 1);
-                var selected = data[mid].CardId;
+                var selected = data[mid].PieceId;
                 var found = (selected < key) ? -1 : (selected > key) ? 1 : 0;
                 if (found == 0) { return data[mid]; }
                 if (found < 0) { lo = mid + 1; }
@@ -43,14 +43,14 @@ namespace Orca.Tables
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public bool TryFindByCardId(int key, out MasterCard result)
+        public bool TryFindByPieceId(int key, out MasterPieceDescription result)
         {
             var lo = 0;
             var hi = data.Length - 1;
             while (lo <= hi)
             {
                 var mid = (int)(((uint)hi + (uint)lo) >> 1);
-                var selected = data[mid].CardId;
+                var selected = data[mid].PieceId;
                 var found = (selected < key) ? -1 : (selected > key) ? 1 : 0;
                 if (found == 0) { result = data[mid]; return true; }
                 if (found < 0) { lo = mid + 1; }
@@ -60,12 +60,12 @@ namespace Orca.Tables
             return false;
         }
 
-        public MasterCard FindClosestByCardId(int key, bool selectLower = true)
+        public MasterPieceDescription FindClosestByPieceId(int key, bool selectLower = true)
         {
             return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, key, selectLower);
         }
 
-        public RangeView<MasterCard> FindRangeByCardId(int min, int max, bool ascendant = true)
+        public RangeView<MasterPieceDescription> FindRangeByPieceId(int min, int max, bool ascendant = true)
         {
             return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
@@ -75,7 +75,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
-            ValidateUniqueCore(data, primaryIndexSelector, "CardId", resultSet);       
+            ValidateUniqueCore(data, primaryIndexSelector, "PieceId", resultSet);       
 
 #endif
         }
@@ -84,17 +84,16 @@ namespace Orca.Tables
 
         public static MasterMemory.Meta.MetaTable CreateMetaTable()
         {
-            return new MasterMemory.Meta.MetaTable(typeof(MasterCard), typeof(MasterCardTable), "card",
+            return new MasterMemory.Meta.MetaTable(typeof(MasterPieceDescription), typeof(MasterPieceDescriptionTable), "piece_description",
                 new MasterMemory.Meta.MetaProperty[]
                 {
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCard).GetProperty("CardId")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCard).GetProperty("FinishFrame")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCard).GetProperty("Name")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCard).GetProperty("Description")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterPieceDescription).GetProperty("PieceId")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterPieceDescription).GetProperty("Name")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterPieceDescription).GetProperty("Description")),
                 },
                 new MasterMemory.Meta.MetaIndex[]{
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
-                        typeof(MasterCard).GetProperty("CardId"),
+                        typeof(MasterPieceDescription).GetProperty("PieceId"),
                     }, true, true, System.Collections.Generic.Comparer<int>.Default),
                 });
         }

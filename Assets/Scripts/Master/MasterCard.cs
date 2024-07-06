@@ -8,15 +8,22 @@ namespace Orca
     {
         public MasterCard(
             int cardId,
-            int finishFrame)
+            int finishFrame,
+            string name,
+            string description)
         {
             CardId = cardId;
             FinishFrame = finishFrame;
+            Name = name;
+            Description = description;
         }
 
         [PrimaryKey]
         public int CardId { get; }
 
         public int FinishFrame { get; }
+
+        public string Name { get; }
+        public string Description { get; }
     }
 }
