@@ -71,13 +71,13 @@ namespace Orca
 
         public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterPiece> dataSource)
         {
-            AppendCore(dataSource, x => (x.PieceId, x.Grade), System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default);
+            AppendCore(dataSource, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
             return this;
         }
 
-        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterPieceDescription> dataSource)
+        public DatabaseBuilder Append(System.Collections.Generic.IEnumerable<MasterPieceRelation> dataSource)
         {
-            AppendCore(dataSource, x => x.PieceId, System.Collections.Generic.Comparer<int>.Default);
+            AppendCore(dataSource, x => (x.PieceId, x.Grade), System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default);
             return this;
         }
 

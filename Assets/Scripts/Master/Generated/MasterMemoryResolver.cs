@@ -57,7 +57,7 @@ namespace Orca
                 {typeof(MasterInfluence[]), 7 },
                 {typeof(MasterLayoutLottery[]), 8 },
                 {typeof(MasterPiece[]), 9 },
-                {typeof(MasterPieceDescription[]), 10 },
+                {typeof(MasterPieceRelation[]), 10 },
                 {typeof(MasterProjectile[]), 11 },
                 {typeof(MasterStage[]), 12 },
             };
@@ -80,7 +80,7 @@ namespace Orca
                 case 7: return new MessagePack.Formatters.ArrayFormatter<MasterInfluence>();
                 case 8: return new MessagePack.Formatters.ArrayFormatter<MasterLayoutLottery>();
                 case 9: return new MessagePack.Formatters.ArrayFormatter<MasterPiece>();
-                case 10: return new MessagePack.Formatters.ArrayFormatter<MasterPieceDescription>();
+                case 10: return new MessagePack.Formatters.ArrayFormatter<MasterPieceRelation>();
                 case 11: return new MessagePack.Formatters.ArrayFormatter<MasterProjectile>();
                 case 12: return new MessagePack.Formatters.ArrayFormatter<MasterStage>();
                 default: return null;

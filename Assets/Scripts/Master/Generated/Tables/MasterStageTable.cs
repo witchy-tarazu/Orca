@@ -30,19 +30,24 @@ namespace Orca.Tables
 
         public RangeView<MasterStage> SortById => new RangeView<MasterStage>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public RangeView<MasterStage> FindByIdAndPanelIndex((int Id, int PanelIndex) key)
+        public MasterStage FindByIdAndPanelIndex((int Id, int PanelIndex) key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, key);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, key, true);
+        }
+        
+        public bool TryFindByIdAndPanelIndex((int Id, int PanelIndex) key, out MasterStage result)
+        {
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, key, out result);
         }
 
-        public RangeView<MasterStage> FindClosestByIdAndPanelIndex((int Id, int PanelIndex) key, bool selectLower = true)
+        public MasterStage FindClosestByIdAndPanelIndex((int Id, int PanelIndex) key, bool selectLower = true)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, key, selectLower);
         }
 
         public RangeView<MasterStage> FindRangeByIdAndPanelIndex((int Id, int PanelIndex) min, (int Id, int PanelIndex) max, bool ascendant = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default, min, max, ascendant);
         }
 
         public RangeView<MasterStage> FindById(int key)
@@ -65,6 +70,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "(Id, PanelIndex)", resultSet);       
 
 #endif
         }
@@ -84,7 +90,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterStage).GetProperty("Id"),
                         typeof(MasterStage).GetProperty("PanelIndex"),
-                    }, true, false, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<(int Id, int PanelIndex)>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterStage).GetProperty("Id"),
                     }, false, false, System.Collections.Generic.Comparer<int>.Default),

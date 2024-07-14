@@ -11,33 +11,63 @@ namespace Orca.Tables
 {
    public sealed partial class MasterPieceTable : TableBase<MasterPiece>, ITableUniqueValidate
    {
-        public Func<MasterPiece, (int PieceId, int Grade)> PrimaryKeySelector => primaryIndexSelector;
-        readonly Func<MasterPiece, (int PieceId, int Grade)> primaryIndexSelector;
+        public Func<MasterPiece, int> PrimaryKeySelector => primaryIndexSelector;
+        readonly Func<MasterPiece, int> primaryIndexSelector;
 
 
         public MasterPieceTable(MasterPiece[] sortedData)
             : base(sortedData)
         {
-            this.primaryIndexSelector = x => (x.PieceId, x.Grade);
+            this.primaryIndexSelector = x => x.PieceId;
             OnAfterConstruct();
         }
 
         partial void OnAfterConstruct();
 
 
-        public RangeView<MasterPiece> FindByPieceIdAndGrade((int PieceId, int Grade) key)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public MasterPiece FindByPieceId(int key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default, key);
+            var lo = 0;
+            var hi = data.Length - 1;
+            while (lo <= hi)
+            {
+                var mid = (int)(((uint)hi + (uint)lo) >> 1);
+                var selected = data[mid].PieceId;
+                var found = (selected < key) ? -1 : (selected > key) ? 1 : 0;
+                if (found == 0) { return data[mid]; }
+                if (found < 0) { lo = mid + 1; }
+                else { hi = mid - 1; }
+            }
+            return ThrowKeyNotFound(key);
         }
 
-        public RangeView<MasterPiece> FindClosestByPieceIdAndGrade((int PieceId, int Grade) key, bool selectLower = true)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public bool TryFindByPieceId(int key, out MasterPiece result)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default, key, selectLower);
+            var lo = 0;
+            var hi = data.Length - 1;
+            while (lo <= hi)
+            {
+                var mid = (int)(((uint)hi + (uint)lo) >> 1);
+                var selected = data[mid].PieceId;
+                var found = (selected < key) ? -1 : (selected > key) ? 1 : 0;
+                if (found == 0) { result = data[mid]; return true; }
+                if (found < 0) { lo = mid + 1; }
+                else { hi = mid - 1; }
+            }
+            result = default;
+            return false;
         }
 
-        public RangeView<MasterPiece> FindRangeByPieceIdAndGrade((int PieceId, int Grade) min, (int PieceId, int Grade) max, bool ascendant = true)
+        public MasterPiece FindClosestByPieceId(int key, bool selectLower = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default, min, max, ascendant);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, key, selectLower);
+        }
+
+        public RangeView<MasterPiece> FindRangeByPieceId(int min, int max, bool ascendant = true)
+        {
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
 
@@ -45,6 +75,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "PieceId", resultSet);       
 
 #endif
         }
@@ -57,14 +88,13 @@ namespace Orca.Tables
                 new MasterMemory.Meta.MetaProperty[]
                 {
                     new MasterMemory.Meta.MetaProperty(typeof(MasterPiece).GetProperty("PieceId")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterPiece).GetProperty("Grade")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterPiece).GetProperty("CardId")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterPiece).GetProperty("Name")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterPiece).GetProperty("Description")),
                 },
                 new MasterMemory.Meta.MetaIndex[]{
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterPiece).GetProperty("PieceId"),
-                        typeof(MasterPiece).GetProperty("Grade"),
-                    }, true, false, System.Collections.Generic.Comparer<(int PieceId, int Grade)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<int>.Default),
                 });
         }
 

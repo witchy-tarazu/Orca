@@ -10,7 +10,7 @@ namespace Orca
         public int MaxHp { get; }
         public int Speed { get; }
 
-        public InputContainer InputContainer { get; }
+        public BattleInputContainer InputContainer { get; }
 
         public MasterCard AttackMaster { get; }
 
@@ -22,7 +22,7 @@ namespace Orca
             int hp,
             int maxHp,
             int speed,
-            InputContainer inputContainer,
+            BattleInputContainer inputContainer,
             MasterCard attackMaster,
             List<MasterCard> cards)
         {

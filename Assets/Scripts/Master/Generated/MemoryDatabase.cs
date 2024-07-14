@@ -22,7 +22,7 @@ namespace Orca
         public MasterInfluenceTable MasterInfluenceTable { get; private set; }
         public MasterLayoutLotteryTable MasterLayoutLotteryTable { get; private set; }
         public MasterPieceTable MasterPieceTable { get; private set; }
-        public MasterPieceDescriptionTable MasterPieceDescriptionTable { get; private set; }
+        public MasterPieceRelationTable MasterPieceRelationTable { get; private set; }
         public MasterProjectileTable MasterProjectileTable { get; private set; }
         public MasterStageTable MasterStageTable { get; private set; }
 
@@ -37,7 +37,7 @@ namespace Orca
             MasterInfluenceTable MasterInfluenceTable,
             MasterLayoutLotteryTable MasterLayoutLotteryTable,
             MasterPieceTable MasterPieceTable,
-            MasterPieceDescriptionTable MasterPieceDescriptionTable,
+            MasterPieceRelationTable MasterPieceRelationTable,
             MasterProjectileTable MasterProjectileTable,
             MasterStageTable MasterStageTable
         )
@@ -52,7 +52,7 @@ namespace Orca
             this.MasterInfluenceTable = MasterInfluenceTable;
             this.MasterLayoutLotteryTable = MasterLayoutLotteryTable;
             this.MasterPieceTable = MasterPieceTable;
-            this.MasterPieceDescriptionTable = MasterPieceDescriptionTable;
+            this.MasterPieceRelationTable = MasterPieceRelationTable;
             this.MasterProjectileTable = MasterProjectileTable;
             this.MasterStageTable = MasterStageTable;
         }
@@ -86,7 +86,7 @@ namespace Orca
             this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs));
             this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs));
             this.MasterPieceTable = ExtractTableData<MasterPiece, MasterPieceTable>(header, databaseBinary, options, xs => new MasterPieceTable(xs));
-            this.MasterPieceDescriptionTable = ExtractTableData<MasterPieceDescription, MasterPieceDescriptionTable>(header, databaseBinary, options, xs => new MasterPieceDescriptionTable(xs));
+            this.MasterPieceRelationTable = ExtractTableData<MasterPieceRelation, MasterPieceRelationTable>(header, databaseBinary, options, xs => new MasterPieceRelationTable(xs));
             this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs));
             this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs));
         }
@@ -105,7 +105,7 @@ namespace Orca
                 () => this.MasterInfluenceTable = ExtractTableData<MasterInfluence, MasterInfluenceTable>(header, databaseBinary, options, xs => new MasterInfluenceTable(xs)),
                 () => this.MasterLayoutLotteryTable = ExtractTableData<MasterLayoutLottery, MasterLayoutLotteryTable>(header, databaseBinary, options, xs => new MasterLayoutLotteryTable(xs)),
                 () => this.MasterPieceTable = ExtractTableData<MasterPiece, MasterPieceTable>(header, databaseBinary, options, xs => new MasterPieceTable(xs)),
-                () => this.MasterPieceDescriptionTable = ExtractTableData<MasterPieceDescription, MasterPieceDescriptionTable>(header, databaseBinary, options, xs => new MasterPieceDescriptionTable(xs)),
+                () => this.MasterPieceRelationTable = ExtractTableData<MasterPieceRelation, MasterPieceRelationTable>(header, databaseBinary, options, xs => new MasterPieceRelationTable(xs)),
                 () => this.MasterProjectileTable = ExtractTableData<MasterProjectile, MasterProjectileTable>(header, databaseBinary, options, xs => new MasterProjectileTable(xs)),
                 () => this.MasterStageTable = ExtractTableData<MasterStage, MasterStageTable>(header, databaseBinary, options, xs => new MasterStageTable(xs)),
             };
@@ -134,7 +134,7 @@ namespace Orca
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
             builder.Append(this.MasterPieceTable.GetRawDataUnsafe());
-            builder.Append(this.MasterPieceDescriptionTable.GetRawDataUnsafe());
+            builder.Append(this.MasterPieceRelationTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
@@ -153,7 +153,7 @@ namespace Orca
             builder.Append(this.MasterInfluenceTable.GetRawDataUnsafe());
             builder.Append(this.MasterLayoutLotteryTable.GetRawDataUnsafe());
             builder.Append(this.MasterPieceTable.GetRawDataUnsafe());
-            builder.Append(this.MasterPieceDescriptionTable.GetRawDataUnsafe());
+            builder.Append(this.MasterPieceRelationTable.GetRawDataUnsafe());
             builder.Append(this.MasterProjectileTable.GetRawDataUnsafe());
             builder.Append(this.MasterStageTable.GetRawDataUnsafe());
             return builder;
@@ -176,7 +176,7 @@ namespace Orca
                 MasterInfluenceTable,
                 MasterLayoutLotteryTable,
                 MasterPieceTable,
-                MasterPieceDescriptionTable,
+                MasterPieceRelationTable,
                 MasterProjectileTable,
                 MasterStageTable,
             });
@@ -200,9 +200,9 @@ namespace Orca
             ((ITableUniqueValidate)MasterLayoutLotteryTable).ValidateUnique(result);
             ValidateTable(MasterLayoutLotteryTable.All, database, "(StageId, LayoutId)", MasterLayoutLotteryTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterPieceTable).ValidateUnique(result);
-            ValidateTable(MasterPieceTable.All, database, "(PieceId, Grade)", MasterPieceTable.PrimaryKeySelector, result);
-            ((ITableUniqueValidate)MasterPieceDescriptionTable).ValidateUnique(result);
-            ValidateTable(MasterPieceDescriptionTable.All, database, "PieceId", MasterPieceDescriptionTable.PrimaryKeySelector, result);
+            ValidateTable(MasterPieceTable.All, database, "PieceId", MasterPieceTable.PrimaryKeySelector, result);
+            ((ITableUniqueValidate)MasterPieceRelationTable).ValidateUnique(result);
+            ValidateTable(MasterPieceRelationTable.All, database, "(PieceId, Grade)", MasterPieceRelationTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterProjectileTable).ValidateUnique(result);
             ValidateTable(MasterProjectileTable.All, database, "ProjectileId", MasterProjectileTable.PrimaryKeySelector, result);
             ((ITableUniqueValidate)MasterStageTable).ValidateUnique(result);
@@ -239,8 +239,8 @@ namespace Orca
                     return db.MasterLayoutLotteryTable;
                 case "piece":
                     return db.MasterPieceTable;
-                case "piece_description":
-                    return db.MasterPieceDescriptionTable;
+                case "piece_relation":
+                    return db.MasterPieceRelationTable;
                 case "projectile":
                     return db.MasterProjectileTable;
                 case "stage":
@@ -268,7 +268,7 @@ namespace Orca
             dict.Add("influence", Orca.Tables.MasterInfluenceTable.CreateMetaTable());
             dict.Add("layout_lottery", Orca.Tables.MasterLayoutLotteryTable.CreateMetaTable());
             dict.Add("piece", Orca.Tables.MasterPieceTable.CreateMetaTable());
-            dict.Add("piece_description", Orca.Tables.MasterPieceDescriptionTable.CreateMetaTable());
+            dict.Add("piece_relation", Orca.Tables.MasterPieceRelationTable.CreateMetaTable());
             dict.Add("projectile", Orca.Tables.MasterProjectileTable.CreateMetaTable());
             dict.Add("stage", Orca.Tables.MasterStageTable.CreateMetaTable());
 

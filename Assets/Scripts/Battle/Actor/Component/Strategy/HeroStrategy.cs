@@ -9,7 +9,7 @@ namespace Orca
         private ActorHealth Health { get; }
         private BattleHeroData HeroData { get; }
 
-        private InputContainer InputContainer { get; }
+        private BattleInputContainer InputContainer { get; }
 
         private Action<MasterCard> UseCardAction { get; }
         private Action<PanelPosition> MoveAction { get; }
@@ -39,14 +39,14 @@ namespace Orca
         public void Update()
         {
             // óDêÊìxÇÕçUåÇÅÑà⁄ìÆ
-            var attackInput = InputContainer.Attack;
-            if (attackInput != AttackCommand.None)
+            var attackInput = InputContainer.BattleCommand;
+            if (attackInput != BattleCommand.None)
             {
                 Attack(attackInput);
                 return;
             }
 
-            var directionInput = InputContainer.Direction;
+            var directionInput = InputContainer.DirectionCommand;
             if (directionInput != DirectionCommand.None)
             {
                 Move(directionInput);
@@ -58,14 +58,14 @@ namespace Orca
             Card.Set(HeroData.Cards);
         }
 
-        private void Attack(AttackCommand command)
+        private void Attack(BattleCommand command)
         {
             switch (command)
             {
-                case AttackCommand.Attack:
+                case BattleCommand.Attack:
                     UseCardAction.Invoke(HeroData.AttackMaster);
                     break;
-                case AttackCommand.Card:
+                case BattleCommand.Card:
                     if (Card.HasCard())
                     {
                         UseCardAction.Invoke(Card.Use());

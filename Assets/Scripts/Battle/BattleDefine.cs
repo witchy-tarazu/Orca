@@ -12,5 +12,15 @@ namespace Orca
         public const int DazzleDamage = 10;
 
         public const int WidthPerPanel = 100;
+
+        public const int MaxCustomPieceCount = 10;
+        public const int DefaultCustomDrawCount = 5;
+    }
+
+    public enum ControllerState
+    {
+        Inactive,
+        Pause,
+        Active,
     }
 }

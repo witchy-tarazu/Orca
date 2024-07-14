@@ -30,19 +30,24 @@ namespace Orca.Tables
 
         public RangeView<MasterBossBattleLayout> SortByLayoutId => new RangeView<MasterBossBattleLayout>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public RangeView<MasterBossBattleLayout> FindByLayoutIdAndEnemyId((int LayoutId, int EnemyId) key)
+        public MasterBossBattleLayout FindByLayoutIdAndEnemyId((int LayoutId, int EnemyId) key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, key);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, key, true);
+        }
+        
+        public bool TryFindByLayoutIdAndEnemyId((int LayoutId, int EnemyId) key, out MasterBossBattleLayout result)
+        {
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, key, out result);
         }
 
-        public RangeView<MasterBossBattleLayout> FindClosestByLayoutIdAndEnemyId((int LayoutId, int EnemyId) key, bool selectLower = true)
+        public MasterBossBattleLayout FindClosestByLayoutIdAndEnemyId((int LayoutId, int EnemyId) key, bool selectLower = true)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, key, selectLower);
         }
 
         public RangeView<MasterBossBattleLayout> FindRangeByLayoutIdAndEnemyId((int LayoutId, int EnemyId) min, (int LayoutId, int EnemyId) max, bool ascendant = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default, min, max, ascendant);
         }
 
         public RangeView<MasterBossBattleLayout> FindByLayoutId(int key)
@@ -65,6 +70,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "(LayoutId, EnemyId)", resultSet);       
 
 #endif
         }
@@ -84,7 +90,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterBossBattleLayout).GetProperty("LayoutId"),
                         typeof(MasterBossBattleLayout).GetProperty("EnemyId"),
-                    }, true, false, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<(int LayoutId, int EnemyId)>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterBossBattleLayout).GetProperty("LayoutId"),
                     }, false, false, System.Collections.Generic.Comparer<int>.Default),

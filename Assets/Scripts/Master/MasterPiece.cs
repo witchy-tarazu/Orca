@@ -6,17 +6,16 @@ namespace Orca
     [MemoryTable("piece"), MessagePackObject(true)]
     public class MasterPiece
     {
-        public MasterPiece(int pieceId, int grade, int cardId)
+        public MasterPiece(int pieceId, string name, string description)
         {
             PieceId = pieceId;
-            Grade = grade;
-            CardId = cardId;
+            Name = name;
+            Description = description;
         }
 
-        [PrimaryKey(0), NonUnique]
+        [PrimaryKey]
         public int PieceId { get; }
-        [PrimaryKey(1), NonUnique]
-        public int Grade { get; }
-        public int CardId { get; }
+        public string Name { get; }
+        public string Description { get; }
     }
 }

@@ -20,10 +20,10 @@ namespace MessagePack.Formatters.Orca
     {
         // PieceId
         private static global::System.ReadOnlySpan<byte> GetSpan_PieceId() => new byte[1 + 7] { 167, 80, 105, 101, 99, 101, 73, 100 };
-        // Grade
-        private static global::System.ReadOnlySpan<byte> GetSpan_Grade() => new byte[1 + 5] { 165, 71, 114, 97, 100, 101 };
-        // CardId
-        private static global::System.ReadOnlySpan<byte> GetSpan_CardId() => new byte[1 + 6] { 166, 67, 97, 114, 100, 73, 100 };
+        // Name
+        private static global::System.ReadOnlySpan<byte> GetSpan_Name() => new byte[1 + 4] { 164, 78, 97, 109, 101 };
+        // Description
+        private static global::System.ReadOnlySpan<byte> GetSpan_Description() => new byte[1 + 11] { 171, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterPiece value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -33,13 +33,14 @@ namespace MessagePack.Formatters.Orca
                 return;
             }
 
+            var formatterResolver = options.Resolver;
             writer.WriteMapHeader(3);
             writer.WriteRaw(GetSpan_PieceId());
             writer.Write(value.PieceId);
-            writer.WriteRaw(GetSpan_Grade());
-            writer.Write(value.Grade);
-            writer.WriteRaw(GetSpan_CardId());
-            writer.Write(value.CardId);
+            writer.WriteRaw(GetSpan_Name());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
+            writer.WriteRaw(GetSpan_Description());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Description, options);
         }
 
         public global::Orca.MasterPiece Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -50,10 +51,11 @@ namespace MessagePack.Formatters.Orca
             }
 
             options.Security.DepthStep(ref reader);
+            var formatterResolver = options.Resolver;
             var length = reader.ReadMapHeader();
             var __PieceId__ = default(int);
-            var __Grade__ = default(int);
-            var __CardId__ = default(int);
+            var __Name__ = default(string);
+            var __Description__ = default(string);
 
             for (int i = 0; i < length; i++)
             {
@@ -69,21 +71,21 @@ namespace MessagePack.Formatters.Orca
 
                         __PieceId__ = reader.ReadInt32();
                         continue;
-                    case 5:
-                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 435475804743UL) { goto FAIL; }
+                    case 4:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 1701667150UL) { goto FAIL; }
 
-                        __Grade__ = reader.ReadInt32();
+                        __Name__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         continue;
-                    case 6:
-                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 110266380607811UL) { goto FAIL; }
+                    case 11:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_Description().Slice(1))) { goto FAIL; }
 
-                        __CardId__ = reader.ReadInt32();
+                        __Description__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterPiece(__PieceId__, __Grade__, __CardId__);
+            var ____result = new global::Orca.MasterPiece(__PieceId__, __Name__, __Description__);
             reader.Depth--;
             return ____result;
         }

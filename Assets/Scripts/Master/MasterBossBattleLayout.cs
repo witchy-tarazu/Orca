@@ -13,9 +13,10 @@ namespace Orca
             PositionIndex = positionIndex;
         }
 
-        [PrimaryKey(0), SecondaryKey(0), NonUnique]
+        [PrimaryKey(0)]
+        [SecondaryKey(0), NonUnique]
         public int LayoutId { get; }
-        [PrimaryKey(1), NonUnique]
+        [PrimaryKey(1)]
         public int EnemyId { get; }
         public int PositionIndex { get; }
     }
