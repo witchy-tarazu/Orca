@@ -98,7 +98,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("ParentType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("TargetType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("CheckSide")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("CheckTargetType")),
+                    new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("CheckRangeType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("CheckValueMin")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterInfluence).GetProperty("CheckValueMax")),
                 },

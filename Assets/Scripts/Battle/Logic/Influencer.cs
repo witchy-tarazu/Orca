@@ -5,7 +5,7 @@ namespace Orca
 
     public class Influencer : IHitChecker, IUpdatable
     {
-        public HashSet<ChildInfluencer> Children { get; set; } = new();
+        public HashSet<ChildInfluencer> Children { get; private set; } = new();
 
         public ActorHealth OwnerHealth { get; private set; }
 
@@ -63,9 +63,9 @@ namespace Orca
             CheckData checkData = new(
                 InfluencePositions,
                 OwnerHealth,
-                InfluenceCheckSide.Opponent,
+                Master.CheckSide,
                 ConvertCheckType(Master.TargetType),
-                InfluenceCheckRangeType.Panel);
+                Master.CheckRangeType);
             CallbackContainer.Check(checkData, this);
         }
 

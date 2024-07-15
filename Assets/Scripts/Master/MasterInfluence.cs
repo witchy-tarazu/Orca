@@ -107,7 +107,7 @@ namespace Orca
             ParentType = parentType;
             TargetType = targetType;
             CheckSide = checkSide;
-            CheckTargetType = checkTargetType;
+            CheckRangeType = checkTargetType;
             CheckValueMin = checkValueMin;
             CheckValueMax = checkValueMax;
         }
@@ -142,7 +142,7 @@ namespace Orca
         /// <summary>判定対象サイド</summary>
         public InfluenceCheckSide CheckSide { get; }
         /// <summary>判定対象の取得単位</summary>
-        public InfluenceCheckRangeType CheckTargetType { get; }
+        public InfluenceCheckRangeType CheckRangeType { get; }
 
         /// <summary>判定対象参考最小値</summary>
         public int CheckValueMin { get; }

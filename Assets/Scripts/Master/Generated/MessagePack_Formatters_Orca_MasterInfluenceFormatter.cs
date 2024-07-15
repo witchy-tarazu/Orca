@@ -80,7 +80,7 @@ namespace MessagePack.Formatters.Orca
             writer.WriteRaw(GetSpan_CheckSide());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckSide>(formatterResolver).Serialize(ref writer, value.CheckSide, options);
             writer.WriteRaw(GetSpan_CheckTargetType());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckRangeType>(formatterResolver).Serialize(ref writer, value.CheckTargetType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceCheckRangeType>(formatterResolver).Serialize(ref writer, value.CheckRangeType, options);
             writer.WriteRaw(GetSpan_CheckValueMin());
             writer.Write(value.CheckValueMin);
             writer.WriteRaw(GetSpan_CheckValueMax());
