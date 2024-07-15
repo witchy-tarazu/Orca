@@ -1,6 +1,6 @@
 namespace Orca
 {
-    public class ParabolaProjectile : IProjectileStrategy
+    public class ParabolaProjectileStrategy : IProjectileStrategy
     {
         public void Update(
             Projectile projectile,

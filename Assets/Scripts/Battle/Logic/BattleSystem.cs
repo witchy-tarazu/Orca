@@ -183,7 +183,7 @@ namespace Orca
 
         private void Check(CheckData check, IHitChecker hit)
         {
-            switch (check.CheckType)
+            switch (check.CheckTargetType)
             {
                 case InfluenceCheckTargetType.Self:
                     {
@@ -212,7 +212,7 @@ namespace Orca
 
         private void CheckByPosition(CheckData check, IHitChecker hit)
         {
-            switch (check.CheckTargetType)
+            switch (check.CheckRangeType)
             {
                 case InfluenceCheckRangeType.Single:
                     {
@@ -286,7 +286,7 @@ namespace Orca
             BattleGameState = BattleGameState.Active;
             foreach (var hero in HeroActors)
             {
-                hero.StartTurn();
+                hero.StartTurn(cards);
             }
         }
     }

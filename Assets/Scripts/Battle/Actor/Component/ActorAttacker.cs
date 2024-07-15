@@ -38,7 +38,7 @@ namespace Orca
 
         public void Execute(MasterCard card)
         {
-            if (Health.IsDazzle())
+            if (Health.IsDazzle)
             {
                 Health.DazzleDamage();
                 return;

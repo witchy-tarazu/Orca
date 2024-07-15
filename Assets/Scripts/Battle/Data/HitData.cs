@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Orca
 {
-    public class HitData : MonoBehaviour
+    public class HitData
     {
         public Panel Panel { get; private set; }
 
@@ -20,7 +20,7 @@ namespace Orca
         {
             foreach (var actor in HitList)
             {
-                action(actor);
+                action.Invoke(actor);
             }
         }
     }

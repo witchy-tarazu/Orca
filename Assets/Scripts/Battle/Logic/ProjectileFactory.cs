@@ -84,7 +84,7 @@ namespace Orca
             projectile.Setup(projectileData, Stage);
 
             var children = MasterDatabase.MasterChildInfluenceTable
-                .FindByParentTypeAndParentId((ChildInfluenceParentType.Projectile, master.ProjectileId));
+                .FindByParentId(master.ProjectileId);
             foreach (var childMaster in children)
             {
                 ChildInfluencer childInfluencer = new(childMaster);

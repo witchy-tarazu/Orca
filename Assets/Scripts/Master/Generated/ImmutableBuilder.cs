@@ -454,6 +454,51 @@ namespace Orca
             );
         }
 
+        public void RemoveMasterEnemyCommand((int PatternId, int Index)[] keys)
+        {
+            var data = RemoveCore(memory.MasterEnemyCommandTable.GetRawDataUnsafe(), keys, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            var table = new MasterEnemyCommandTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterLayoutLotteryTable,
+                memory.MasterPieceTable,
+                memory.MasterPieceRelationTable,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
+
+        public void Diff(MasterEnemyCommand[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterEnemyCommandTable.GetRawDataUnsafe(), addOrReplaceData, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.PatternId, x.Index), System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default);
+            var table = new MasterEnemyCommandTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                table,
+                memory.MasterInfluenceTable,
+                memory.MasterLayoutLotteryTable,
+                memory.MasterPieceTable,
+                memory.MasterPieceRelationTable,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterInfluence> data)
         {
@@ -545,6 +590,51 @@ namespace Orca
             );
         }
 
+        public void RemoveMasterLayoutLottery((int StageId, int LayoutId)[] keys)
+        {
+            var data = RemoveCore(memory.MasterLayoutLotteryTable.GetRawDataUnsafe(), keys, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            var table = new MasterLayoutLotteryTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                table,
+                memory.MasterPieceTable,
+                memory.MasterPieceRelationTable,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
+
+        public void Diff(MasterLayoutLottery[] addOrReplaceData)
+        {
+            var data = DiffCore(memory.MasterLayoutLotteryTable.GetRawDataUnsafe(), addOrReplaceData, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            var newData = CloneAndSortBy(data, x => (x.StageId, x.LayoutId), System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default);
+            var table = new MasterLayoutLotteryTable(newData);
+            memory = new MemoryDatabase(
+                memory.MasterBossBattleLayoutTable,
+                memory.MasterCardTable,
+                memory.MasterCardDetailTable,
+                memory.MasterChildInfluenceTable,
+                memory.MasterEnemyTable,
+                memory.MasterEnemyBattleLayoutTable,
+                memory.MasterEnemyCommandTable,
+                memory.MasterInfluenceTable,
+                table,
+                memory.MasterPieceTable,
+                memory.MasterPieceRelationTable,
+                memory.MasterProjectileTable,
+                memory.MasterStageTable
+            
+            );
+        }
 
         public void ReplaceAll(System.Collections.Generic.IList<MasterPiece> data)
         {

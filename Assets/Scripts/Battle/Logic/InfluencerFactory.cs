@@ -82,7 +82,7 @@ namespace Orca
             influencer.Setup(master, ownerHealth, ownerPosition, callbackContainer, Stage, ++Serial);
 
             var children = MasterDatabase.MasterChildInfluenceTable
-                .FindByParentTypeAndParentId((ChildInfluenceParentType.Influence, master.InfluenceId));
+                .FindByParentId(master.InfluenceId);
             foreach (var childMaster in children)
             {
                 ChildInfluencer childInfluencer = new(childMaster);

@@ -7,7 +7,7 @@ namespace Orca
     {
         public bool IsSatisfied { get; private set; }
 
-        public MasterChildInfluence Master { get; set; }
+        private MasterChildInfluence Master { get; set; }
 
         private HashSet<ActorHealth> SatisfiedHealthSet { get; set; }
 

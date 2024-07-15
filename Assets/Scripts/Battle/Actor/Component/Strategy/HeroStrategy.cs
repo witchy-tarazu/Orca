@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Orca
 {
@@ -7,7 +8,7 @@ namespace Orca
     {
         private BattleStage Stage { get; }
         private ActorHealth Health { get; }
-        private BattleHeroData HeroData { get; }
+        private MasterCard AttackMaster { get; }
 
         private BattleInputContainer InputContainer { get; }
 
@@ -28,7 +29,7 @@ namespace Orca
         {
             Stage = stage;
             Health = health;
-            HeroData = heroData;
+            AttackMaster = heroData.AttackMaster;
             InputContainer = heroData.InputContainer;
             UseCardAction = useCardAction;
             MoveAction = moveAction;
@@ -53,9 +54,9 @@ namespace Orca
             }
         }
 
-        public void StartTurn()
+        public void StartTurn(List<MasterCard> cards)
         {
-            Card.Set(HeroData.Cards);
+            Card.Set(cards);
         }
 
         private void Attack(BattleCommand command)
@@ -63,7 +64,7 @@ namespace Orca
             switch (command)
             {
                 case BattleCommand.Attack:
-                    UseCardAction.Invoke(HeroData.AttackMaster);
+                    UseCardAction.Invoke(AttackMaster);
                     break;
                 case BattleCommand.Card:
                     if (Card.HasCard())

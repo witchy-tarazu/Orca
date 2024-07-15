@@ -13,9 +13,10 @@ namespace Orca
             Weight = weight;
         }
 
-        [PrimaryKey(0), SecondaryKey(0), NonUnique]
+        [PrimaryKey(0)]
+        [SecondaryKey(0), NonUnique]
         public int StageId { get; }
-        [PrimaryKey(1), NonUnique]
+        [PrimaryKey(1)]
         public int LayoutId { get; }
         public int Weight { get; }
     }

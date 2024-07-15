@@ -28,7 +28,7 @@ namespace Orca
             if (FrameCountForApply == ApplyFrame)
             {
                 ApplyAction.Invoke(State);
-                Reset();
+                ResetRemainFrame();
             }
         }
 
@@ -36,7 +36,7 @@ namespace Orca
         {
             RemainFrame -= value;
 
-            if (RemainFrame < 0) { Reset(); }
+            if (RemainFrame < 0) { ResetRemainFrame(); }
         }
 
         public void AddFrame(int frame)
@@ -44,7 +44,7 @@ namespace Orca
             RemainFrame += frame;
         }
 
-        public void Reset()
+        public void ResetRemainFrame()
         {
             RemainFrame = 0;
         }

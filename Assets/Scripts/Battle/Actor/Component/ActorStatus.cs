@@ -33,6 +33,13 @@ namespace Orca
             foreach (var state in Status)
             {
                 state.Update();
+            }
+        }
+
+        public void LateUpdate()
+        {
+            foreach (var state in Status)
+            {
                 state.Consume(1);
             }
         }
@@ -47,56 +54,36 @@ namespace Orca
             foreach (BattleStack stack in Stacks) { action.Invoke(stack); }
         }
 
-        public bool IsState(ActorState state)
-        {
-            return Status.Any(x => x.State == state && x.IsEnable);
-        }
+        public bool IsState(ActorState state) =>
+            Status.Any(x => x.State == state && x.IsEnable);
 
-        public void MakeState(ActorState state, int duration)
-        {
+        public void MakeState(ActorState state, int duration) =>
             Status.Where(x => x.State == state).First().AddFrame(duration);
-        }
 
-        public void RemoveState(ActorState state)
-        {
-            Status.Where(x => x.State == state).First().Reset();
-        }
+        public void RemoveState(ActorState state) =>
+            Status.Where(x => x.State == state).First().ResetRemainFrame();
 
-        public bool HasStack(ActorState state)
-        {
-            return Stacks.Any(x => x.State == state && x.IsEnable);
-        }
+        public bool HasStack(ActorState state) =>
+            Stacks.Any(x => x.State == state && x.IsEnable);
 
-        public int GetStackValue(ActorState state)
-        {
-            if (!Stacks.Any(stack => stack.State == state))
-            {
-                return 0;
-            }
-
-            return 0;
-        }
+        public int GetStackValue(ActorState state) =>
+            Stacks.Where(x => x.State == state).First().StackValue;
 
         public void ConsumeStack(ActorState state, int value)
         {
-            var targetStack = Stacks.Where(stack => stack.State == state).FirstOrDefault();
-
-            if (targetStack == null) { return; }
-
+            var targetStack = Stacks.Where(stack => stack.State == state).First();
             targetStack.Consume(value);
         }
 
         public void AddStack(ActorState state, int value)
         {
             var targetStack = Stacks.Where(stack => stack.State == state).First();
-
             targetStack.Stack(value);
         }
 
         public void RemoveStack(ActorState state)
         {
             var targetStack = Stacks.Where(stack => stack.State == state).First();
-
             targetStack.Reset();
         }
     }

@@ -84,7 +84,6 @@ namespace Orca.Tables
                 {
                     new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("CardId")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("DetailId")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterCardDetail).GetProperty("ExecuteFrame")),
                 },
                 new MasterMemory.Meta.MetaIndex[]{
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {

@@ -30,19 +30,24 @@ namespace Orca.Tables
 
         public RangeView<MasterLayoutLottery> SortByStageId => new RangeView<MasterLayoutLottery>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public RangeView<MasterLayoutLottery> FindByStageIdAndLayoutId((int StageId, int LayoutId) key)
+        public MasterLayoutLottery FindByStageIdAndLayoutId((int StageId, int LayoutId) key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, key);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, key, true);
+        }
+        
+        public bool TryFindByStageIdAndLayoutId((int StageId, int LayoutId) key, out MasterLayoutLottery result)
+        {
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, key, out result);
         }
 
-        public RangeView<MasterLayoutLottery> FindClosestByStageIdAndLayoutId((int StageId, int LayoutId) key, bool selectLower = true)
+        public MasterLayoutLottery FindClosestByStageIdAndLayoutId((int StageId, int LayoutId) key, bool selectLower = true)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, key, selectLower);
         }
 
         public RangeView<MasterLayoutLottery> FindRangeByStageIdAndLayoutId((int StageId, int LayoutId) min, (int StageId, int LayoutId) max, bool ascendant = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default, min, max, ascendant);
         }
 
         public RangeView<MasterLayoutLottery> FindByStageId(int key)
@@ -65,6 +70,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "(StageId, LayoutId)", resultSet);       
 
 #endif
         }
@@ -84,7 +90,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterLayoutLottery).GetProperty("StageId"),
                         typeof(MasterLayoutLottery).GetProperty("LayoutId"),
-                    }, true, false, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<(int StageId, int LayoutId)>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterLayoutLottery).GetProperty("StageId"),
                     }, false, false, System.Collections.Generic.Comparer<int>.Default),

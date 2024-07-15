@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Orca
 {
     public enum MoveType
@@ -8,9 +10,9 @@ namespace Orca
 
     public class ActorMover : IActorAction
     {
-        private BattleStage Stage { get; set; }
-        private ActorHealth Health { get; set; }
-        private int AbsoluteSpeed { get; set; }
+        private BattleStage Stage { get; }
+        private ActorHealth Health { get; }
+        private int AbsoluteSpeed { get; }
 
         public ActorComponentState CurrentState { get; private set; }
 
@@ -33,27 +35,27 @@ namespace Orca
 
         public void Execute(MoveType moveType, PanelPosition target)
         {
-            CurrentState = ActorComponentState.Active;
             MoveType = moveType;
             Target = target;
 
             switch (MoveType)
             {
                 case MoveType.Normal:
-                    executeNormal(target);
+                    ExecuteNormal();
                     break;
                 case MoveType.Jump:
-                    executeJump(target);
+                    ExecuteJump();
                     break;
             }
+
+            CurrentState = ActorComponentState.Active;
         }
 
-        private void executeNormal(PanelPosition target)
+        private void ExecuteNormal()
         {
             LinearPosition = Stage.GetLinearPositonCenter(Current);
             LinearTargetPosition = Stage.GetLinearPositonCenter(Target);
 
-            CurrentState = ActorComponentState.Active;
             Speed = AbsoluteSpeed;
 
             if (LinearPosition > LinearTargetPosition)
@@ -62,12 +64,11 @@ namespace Orca
             }
         }
 
-        private void executeJump(PanelPosition target)
+        private void ExecuteJump()
         {
             LinearPosition = 0;
             LinearTargetPosition = Stage.WidthPerPanel;
 
-            CurrentState = ActorComponentState.Active;
             Speed = AbsoluteSpeed;
         }
 
@@ -79,17 +80,11 @@ namespace Orca
 
             if (Speed > 0)
             {
-                if (LinearPosition > LinearTargetPosition)
-                {
-                    LinearPosition = LinearTargetPosition;
-                }
+                Mathf.Min(LinearPosition, LinearTargetPosition);
             }
             else
             {
-                if (LinearPosition < LinearTargetPosition)
-                {
-                    LinearPosition = LinearTargetPosition;
-                }
+                Mathf.Max(LinearPosition, LinearTargetPosition);
             }
 
             switch (MoveType)
@@ -106,19 +101,27 @@ namespace Orca
         private void Move()
         {
             var nextPosition = Stage.GetPanelPosition(LinearPosition);
-            if (Stage.TryMove(nextPosition, Health, Cancel))
+            if (Stage.TryMove(nextPosition, Health))
             {
                 Current = nextPosition;
+            }
+            else
+            {
+                Cancel();
             }
         }
 
         private void Jump()
         {
-            if (LinearPosition > Stage.WidthPerPanel / 2)
+            if (LinearPosition > LinearTargetPosition / 2)
             {
-                if (Stage.TryMove(Target, Health, Cancel))
+                if (Stage.TryMove(Target, Health))
                 {
                     Current = Target;
+                }
+                else
+                {
+                    Cancel();
                 }
             }
         }

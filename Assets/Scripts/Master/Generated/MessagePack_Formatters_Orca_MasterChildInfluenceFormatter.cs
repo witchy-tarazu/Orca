@@ -20,8 +20,6 @@ namespace MessagePack.Formatters.Orca
     {
         // ChildId
         private static global::System.ReadOnlySpan<byte> GetSpan_ChildId() => new byte[1 + 7] { 167, 67, 104, 105, 108, 100, 73, 100 };
-        // ParentType
-        private static global::System.ReadOnlySpan<byte> GetSpan_ParentType() => new byte[1 + 10] { 170, 80, 97, 114, 101, 110, 116, 84, 121, 112, 101 };
         // ParentId
         private static global::System.ReadOnlySpan<byte> GetSpan_ParentId() => new byte[1 + 8] { 168, 80, 97, 114, 101, 110, 116, 73, 100 };
         // TriggerCondition
@@ -46,11 +44,9 @@ namespace MessagePack.Formatters.Orca
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(9);
+            writer.WriteMapHeader(8);
             writer.WriteRaw(GetSpan_ChildId());
             writer.Write(value.ChildId);
-            writer.WriteRaw(GetSpan_ParentType());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ChildInfluenceParentType>(formatterResolver).Serialize(ref writer, value.ParentType, options);
             writer.WriteRaw(GetSpan_ParentId());
             writer.Write(value.ParentId);
             writer.WriteRaw(GetSpan_TriggerCondition());
@@ -78,7 +74,6 @@ namespace MessagePack.Formatters.Orca
             var formatterResolver = options.Resolver;
             var length = reader.ReadMapHeader();
             var __ChildId__ = default(int);
-            var __ParentType__ = default(global::Orca.ChildInfluenceParentType);
             var __ParentId__ = default(int);
             var __TriggerCondition__ = default(global::Orca.ChildTriggerCondition);
             var __CheckSide__ = default(global::Orca.InfluenceCheckSide);
@@ -101,23 +96,6 @@ namespace MessagePack.Formatters.Orca
 
                         __ChildId__ = reader.ReadInt32();
                         continue;
-                    case 10:
-                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
-                        {
-                            default: goto FAIL;
-                            case 8742740794130194768UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25968UL) { goto FAIL; }
-
-                                __ParentType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ChildInfluenceParentType>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                            case 7022329469938721601UL:
-                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 25972UL) { goto FAIL; }
-
-                                __ActorState__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ActorState>(formatterResolver).Deserialize(ref reader, options);
-                                continue;
-
-                        }
                     case 8:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7226435094589890896UL) { goto FAIL; }
 
@@ -138,6 +116,11 @@ namespace MessagePack.Formatters.Orca
 
                         __InfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.InfluenceType>(formatterResolver).Deserialize(ref reader, options);
                         continue;
+                    case 10:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_ActorState().Slice(1))) { goto FAIL; }
+
+                        __ActorState__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Orca.ActorState>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
                     case 15:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_PenetrationType().Slice(1))) { goto FAIL; }
 
@@ -152,7 +135,7 @@ namespace MessagePack.Formatters.Orca
                 }
             }
 
-            var ____result = new global::Orca.MasterChildInfluence(__ChildId__, __ParentType__, __ParentId__, __TriggerCondition__, __CheckSide__, __InfluenceType__, __ActorState__, __PenetrationType__, __Value__);
+            var ____result = new global::Orca.MasterChildInfluence(__ChildId__, __ParentId__, __TriggerCondition__, __CheckSide__, __InfluenceType__, __ActorState__, __PenetrationType__, __Value__);
             reader.Depth--;
             return ____result;
         }

@@ -14,8 +14,6 @@ namespace Orca
 
         public MasterCard AttackMaster { get; }
 
-        public List<MasterCard> Cards { get; }
-
         public PanelPosition StartPosition { get; private set; }
 
         public BattleHeroData(
@@ -23,15 +21,13 @@ namespace Orca
             int maxHp,
             int speed,
             BattleInputContainer inputContainer,
-            MasterCard attackMaster,
-            List<MasterCard> cards)
+            MasterCard attackMaster)
         {
             Hp = hp;
             MaxHp = maxHp;
             Speed = speed;
             InputContainer = inputContainer;
             AttackMaster = attackMaster;
-            Cards = cards;
         }
 
         public void SetStartPosition(PanelPosition panelPosition)

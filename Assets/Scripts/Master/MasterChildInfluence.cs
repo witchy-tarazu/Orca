@@ -9,18 +9,11 @@ namespace Orca
         Damage,
     }
 
-    public enum ChildInfluenceParentType
-    {
-        Influence,
-        Projectile,
-    }
-
     [MemoryTable("child_influence"), MessagePackObject(true)]
     public class MasterChildInfluence
     {
         public MasterChildInfluence(
             int childId,
-            ChildInfluenceParentType parentType,
             int parentId,
             ChildTriggerCondition triggerCondition,
             InfluenceCheckSide checkSide,
@@ -30,7 +23,6 @@ namespace Orca
             int value)
         {
             ChildId = childId;
-            ParentType = parentType;
             ParentId = parentId;
             TriggerCondition = triggerCondition;
             CheckSide = checkSide;
@@ -44,11 +36,8 @@ namespace Orca
         /// <summary>éqå¯â ÇÃID</summary>
         public int ChildId { get; }
 
-        [SecondaryKey(0, 0), NonUnique]
-        public ChildInfluenceParentType ParentType { get; }
-
         /// <summary>êeå¯â ID</summary>
-        [SecondaryKey(0, 1), NonUnique]
+        [SecondaryKey(0), NonUnique]
         public int ParentId { get; }
 
         /// <summary>éqå¯â ÇÃî≠ìÆèåè</summary>

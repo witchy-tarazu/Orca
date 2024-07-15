@@ -21,24 +21,13 @@ namespace Orca
             HealthList = new();
         }
 
-        public bool Exists(ActorHealth health)
-        {
-            return HealthList.Contains(health);
-        }
+        public void Add(ActorHealth health) => HealthList.Add(health);
 
-        public void Add(ActorHealth health)
-        {
-            HealthList.Add(health);
-        }
-
-        public void Remove(ActorHealth health)
-        {
-            HealthList.Remove(health);
-        }
+        public void Remove(ActorHealth health) => HealthList.Remove(health);
 
         public HashSet<ActorHealth> ListupHealth(CheckData checkData)
         {
-            return checkData.CheckTargetType switch
+            return checkData.CheckRangeType switch
             {
                 InfluenceCheckRangeType.Single => new() {
                         HealthList
@@ -63,19 +52,10 @@ namespace Orca
             }
         }
 
-        public bool HasActor(ActorHealth health)
-        {
-            return HealthList.Contains(health);
-        }
+        public bool HasActor(ActorHealth health) => HealthList.Contains(health);
 
-        public bool HasAnyActor()
-        {
-            return HealthList.Count > 0;
-        }
+        public bool HasAnyActor() => HealthList.Count > 0;
 
-        public bool HasAnyActor(ActorSide side)
-        {
-            return HealthList.Where(health => health.Side == side).Count() > 0;
-        }
+        public bool HasAnyActor(ActorSide side) => HealthList.Where(health => health.Side == side).Any();
     }
 }

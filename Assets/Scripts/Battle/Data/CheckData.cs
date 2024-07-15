@@ -13,9 +13,9 @@ namespace Orca
 
         public InfluenceCheckSide CheckSide { get; private set; }
 
-        public InfluenceCheckTargetType CheckType { get; private set; }
+        public InfluenceCheckTargetType CheckTargetType { get; private set; }
 
-        public InfluenceCheckRangeType CheckTargetType { get; private set; }
+        public InfluenceCheckRangeType CheckRangeType { get; private set; }
 
 
         public CheckData(
@@ -26,15 +26,15 @@ namespace Orca
             CheckPositions = positions;
             OwnerHealth = ownerHealth;
             CheckSide = side;
-            CheckType = type;
-            CheckTargetType = targetType;
+            CheckTargetType = type;
+            CheckRangeType = targetType;
         }
 
         public void ApplyToPositions(Action<PanelPosition> action)
         {
             foreach (var position in CheckPositions)
             {
-                action(position);
+                action.Invoke(position);
             }
         }
     }

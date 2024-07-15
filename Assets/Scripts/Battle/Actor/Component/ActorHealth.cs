@@ -11,7 +11,7 @@ namespace Orca
 
         private HashSet<int> ReceivedSerial { get; set; }
 
-        public bool IsAlive => HitPoint.IsAlive();
+        public bool IsAlive => HitPoint.IsAlive;
 
         public ActorHealth(ActorSide side, int maxHp)
         {
@@ -183,19 +183,18 @@ namespace Orca
             Status.MakeState(abnormalState, duration);
         }
 
-        public bool IsDisableAction()
-        {
-            return Status.IsState(ActorState.Stan) || !IsAlive;
-        }
+        public bool IsDisableAction => Status.IsState(ActorState.Stan) || !IsAlive;
 
-        public bool IsDazzle()
-        {
-            return Status.IsState(ActorState.Dazzle);
-        }
+        public bool IsDazzle => Status.IsState(ActorState.Dazzle);
 
         public void Update()
         {
             Status.Update();
+        }
+
+        public void LateUpdate()
+        {
+            Status.LateUpdate();
         }
 
         public int GetStackValue(ActorState state) => Status.GetStackValue(state);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Orca
 {
@@ -17,8 +18,8 @@ namespace Orca
 
         private IProjectileStrategy Strategy { get; set; }
 
-        private LinearProjectile LinearProjectile { get; set; }
-        private ParabolaProjectile ParabolaProjectile { get; set; }
+        private LinearProjectileStrategy LinearProjectile { get; set; }
+        private ParabolaProjectileStrategy ParabolaProjectile { get; set; }
 
         public ActorHealth OwnerHealth => ProjectileData.OwnerHealth;
 
@@ -33,10 +34,10 @@ namespace Orca
             switch (ProjectileData.Master.ProjectileType)
             {
                 case ProjectileType.Linear:
-                    Strategy = (LinearProjectile ??= new LinearProjectile());
+                    Strategy = (LinearProjectile ??= new LinearProjectileStrategy());
                     break;
                 case ProjectileType.Parabola:
-                    Strategy = (ParabolaProjectile ??= new ParabolaProjectile());
+                    Strategy = (ParabolaProjectile ??= new ParabolaProjectileStrategy());
                     break;
             }
 
@@ -51,10 +52,7 @@ namespace Orca
         public virtual void Update()
         {
             CurrentPos += Speed;
-            if (CurrentPos > TargetPos)
-            {
-                CurrentPos = TargetPos;
-            }
+            CurrentPos = Mathf.Min(CurrentPos, TargetPos);
 
             Strategy.Update(this, ProjectileData, BattleStage, CurrentPos, TargetPos);
         }
@@ -71,11 +69,6 @@ namespace Orca
             {
                 ProjectileData.Release();
             }
-        }
-
-        public MasterProjectile GetMaster()
-        {
-            return ProjectileData.Master;
         }
     }
 }

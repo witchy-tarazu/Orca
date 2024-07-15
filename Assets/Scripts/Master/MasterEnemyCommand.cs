@@ -23,10 +23,11 @@ namespace Orca
     [MemoryTable("enemy_command"), MessagePackObject(true)]
     public class MasterEnemyCommand
     {
-        [PrimaryKey(0), SecondaryKey(0), NonUnique]
+        [PrimaryKey(0)]
+        [SecondaryKey(0), NonUnique]
         public int PatternId { get; }
 
-        [PrimaryKey(1), NonUnique]
+        [PrimaryKey(1)]
         public int Index { get; }
 
         public CommandType Type { get; }

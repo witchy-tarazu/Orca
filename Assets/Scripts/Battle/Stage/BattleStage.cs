@@ -37,11 +37,10 @@ namespace Orca
             return position.PositionX >= 0 && position.PositionX < Panels.Count;
         }
 
-        public bool TryMove(PanelPosition position, ActorHealth ownerHealth, Action onCancel)
+        public bool TryMove(PanelPosition position, ActorHealth ownerHealth)
         {
             if (!IsValidPos(position))
             {
-                onCancel.Invoke();
                 return false;
             }
 
@@ -55,7 +54,6 @@ namespace Orca
             var opponentSide = ownerHealth.Side == ActorSide.Left ? ActorSide.Right : ActorSide.Left;
             if (targetPanel.HasAnyActor(opponentSide))
             {
-                onCancel.Invoke();
                 return false;
             }
 

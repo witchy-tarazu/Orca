@@ -15,20 +15,20 @@ namespace Orca.Tables
         readonly Func<MasterChildInfluence, int> primaryIndexSelector;
 
         readonly MasterChildInfluence[] secondaryIndex0;
-        readonly Func<MasterChildInfluence, (ChildInfluenceParentType ParentType, int ParentId)> secondaryIndex0Selector;
+        readonly Func<MasterChildInfluence, int> secondaryIndex0Selector;
 
         public MasterChildInfluenceTable(MasterChildInfluence[] sortedData)
             : base(sortedData)
         {
             this.primaryIndexSelector = x => x.ChildId;
-            this.secondaryIndex0Selector = x => (x.ParentType, x.ParentId);
-            this.secondaryIndex0 = CloneAndSortBy(this.secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default);
+            this.secondaryIndex0Selector = x => x.ParentId;
+            this.secondaryIndex0 = CloneAndSortBy(this.secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default);
             OnAfterConstruct();
         }
 
         partial void OnAfterConstruct();
 
-        public RangeView<MasterChildInfluence> SortByParentTypeAndParentId => new RangeView<MasterChildInfluence>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
+        public RangeView<MasterChildInfluence> SortByParentId => new RangeView<MasterChildInfluence>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public MasterChildInfluence FindByChildId(int key)
@@ -75,19 +75,19 @@ namespace Orca.Tables
             return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
-        public RangeView<MasterChildInfluence> FindByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key)
+        public RangeView<MasterChildInfluence> FindByParentId(int key)
         {
-            return FindManyCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key);
+            return FindManyCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, key);
         }
 
-        public RangeView<MasterChildInfluence> FindClosestByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) key, bool selectLower = true)
+        public RangeView<MasterChildInfluence> FindClosestByParentId(int key, bool selectLower = true)
         {
-            return FindManyClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, key, selectLower);
+            return FindManyClosestCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, key, selectLower);
         }
 
-        public RangeView<MasterChildInfluence> FindRangeByParentTypeAndParentId((ChildInfluenceParentType ParentType, int ParentId) min, (ChildInfluenceParentType ParentType, int ParentId) max, bool ascendant = true)
+        public RangeView<MasterChildInfluence> FindRangeByParentId(int min, int max, bool ascendant = true)
         {
-            return FindManyRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default, min, max, ascendant);
+            return FindManyRangeCore(secondaryIndex0, secondaryIndex0Selector, System.Collections.Generic.Comparer<int>.Default, min, max, ascendant);
         }
 
 
@@ -108,7 +108,6 @@ namespace Orca.Tables
                 new MasterMemory.Meta.MetaProperty[]
                 {
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("ChildId")),
-                    new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("ParentType")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("ParentId")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("TriggerCondition")),
                     new MasterMemory.Meta.MetaProperty(typeof(MasterChildInfluence).GetProperty("CheckSide")),
@@ -122,9 +121,8 @@ namespace Orca.Tables
                         typeof(MasterChildInfluence).GetProperty("ChildId"),
                     }, true, true, System.Collections.Generic.Comparer<int>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
-                        typeof(MasterChildInfluence).GetProperty("ParentType"),
                         typeof(MasterChildInfluence).GetProperty("ParentId"),
-                    }, false, false, System.Collections.Generic.Comparer<(ChildInfluenceParentType ParentType, int ParentId)>.Default),
+                    }, false, false, System.Collections.Generic.Comparer<int>.Default),
                 });
         }
 

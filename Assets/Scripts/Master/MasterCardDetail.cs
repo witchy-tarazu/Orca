@@ -8,12 +8,10 @@ namespace Orca
     {
         public MasterCardDetail(
             int cardId,
-            int detailId,
-            int executeFrame)
+            int detailId)
         {
             CardId = cardId;
             DetailId = detailId;
-            ExecuteFrame = executeFrame;
         }
 
         [PrimaryKey(0)]
@@ -22,7 +20,5 @@ namespace Orca
 
         [PrimaryKey(1)]
         public int DetailId { get; }
-
-        public int ExecuteFrame { get; }
     }
 }

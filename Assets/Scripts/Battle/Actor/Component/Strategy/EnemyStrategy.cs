@@ -77,7 +77,7 @@ namespace Orca
         private void Move()
         {
             var currentPosition = Stage.GetPanel(Health).Position;
-            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : CurrentCommand.Value * -1;
+            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : -CurrentCommand.Value;
             var nextPosition = new PanelPosition(currentPosition.PositionX + offset);
             MoveAction.Invoke(nextPosition);
         }
@@ -85,7 +85,7 @@ namespace Orca
         private void MoveNearestEnemy()
         {
             var currentPosition = Stage.GetPanel(Health).Position;
-            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : CurrentCommand.Value * -1;
+            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : -CurrentCommand.Value;
             var nearestEnemyPanel = Stage.GetNearestEnemyPanel(Health);
             var nextPosition = new PanelPosition(nearestEnemyPanel.Position.PositionX + offset);
             MoveAction.Invoke(nextPosition);
@@ -94,7 +94,7 @@ namespace Orca
         private void Jump()
         {
             var currentPosition = Stage.GetPanel(Health).Position;
-            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : CurrentCommand.Value * -1;
+            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : -CurrentCommand.Value;
             var nextPosition = new PanelPosition(currentPosition.PositionX + offset);
             if (Stage.IsValidPos(nextPosition))
             {
@@ -105,7 +105,7 @@ namespace Orca
         private void JumpNearestEnemy()
         {
             var currentPosition = Stage.GetPanel(Health).Position;
-            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : CurrentCommand.Value * -1;
+            int offset = (Health.Side == ActorSide.Left) ? CurrentCommand.Value : -CurrentCommand.Value;
             var nearestEnemyPanel = Stage.GetNearestEnemyPanel(Health);
             var nextPosition = new PanelPosition(nearestEnemyPanel.Position.PositionX + offset);
             if (Stage.IsValidPos(nextPosition))

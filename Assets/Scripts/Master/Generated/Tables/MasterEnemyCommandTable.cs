@@ -30,19 +30,24 @@ namespace Orca.Tables
 
         public RangeView<MasterEnemyCommand> SortByPatternId => new RangeView<MasterEnemyCommand>(secondaryIndex0, 0, secondaryIndex0.Length - 1, true);
 
-        public RangeView<MasterEnemyCommand> FindByPatternIdAndIndex((int PatternId, int Index) key)
+        public MasterEnemyCommand FindByPatternIdAndIndex((int PatternId, int Index) key)
         {
-            return FindManyCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, key);
+            return FindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, key, true);
+        }
+        
+        public bool TryFindByPatternIdAndIndex((int PatternId, int Index) key, out MasterEnemyCommand result)
+        {
+            return TryFindUniqueCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, key, out result);
         }
 
-        public RangeView<MasterEnemyCommand> FindClosestByPatternIdAndIndex((int PatternId, int Index) key, bool selectLower = true)
+        public MasterEnemyCommand FindClosestByPatternIdAndIndex((int PatternId, int Index) key, bool selectLower = true)
         {
-            return FindManyClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, key, selectLower);
+            return FindUniqueClosestCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, key, selectLower);
         }
 
         public RangeView<MasterEnemyCommand> FindRangeByPatternIdAndIndex((int PatternId, int Index) min, (int PatternId, int Index) max, bool ascendant = true)
         {
-            return FindManyRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, min, max, ascendant);
+            return FindUniqueRangeCore(data, primaryIndexSelector, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default, min, max, ascendant);
         }
 
         public RangeView<MasterEnemyCommand> FindByPatternId(int key)
@@ -65,6 +70,7 @@ namespace Orca.Tables
         {
 #if !DISABLE_MASTERMEMORY_VALIDATOR
 
+            ValidateUniqueCore(data, primaryIndexSelector, "(PatternId, Index)", resultSet);       
 
 #endif
         }
@@ -88,7 +94,7 @@ namespace Orca.Tables
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterEnemyCommand).GetProperty("PatternId"),
                         typeof(MasterEnemyCommand).GetProperty("Index"),
-                    }, true, false, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default),
+                    }, true, true, System.Collections.Generic.Comparer<(int PatternId, int Index)>.Default),
                     new MasterMemory.Meta.MetaIndex(new System.Reflection.PropertyInfo[] {
                         typeof(MasterEnemyCommand).GetProperty("PatternId"),
                     }, false, false, System.Collections.Generic.Comparer<int>.Default),

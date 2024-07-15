@@ -32,6 +32,6 @@ namespace Orca
             Hp = Mathf.Min(Hp, MaxHp);
         }
 
-        public bool IsAlive() => Hp > 0;
+        public bool IsAlive => Hp > 0;
     }
 }

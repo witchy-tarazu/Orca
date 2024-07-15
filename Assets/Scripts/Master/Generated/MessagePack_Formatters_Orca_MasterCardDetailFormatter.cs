@@ -22,8 +22,6 @@ namespace MessagePack.Formatters.Orca
         private static global::System.ReadOnlySpan<byte> GetSpan_CardId() => new byte[1 + 6] { 166, 67, 97, 114, 100, 73, 100 };
         // DetailId
         private static global::System.ReadOnlySpan<byte> GetSpan_DetailId() => new byte[1 + 8] { 168, 68, 101, 116, 97, 105, 108, 73, 100 };
-        // ExecuteFrame
-        private static global::System.ReadOnlySpan<byte> GetSpan_ExecuteFrame() => new byte[1 + 12] { 172, 69, 120, 101, 99, 117, 116, 101, 70, 114, 97, 109, 101 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Orca.MasterCardDetail value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -33,13 +31,11 @@ namespace MessagePack.Formatters.Orca
                 return;
             }
 
-            writer.WriteMapHeader(3);
+            writer.WriteMapHeader(2);
             writer.WriteRaw(GetSpan_CardId());
             writer.Write(value.CardId);
             writer.WriteRaw(GetSpan_DetailId());
             writer.Write(value.DetailId);
-            writer.WriteRaw(GetSpan_ExecuteFrame());
-            writer.Write(value.ExecuteFrame);
         }
 
         public global::Orca.MasterCardDetail Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -53,7 +49,6 @@ namespace MessagePack.Formatters.Orca
             var length = reader.ReadMapHeader();
             var __CardId__ = default(int);
             var __DetailId__ = default(int);
-            var __ExecuteFrame__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -74,16 +69,11 @@ namespace MessagePack.Formatters.Orca
 
                         __DetailId__ = reader.ReadInt32();
                         continue;
-                    case 12:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_ExecuteFrame().Slice(1))) { goto FAIL; }
-
-                        __ExecuteFrame__ = reader.ReadInt32();
-                        continue;
 
                 }
             }
 
-            var ____result = new global::Orca.MasterCardDetail(__CardId__, __DetailId__, __ExecuteFrame__);
+            var ____result = new global::Orca.MasterCardDetail(__CardId__, __DetailId__);
             reader.Depth--;
             return ____result;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Orca
@@ -81,7 +82,7 @@ namespace Orca
         {
             Health.Update();
 
-            if (Health.IsDisableAction())
+            if (Health.IsDisableAction)
             {
                 return;
             }
@@ -99,7 +100,7 @@ namespace Orca
 
         public void LateUpdate()
         {
-            if (Health.IsDisableAction())
+            if (Health.IsDisableAction)
             {
                 Attacker.Cancel();
                 Mover.Cancel();
@@ -110,9 +111,11 @@ namespace Orca
                 OnDeadCallback.Invoke();
                 return;
             }
+
+            Health.LateUpdate();
         }
 
-        public void StartTurn()
+        public void StartTurn(List<MasterCard> cards)
         {
             if (Strategy is not HeroStrategy)
             {
@@ -120,7 +123,7 @@ namespace Orca
             }
 
             var heroStrategy = Strategy as HeroStrategy;
-            heroStrategy.StartTurn();
+            heroStrategy.StartTurn(cards);
         }
 
         public bool IsHero(ActorSide side)
